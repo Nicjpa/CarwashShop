@@ -1,10 +1,9 @@
-﻿namespace CarWashShopAPI.Entities
+﻿using CarWashShopAPI.DTO.ServiceTypeDTO;
+
+namespace CarWashShopAPI.Entities
 {
-    public class ServiceType
+    public class ServiceType : ServiceTypeCreation
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<Service> Services { get; set; }
     }
 }

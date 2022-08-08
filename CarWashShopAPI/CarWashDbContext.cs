@@ -1,9 +1,10 @@
 ﻿using CarWashShopAPI.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarWashShopAPI
 {
-    public class CarWashDbContext : DbContext
+    public class CarWashDbContext : IdentityDbContext
     {
         public CarWashDbContext(DbContextOptions<CarWashDbContext> options) : base(options) { }
 
@@ -11,8 +12,9 @@ namespace CarWashShopAPI
         public DbSet<CarWashShop> CarWashs { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
-
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
