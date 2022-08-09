@@ -1,4 +1,9 @@
-﻿namespace CarWashShopAPI.Entities
+﻿
+
+
+using Newtonsoft.Json;
+
+namespace CarWashShopAPI.Entities
 {
     public class CarWashShop
     {
@@ -8,8 +13,7 @@
         public int AmountOfWashingUnits { get; set; }
         public int OpeningTime { get; set; }
         public int ClosingTime { get; set; }
-        public List<Service> Services { get; set; }
-        public List<CarWashShopsServices> CarWashShopsServices { get; set; } = new List<CarWashShopsServices>();    
+        public List<CarWashShopsServices> CarWashShopsServices { get; set; } = new List<CarWashShopsServices>();
         public List<CarWashShopsOwners> Owners { get; set; }
     }
 }

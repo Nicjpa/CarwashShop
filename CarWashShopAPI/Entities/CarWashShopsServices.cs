@@ -1,4 +1,6 @@
-﻿namespace CarWashShopAPI.Entities
+﻿using Newtonsoft.Json;
+
+namespace CarWashShopAPI.Entities
 {
     public class CarWashShopsServices
     {

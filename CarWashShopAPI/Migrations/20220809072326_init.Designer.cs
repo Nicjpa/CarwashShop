@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarWashShopAPI.Migrations
 {
     [DbContext(typeof(CarWashDbContext))]
-    [Migration("20220808232147_init")]
+    [Migration("20220809072326_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,9 +119,6 @@ namespace CarWashShopAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CarWashShopId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -134,8 +131,6 @@ namespace CarWashShopAPI.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CarWashShopId");
 
                     b.ToTable("Services");
                 });
@@ -400,13 +395,6 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>
-                {
-                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", null)
-                        .WithMany("Services")
-                        .HasForeignKey("CarWashShopId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -463,8 +451,6 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("CarWashShopsServices");
 
                     b.Navigation("Owners");
-
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>

@@ -9,46 +9,71 @@ namespace CarWashShopAPI.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<ServiceCreation, Service>();
+            CreateMap<ServiceCreationView, Service>();
+
+            CreateMap<CarWashShopCreation, Service>();
+
+            CreateMap<CarWashShop, CarWashShopView>()
+                .ForMember(x => x.Services, opt => opt.Ignore());
+
+
+
+            CreateMap<CarWashShopsOwners, CarWashShopView>()
+                .ForMember(x => x.Services, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
+
+            //CreateMap<CarWashShopsOwners, CarWashShopView>()
+            //    .ForMember(x => x, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
+
             CreateMap<CarWashShopCreation, CarWashShop>()
                 .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashCreationOwners2CarWashOwners))
-                .ForMember(x => x.Services, opt => opt.MapFrom(CarWashCreationService2CarWashService))
                 .ForMember(x => x.CarWashShopsServices, opt => opt.Ignore());
 
-            //CreateMap<Franchise, FranchiseView>()
-            //    .ForMember(x => x.CarWashes, opt => opt.MapFrom(CarWash2CarWashView));
 
         }
 
         private List<CarWashShopsOwners> CarWashCreationOwners2CarWashOwners(CarWashShopCreation creation, CarWashShop entity)
         {
             var result = new List<CarWashShopsOwners>();
-
             creation.CarWashShopsOwners.ForEach(x => result.Add(new CarWashShopsOwners() { OwnerId = x.ToUpper() }));
             return result;
         }
 
-        private List<Service> CarWashCreationService2CarWashService(CarWashShopCreation creation, CarWashShop entity)
-        {
-            var result = new List<Service>();
-            creation.Services.ForEach(x => result.Add(new Service() { Name = x.Name, Description = x.Description, Price = x.Price}));
-            return result;
-        }
-        //private List<FranchiseCarWashView> CarWash2CarWashView(Franchise from, FranchiseView to)
+        //private List<ServiceCreationView> CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
         //{
-        //    var result = new List<FranchiseCarWashView>();
-        //    foreach (CarWash carWash in from.CarWashes)
-        //    {
-        //        result.Add(new FranchiseCarWashView()
-        //        {
-        //            Id = carWash.Id,
-        //            Name = carWash.Name,
-        //            AmountOfWashingBoxes = carWash.AmountOfWashingBoxes,
-        //            FranchiseName = from.Name,
-        //            CarWashOwners = carWash.CarWashOwners
-        //        });
-        //    }
+        //    var result = new List<ServiceCreationView>();
+        //    var service = new List<Service>();
+        //    entity.CarWashShop.CarWashShopsServices.ForEach(x => service.Add(x.Service));
+        //    service.ForEach(x => result.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
         //    return result;
         //}
+
+        private CarWashShopView CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
+        {
+
+            var service = new List<Service>();
+            var serviceView = new List<ServiceCreationView>();
+
+            entity.CarWashShop.CarWashShopsServices.ForEach(x => service.Add(x.Service));
+            service.ForEach(x => serviceView.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
+
+            var result = new CarWashShopView()
+            {
+                Id = entity.CarWashShop.Id,
+                Name = entity.CarWashShop.Name,
+                AdvertisingDescription = entity.CarWashShop.AdvertisingDescription,
+                OpeningTime = entity.CarWashShop.OpeningTime,
+                ClosingTime = entity.CarWashShop.ClosingTime,
+                Services = serviceView
+            };
+            return result;
+        }
+
+        //private List<Service> CarWashCreationService2CarWashService(CarWashShopCreation creation, CarWashShop entity)
+        //{
+        //    var result = new List<Service>();
+        //    creation.Services.ForEach(x => result.Add(new Service() { Name = x.Name, Description = x.Description, Price = x.Price}));
+        //    return result;
+        //}
+
     }
 }

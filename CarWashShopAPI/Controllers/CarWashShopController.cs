@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.Entities;
+using CarWashShopAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarWashShopAPI.Controllers
 {
@@ -25,28 +27,60 @@ namespace CarWashShopAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Post([FromBody] CarWashShopCreation shopCreation)
         {
+            if (shopCreation.CarWashShopsOwners.Contains(null))
+                return BadRequest("Each added shop owner must have name"); 
+
             shopCreation.CarWashShopsOwners = shopCreation.CarWashShopsOwners.ConvertAll(x => x.ToUpper());
             string user = User.Identity.Name.ToUpper();
 
             if (!shopCreation.CarWashShopsOwners.Contains(user))
-            {
                 shopCreation.CarWashShopsOwners.Add(user);
-            }
-            var carWashShopEntity = _mapper.Map<CarWashShop>(shopCreation);
-            _dbContext.CarWashs.Add(carWashShopEntity);
-            
+
+            var carWashShopEntity = new CarWashShop();
             try
             {
+                var services = _mapper.Map<List<Service>>(shopCreation.Services);
+                _dbContext.Services.AddRange(services);
                 await _dbContext.SaveChangesAsync();
-                carWashShopEntity.Services.ForEach(x => carWashShopEntity.CarWashShopsServices.Add(new CarWashShopsServices() { ServiceId = x.Id }));
+
+                carWashShopEntity = _mapper.Map<CarWashShop>(shopCreation);
+                services.ForEach(x => carWashShopEntity.CarWashShopsServices.Add(new CarWashShopsServices() { ServiceId = x.Id }));
+                _dbContext.CarWashs.Add(carWashShopEntity);
                 await _dbContext.SaveChangesAsync();
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                if(ex.InnerException.Message.Contains("Cannot insert duplicate key row")) 
+                    return BadRequest($"CarWashShop '{carWashShopEntity.Name}' already exsist..");
+
+                return BadRequest("Your entries or entry formats are incorrect..");
             }
 
-            return Ok();
+            return Ok($"You have successfully added NEW CarWashShop: '{carWashShopEntity.Name}'.");
+        }
+
+        [HttpGet("GetAllShopsInYourPossession", Name = "getAllShopsInYourPossession")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<List<CarWashShopView>>> Get()
+        {
+            string ownerId = User.Identity.Name;
+            var carShopEntities = _dbContext.CarWashShopsOwners
+                .Include(x => x.CarWashShop)
+                .ThenInclude(a => a.CarWashShopsServices)
+                .ThenInclude(b => b.Service)
+                .Where(x => x.OwnerId == ownerId);
+
+            var listCarWashShops = carShopEntities.Select(x => x.CarWashShop);
+
+            var carWashShopsView = _mapper.Map<List<CarWashShopView>>(listCarWashShops);
+            var carShopViewService = _mapper.Map<List<CarWashShopView>>(carShopEntities);
+
+            for (int i = 0; i < carWashShopsView.Count; i++)
+            {
+                carWashShopsView[i].Services = carShopViewService[i].Services;
+            }
+
+            return Ok(carShopViewService);
         }
     }
 }

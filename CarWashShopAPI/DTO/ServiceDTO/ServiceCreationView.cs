@@ -1,6 +1,6 @@
 ﻿namespace CarWashShopAPI.DTO.ServiceDTO
 {
-    public class ServiceCreation
+    public class ServiceCreationView
     {
         public string Name { get; set; }
         public string Description { get; set; }
