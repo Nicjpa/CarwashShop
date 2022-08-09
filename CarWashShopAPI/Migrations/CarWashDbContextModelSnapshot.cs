@@ -41,12 +41,15 @@ namespace CarWashShopAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("OpeningTime")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("CarWashs");
                 });
@@ -64,6 +67,21 @@ namespace CarWashShopAPI.Migrations
                     b.HasIndex("CarWashShopId");
 
                     b.ToTable("CarWashShopsOwners");
+                });
+
+            modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsServices", b =>
+                {
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CarWashShopId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ServiceId", "CarWashShopId");
+
+                    b.HasIndex("CarWashShopId");
+
+                    b.ToTable("CarWashShopsServices");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Order", b =>
@@ -99,31 +117,8 @@ namespace CarWashShopAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CarWashShopId")
+                    b.Property<int?>("CarWashShopId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ServiceTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarWashShopId");
-
-                    b.HasIndex("ServiceTypeId");
-
-                    b.ToTable("Services");
-                });
-
-            modelBuilder.Entity("CarWashShopAPI.Entities.ServiceType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -133,9 +128,14 @@ namespace CarWashShopAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceTypes");
+                    b.HasIndex("CarWashShopId");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -352,13 +352,13 @@ namespace CarWashShopAPI.Migrations
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsOwners", b =>
                 {
                     b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWashShop")
-                        .WithMany("CarWashShopsOwners")
+                        .WithMany("Owners")
                         .HasForeignKey("CarWashShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CarWashShopAPI.Entities.Owner", "Owner")
-                        .WithMany("CarWashShopsOwners")
+                        .WithMany("CarWashShops")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -366,6 +366,25 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("CarWashShop");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsServices", b =>
+                {
+                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWashShop")
+                        .WithMany("CarWashShopsServices")
+                        .HasForeignKey("CarWashShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarWashShopAPI.Entities.Service", "Service")
+                        .WithMany("CarWashShops")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarWashShop");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Order", b =>
@@ -381,21 +400,9 @@ namespace CarWashShopAPI.Migrations
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>
                 {
-                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWash")
+                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", null)
                         .WithMany("Services")
-                        .HasForeignKey("CarWashShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarWashShopAPI.Entities.ServiceType", "ServiceType")
-                        .WithMany()
-                        .HasForeignKey("ServiceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CarWash");
-
-                    b.Navigation("ServiceType");
+                        .HasForeignKey("CarWashShopId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -451,14 +458,21 @@ namespace CarWashShopAPI.Migrations
 
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShop", b =>
                 {
-                    b.Navigation("CarWashShopsOwners");
+                    b.Navigation("CarWashShopsServices");
+
+                    b.Navigation("Owners");
 
                     b.Navigation("Services");
                 });
 
+            modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>
+                {
+                    b.Navigation("CarWashShops");
+                });
+
             modelBuilder.Entity("CarWashShopAPI.Entities.Owner", b =>
                 {
-                    b.Navigation("CarWashShopsOwners");
+                    b.Navigation("CarWashShops");
                 });
 #pragma warning restore 612, 618
         }

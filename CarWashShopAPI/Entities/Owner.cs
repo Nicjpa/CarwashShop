@@ -4,6 +4,6 @@ namespace CarWashShopAPI.Entities
 {
     public class Owner : IdentityUser
     {
-        public List<CarWashShopsOwners> CarWashShopsOwners { get; set; }
+        public List<CarWashShopsOwners> CarWashShops { get; set; }
     }
 }

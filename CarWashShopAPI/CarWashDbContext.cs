@@ -11,7 +11,6 @@ namespace CarWashShopAPI
 
         public DbSet<CarWashShop> CarWashs { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
         
@@ -22,15 +21,27 @@ namespace CarWashShopAPI
 
             modelBuilder.Entity<CarWashShopsOwners>()
             .HasOne(cwo => cwo.Owner)
-            .WithMany(cwo => cwo.CarWashShopsOwners)
+            .WithMany(cwo => cwo.CarWashShops)
             .HasForeignKey(cwo => cwo.OwnerId);
 
             modelBuilder.Entity<CarWashShopsOwners>()
             .HasOne(cwo => cwo.CarWashShop)
-            .WithMany(cwo => cwo.CarWashShopsOwners)
+            .WithMany(cwo => cwo.Owners)
             .HasForeignKey(cwo => cwo.CarWashShopId);
 
-            //modelBuilder.Entity<Franchise>().HasIndex(u => u.Name).IsUnique();
+            modelBuilder.Entity<CarWashShopsServices>().HasKey(x => new { x.ServiceId, x.CarWashShopId });
+
+            modelBuilder.Entity<CarWashShopsServices>()
+            .HasOne(cwo => cwo.Service)
+            .WithMany(cwo => cwo.CarWashShops)
+            .HasForeignKey(cwo => cwo.ServiceId);
+
+            modelBuilder.Entity<CarWashShopsServices>()
+            .HasOne(cwo => cwo.CarWashShop)
+            .WithMany(cwo => cwo.CarWashShopsServices)
+            .HasForeignKey(cwo => cwo.CarWashShopId);
+
+            modelBuilder.Entity<CarWashShop>().HasIndex(u => u.Name).IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

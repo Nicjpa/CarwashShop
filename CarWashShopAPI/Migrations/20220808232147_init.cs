@@ -55,7 +55,7 @@ namespace CarWashShopAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AdvertisingDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountOfWashingUnits = table.Column<int>(type: "int", nullable: false),
                     OpeningTime = table.Column<int>(type: "int", nullable: false),
@@ -64,20 +64,6 @@ namespace CarWashShopAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CarWashs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,9 +202,10 @@ namespace CarWashShopAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceTypeId = table.Column<int>(type: "int", nullable: false),
-                    CarWashShopId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CarWashShopId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,12 +214,29 @@ namespace CarWashShopAPI.Migrations
                         name: "FK_Services_CarWashs_CarWashShopId",
                         column: x => x.CarWashShopId,
                         principalTable: "CarWashs",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CarWashShopsServices",
+                columns: table => new
+                {
+                    CarWashShopId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarWashShopsServices", x => new { x.ServiceId, x.CarWashShopId });
+                    table.ForeignKey(
+                        name: "FK_CarWashShopsServices_CarWashs_CarWashShopId",
+                        column: x => x.CarWashShopId,
+                        principalTable: "CarWashs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Services_ServiceTypes_ServiceTypeId",
-                        column: x => x.ServiceTypeId,
-                        principalTable: "ServiceTypes",
+                        name: "FK_CarWashShopsServices_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -298,8 +302,19 @@ namespace CarWashShopAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CarWashs_Name",
+                table: "CarWashs",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CarWashShopsOwners_CarWashShopId",
                 table: "CarWashShopsOwners",
+                column: "CarWashShopId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarWashShopsServices_CarWashShopId",
+                table: "CarWashShopsServices",
                 column: "CarWashShopId");
 
             migrationBuilder.CreateIndex(
@@ -311,11 +326,6 @@ namespace CarWashShopAPI.Migrations
                 name: "IX_Services_CarWashShopId",
                 table: "Services",
                 column: "CarWashShopId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_ServiceTypeId",
-                table: "Services",
-                column: "ServiceTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -339,6 +349,9 @@ namespace CarWashShopAPI.Migrations
                 name: "CarWashShopsOwners");
 
             migrationBuilder.DropTable(
+                name: "CarWashShopsServices");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
@@ -352,9 +365,6 @@ namespace CarWashShopAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "CarWashs");
-
-            migrationBuilder.DropTable(
-                name: "ServiceTypes");
         }
     }
 }

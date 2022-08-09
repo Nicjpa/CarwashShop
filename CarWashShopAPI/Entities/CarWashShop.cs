@@ -9,6 +9,7 @@
         public int OpeningTime { get; set; }
         public int ClosingTime { get; set; }
         public List<Service> Services { get; set; }
-        public List<CarWashShopsOwners> CarWashShopsOwners { get; set; }
+        public List<CarWashShopsServices> CarWashShopsServices { get; set; } = new List<CarWashShopsServices>();    
+        public List<CarWashShopsOwners> Owners { get; set; }
     }
 }
