@@ -16,19 +16,15 @@ namespace CarWashShopAPI.Helpers
             CreateMap<CarWashShop, CarWashShopView>()
                 .ForMember(x => x.Services, opt => opt.Ignore());
 
-
-
             CreateMap<CarWashShopsOwners, CarWashShopView>()
                 .ForMember(x => x.Services, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
-
-            //CreateMap<CarWashShopsOwners, CarWashShopView>()
-            //    .ForMember(x => x, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
 
             CreateMap<CarWashShopCreation, CarWashShop>()
                 .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashCreationOwners2CarWashOwners))
                 .ForMember(x => x.CarWashShopsServices, opt => opt.Ignore());
 
-
+            CreateMap<CarWashShopUpdate, CarWashShop>()
+                .ReverseMap();
         }
 
         private List<CarWashShopsOwners> CarWashCreationOwners2CarWashOwners(CarWashShopCreation creation, CarWashShop entity)
@@ -38,40 +34,33 @@ namespace CarWashShopAPI.Helpers
             return result;
         }
 
-        //private List<ServiceCreationView> CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
-        //{
-        //    var result = new List<ServiceCreationView>();
-        //    var service = new List<Service>();
-        //    entity.CarWashShop.CarWashShopsServices.ForEach(x => service.Add(x.Service));
-        //    service.ForEach(x => result.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
-        //    return result;
-        //}
-
-        private CarWashShopView CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
+        private List<ServiceCreationView> CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
         {
-
+            var result = new List<ServiceCreationView>();
             var service = new List<Service>();
-            var serviceView = new List<ServiceCreationView>();
-
             entity.CarWashShop.CarWashShopsServices.ForEach(x => service.Add(x.Service));
-            service.ForEach(x => serviceView.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
-
-            var result = new CarWashShopView()
-            {
-                Id = entity.CarWashShop.Id,
-                Name = entity.CarWashShop.Name,
-                AdvertisingDescription = entity.CarWashShop.AdvertisingDescription,
-                OpeningTime = entity.CarWashShop.OpeningTime,
-                ClosingTime = entity.CarWashShop.ClosingTime,
-                Services = serviceView
-            };
+            service.ForEach(x => result.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
             return result;
         }
 
-        //private List<Service> CarWashCreationService2CarWashService(CarWashShopCreation creation, CarWashShop entity)
+        //private CarWashShopView CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
         //{
-        //    var result = new List<Service>();
-        //    creation.Services.ForEach(x => result.Add(new Service() { Name = x.Name, Description = x.Description, Price = x.Price}));
+
+        //    var service = new List<Service>();
+        //    var serviceView = new List<ServiceCreationView>();
+
+        //    entity.CarWashShop.CarWashShopsServices.ForEach(x => service.Add(x.Service));
+        //    service.ForEach(x => serviceView.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
+
+        //    var result = new CarWashShopView()
+        //    {
+        //        Id = entity.CarWashShop.Id,
+        //        Name = entity.CarWashShop.Name,
+        //        AdvertisingDescription = entity.CarWashShop.AdvertisingDescription,
+        //        OpeningTime = entity.CarWashShop.OpeningTime,
+        //        ClosingTime = entity.CarWashShop.ClosingTime,
+        //        Services = serviceView
+        //    };
         //    return result;
         //}
 

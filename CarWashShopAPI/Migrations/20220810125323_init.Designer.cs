@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarWashShopAPI.Migrations
 {
     [DbContext(typeof(CarWashDbContext))]
-    [Migration("20220809072326_init")]
+    [Migration("20220810125323_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,10 @@ namespace CarWashShopAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdvertisingDescription")
                         .HasColumnType("nvarchar(max)");
@@ -53,7 +57,7 @@ namespace CarWashShopAPI.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("CarWashs");
+                    b.ToTable("CarWashsShops");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsOwners", b =>

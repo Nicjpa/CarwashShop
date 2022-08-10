@@ -8,12 +8,13 @@ namespace CarWashShopAPI
     {
         public CarWashDbContext(DbContextOptions<CarWashDbContext> options) : base(options) { }
 
-
-        public DbSet<CarWashShop> CarWashs { get; set; }
+        public DbSet<CarWashShop> CarWashsShops { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
-        
+        public DbSet<CarWashShopsServices> CarWashShopsServices { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

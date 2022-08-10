@@ -76,8 +76,11 @@ namespace CarWashShopAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            //app.UseStaticFiles();
 
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.MapControllers();
 

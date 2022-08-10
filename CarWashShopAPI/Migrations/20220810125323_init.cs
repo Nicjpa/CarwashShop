@@ -50,7 +50,7 @@ namespace CarWashShopAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarWashs",
+                name: "CarWashsShops",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -58,12 +58,13 @@ namespace CarWashShopAPI.Migrations
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AdvertisingDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountOfWashingUnits = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OpeningTime = table.Column<int>(type: "int", nullable: false),
                     ClosingTime = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarWashs", x => x.Id);
+                    table.PrimaryKey("PK_CarWashsShops", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,9 +205,9 @@ namespace CarWashShopAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarWashShopsOwners_CarWashs_CarWashShopId",
+                        name: "FK_CarWashShopsOwners_CarWashsShops_CarWashShopId",
                         column: x => x.CarWashShopId,
-                        principalTable: "CarWashs",
+                        principalTable: "CarWashsShops",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -222,9 +223,9 @@ namespace CarWashShopAPI.Migrations
                 {
                     table.PrimaryKey("PK_CarWashShopsServices", x => new { x.ServiceId, x.CarWashShopId });
                     table.ForeignKey(
-                        name: "FK_CarWashShopsServices_CarWashs_CarWashShopId",
+                        name: "FK_CarWashShopsServices_CarWashsShops_CarWashShopId",
                         column: x => x.CarWashShopId,
-                        principalTable: "CarWashs",
+                        principalTable: "CarWashsShops",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -296,12 +297,6 @@ namespace CarWashShopAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarWashs_Name",
-                table: "CarWashs",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CarWashShopsOwners_CarWashShopId",
                 table: "CarWashShopsOwners",
                 column: "CarWashShopId");
@@ -310,6 +305,12 @@ namespace CarWashShopAPI.Migrations
                 name: "IX_CarWashShopsServices_CarWashShopId",
                 table: "CarWashShopsServices",
                 column: "CarWashShopId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarWashsShops_Name",
+                table: "CarWashsShops",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_ServiceId",
@@ -350,7 +351,7 @@ namespace CarWashShopAPI.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "CarWashs");
+                name: "CarWashsShops");
 
             migrationBuilder.DropTable(
                 name: "Services");

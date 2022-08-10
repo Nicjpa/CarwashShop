@@ -73,7 +73,7 @@ namespace CarWashShopAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserToken>> Renew()
         {
-            var userInfo = new UserInfo() { UserName = HttpContext.User.Identity.Name };
+            var userInfo = new UserInfo() { UserName = User.Identity.Name };
             return await BuildToken(userInfo);
         }
 
