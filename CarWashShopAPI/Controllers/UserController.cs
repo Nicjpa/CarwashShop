@@ -96,7 +96,7 @@ namespace CarWashShopAPI.Controllers
         {
             try
             {
-                var user = new IdentityUser { UserName = userInfo.UserName, Email = userInfo.UserName.ToLower(), Id = userInfo.UserName.ToUpper() };
+                var user = new IdentityUser { UserName = userInfo.UserName, Email = userInfo.UserName.ToLower(), Id = $"{ userInfo.UserName.ToUpper()}{Guid.NewGuid()}" };
                 var result = await _userManager.CreateAsync(user, userInfo.Password);
 
                 if (result.Succeeded)
