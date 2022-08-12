@@ -7,7 +7,7 @@ namespace CarWashShopAPI.Entities
         public int CarWashShopId { get; set; }
         public CarWashShop CarWashShop { get; set; }
         public string OwnerId { get; set; }
-        public Owner Owner { get; set; }
+        public CustomUser Owner { get; set; }
     }
 }
 

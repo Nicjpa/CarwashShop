@@ -3,11 +3,9 @@ namespace CarWashShopAPI.Helpers
 {
     public static class CustomFunctions 
     {
-        public static string GetUserName(this string id, string userName)
+        public static string GetUserName(this string id)
         {
-            string text = id.Substring(0, userName.Length);
-            return text.ToUpper(); 
+            return id.Substring(36, id.Length - 36);
         }
-
     }
 }

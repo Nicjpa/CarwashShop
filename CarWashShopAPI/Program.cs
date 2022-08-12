@@ -1,3 +1,4 @@
+using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +20,7 @@ namespace CarWashShopAPI
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddIdentity<CustomUser, IdentityRole>()
                 .AddEntityFrameworkStores<CarWashDbContext>()
                 .AddDefaultTokenProviders();
 

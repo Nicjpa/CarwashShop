@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarWashShopAPI.DTO.UserDTOs;
+using CarWashShopAPI.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,15 +17,15 @@ namespace CarWashShopAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CustomUser> _userManager;
+        private readonly SignInManager<CustomUser> _signInManager;
         private readonly IConfiguration _config;
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
 
         public UserController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<CustomUser> userManager,
+            SignInManager<CustomUser> signInManager,
             IConfiguration config,
             CarWashDbContext dbContext,
             IMapper mapper)
@@ -41,7 +42,8 @@ namespace CarWashShopAPI.Controllers
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, userInfo.UserName),
-                new Claim(ClaimTypes.Email, userInfo.UserName)
+                new Claim(ClaimTypes.Email, userInfo.UserName),
+                new Claim(ClaimTypes.NameIdentifier, userInfo.guid)
             };
 
             var identityUser = await _userManager.FindByEmailAsync(userInfo.UserName);
@@ -96,7 +98,7 @@ namespace CarWashShopAPI.Controllers
         {
             try
             {
-                var user = new IdentityUser { UserName = userInfo.UserName, Email = userInfo.UserName.ToLower(), Id = $"{ userInfo.UserName.ToUpper()}{Guid.NewGuid()}" };
+                var user = new CustomUser { UserName = userInfo.UserName, Email = userInfo.UserName.ToLower(), Id = $"{userInfo.guid}{userInfo.UserName.ToUpper()}" };
                 var result = await _userManager.CreateAsync(user, userInfo.Password);
 
                 if (result.Succeeded)

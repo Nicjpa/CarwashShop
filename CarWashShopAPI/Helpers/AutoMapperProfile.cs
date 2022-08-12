@@ -21,7 +21,7 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.Services, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
 
             CreateMap<CarWashShopCreation, CarWashShop>()
-                .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashCreationOwners2CarWashOwners))
+                .ForMember(x => x.Owners, opt => opt.Ignore())
                 .ForMember(x => x.CarWashShopsServices, opt => opt.Ignore());
 
             CreateMap<CarWashShopUpdate, CarWashShop>()
@@ -31,12 +31,13 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashShopOwners2OwnerView));
         }
 
-        private List<CarWashShopsOwners> CarWashCreationOwners2CarWashOwners(CarWashShopCreation creation, CarWashShop entity)
-        {
-            var result = new List<CarWashShopsOwners>();
-            creation.CarWashShopsOwners.ForEach(x => result.Add(new CarWashShopsOwners() { OwnerId = x.ToUpper() }));
-            return result;
-        }
+        //private List<CarWashShopsOwners> CarWashCreationOwners2CarWashOwners(CarWashShopCreation creation, CarWashShop entity)
+        //{
+        //    var result = new List<CarWashShopsOwners>();
+            
+        //    creation.CarWashShopsOwners.ForEach(x => result.Add(new CarWashShopsOwners() { OwnerId = x.ToUpper() }));
+        //    return result;
+        //}
 
         private List<ServiceCreationView> CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)
         {
@@ -50,7 +51,7 @@ namespace CarWashShopAPI.Helpers
         private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, OwnersViewPerShop view)
         {
             var result = new List<string>();
-            entity.Owners.ForEach(x => result.Add(x.OwnerId));
+            entity.Owners.ForEach(x => result.Add(x.OwnerId.GetUserName()));
             return result;
         }
         //private CarWashShopView CarWashShopsOwners2CarWashShopView(CarWashShopsOwners entity, CarWashShopView view)

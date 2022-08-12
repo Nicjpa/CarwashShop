@@ -1,4 +1,6 @@
-﻿namespace CarWashShopAPI.DTO.CarWashShopDTOs
+﻿using Newtonsoft.Json;
+
+namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {
     public class OwnersViewPerShop
     {

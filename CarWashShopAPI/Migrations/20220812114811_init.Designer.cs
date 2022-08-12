@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarWashShopAPI.Migrations
 {
     [DbContext(typeof(CarWashDbContext))]
-    [Migration("20220810125323_init")]
+    [Migration("20220812114811_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -343,11 +343,23 @@ namespace CarWashShopAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CarWashShopAPI.Entities.Owner", b =>
+            modelBuilder.Entity("CarWashShopAPI.Entities.CustomUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.HasDiscriminator().HasValue("Owner");
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Picture")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("CustomUser");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsOwners", b =>
@@ -358,7 +370,7 @@ namespace CarWashShopAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CarWashShopAPI.Entities.Owner", "Owner")
+                    b.HasOne("CarWashShopAPI.Entities.CustomUser", "Owner")
                         .WithMany("CarWashShops")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -462,7 +474,7 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("CarWashShops");
                 });
 
-            modelBuilder.Entity("CarWashShopAPI.Entities.Owner", b =>
+            modelBuilder.Entity("CarWashShopAPI.Entities.CustomUser", b =>
                 {
                     b.Navigation("CarWashShops");
                 });
