@@ -29,11 +29,11 @@ namespace CarWashShopAPI.Controllers
             _mapper = mapper;
         }
 
-        //--1------------------------------ GET ALL EXISTING SHOPS WITH OR WITHOUT FILTERS IN IN USER'S POSSESSION  ---------------------- 
+        //--1------------------------------ GET ALL EXISTING SHOPS WITH FILTERS IN IN USER'S POSSESSION  ---------------------- 
 
-        [HttpGet("ListShopsInYourPossession", Name = "listShopsInYourPossession")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<CarWashShopView>>> GetAllShopsInPossession([FromQuery] CarWashFilter shopFilter)
+        [HttpGet("GetAllShopsFilteredInYourPossessionOrByShopID", Name = "getAllShopsFilteredInYourPossessionOrByShopID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        public async Task<ActionResult<List<CarWashShopView>>> Get([FromQuery] CarWashFilter shopFilter)
         {
             string userName = User.Identity.Name;
             var carShopEntities = _dbContext.CarWashShopsOwners
@@ -47,25 +47,32 @@ namespace CarWashShopAPI.Controllers
             if (carWashShop == null || carWashShop.Count() == 0)
                 return NotFound("You didn't create any CarWashShop yet..");
 
-            if (!string.IsNullOrWhiteSpace(shopFilter.Name))
-                carWashShop = carWashShop.Where(x => x.Name.Contains(shopFilter.Name));
+            if (shopFilter.Id != null)
+            {
+                carWashShop = carWashShop.Where(x => x.Id == shopFilter.Id);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(shopFilter.Name))
+                    carWashShop = carWashShop.Where(x => x.Name.Contains(shopFilter.Name));
 
-            if (!string.IsNullOrWhiteSpace(shopFilter.AdvertisingDescription))
-                carWashShop = carWashShop.Where(x => x.AdvertisingDescription.Contains(shopFilter.AdvertisingDescription));
+                if (!string.IsNullOrWhiteSpace(shopFilter.AdvertisingDescription))
+                    carWashShop = carWashShop.Where(x => x.AdvertisingDescription.Contains(shopFilter.AdvertisingDescription));
 
-            if (shopFilter.MinimumAmountOfWashingUnits != null)
-                carWashShop = carWashShop.Where(x => x.AmountOfWashingUnits >= shopFilter.MinimumAmountOfWashingUnits);
+                if (shopFilter.MinimumAmountOfWashingUnits != null)
+                    carWashShop = carWashShop.Where(x => x.AmountOfWashingUnits >= shopFilter.MinimumAmountOfWashingUnits);
 
-            if (shopFilter.RequiredAndEarlierOpeningTime != null)
-                carWashShop = carWashShop.Where(x => x.OpeningTime <= shopFilter.RequiredAndEarlierOpeningTime);
+                if (shopFilter.RequiredAndEarlierOpeningTime != null)
+                    carWashShop = carWashShop.Where(x => x.OpeningTime <= shopFilter.RequiredAndEarlierOpeningTime);
 
-            if (shopFilter.RequiredAndLaterClosingTime != null)
-                carWashShop = carWashShop.Where(x => x.ClosingTime >= shopFilter.RequiredAndLaterClosingTime);
+                if (shopFilter.RequiredAndLaterClosingTime != null)
+                    carWashShop = carWashShop.Where(x => x.ClosingTime >= shopFilter.RequiredAndLaterClosingTime);
 
-            if (!string.IsNullOrWhiteSpace(shopFilter.ServiceNameOrDescription))
-                carWashShop = carWashShop
-                    .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.Contains(shopFilter.ServiceNameOrDescription) 
-                             || x.Service.Description.Contains(shopFilter.ServiceNameOrDescription)));
+                if (!string.IsNullOrWhiteSpace(shopFilter.ServiceNameOrDescription))
+                    carWashShop = carWashShop
+                        .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.Contains(shopFilter.ServiceNameOrDescription)
+                                 || x.Service.Description.Contains(shopFilter.ServiceNameOrDescription)));
+            }
 
             if (carWashShop == null || carWashShop.Count() == 0)
                 return NotFound("There is no CarWashShop with specified filter parameters..");
@@ -75,40 +82,10 @@ namespace CarWashShopAPI.Controllers
             return Ok(shopsView);
         }
 
-
-
-        //--2------------------------------ GET EXISTING SHOP BY 'ShopName' OR 'ShopID' IN USER'S POSSESSION  ---------------------- 
-
-        [HttpGet("GetYourShopByNameOrId", Name = "getYourShopByNameOrId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<CarWashShopView>> GetYourShopByNameOrId(string GetYourShopByNameOrId)
-        {
-            bool isNotNumber = !int.TryParse(GetYourShopByNameOrId, out int id) && GetYourShopByNameOrId != "0";
-            string type = isNotNumber ? "name" : "ID";
-
-            string userName = User.Identity.Name;
-            var carShopEntities = await _dbContext.CarWashShopsOwners
-                .Include(x => x.CarWashShop)
-                .ThenInclude(a => a.CarWashShopsServices)
-                .ThenInclude(b => b.Service)
-                .Include(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Owner.UserName == userName && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == GetYourShopByNameOrId.ToUpper()));
-
-            if (carShopEntities == null)
-                return NotFound($"You don't have any CarWashShop with {type} '{GetYourShopByNameOrId}'..");
-
-            var carWashShop = carShopEntities.CarWashShop;
-            var shopsView = _mapper.Map<CarWashShopView>(carWashShop);
-
-            return Ok(shopsView);
-        }
-
-
-
         //--3------------------------------ CREATE NEW SHOP WITH SERVICES BOUND TO THE EXISTING USER -------------------------------------- 
 
-        [HttpPost("CreateYourShop", Name = "createYourShop")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("CreateNewShop", Name = "createNewShop")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult> Post([FromBody] CarWashShopCreation shopCreation)
         {
             if (shopCreation.CarWashShopsOwners.Contains(null))
@@ -157,8 +134,8 @@ namespace CarWashShopAPI.Controllers
 
         //--4---------------------------------- UPDATE SHOP'S GENERAL INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ------------------------------- 
 
-        [HttpPut("UpdateShopInfoByShopNameOrId", Name = "updateShopInfoByShopNameOrId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("UpdateShopInfoByShopNameID", Name = "updateShopInfoByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult<CarWashShopView>> Put(string UpdateShopInfoByShopNameOrId, [FromBody] CarWashShopUpdate shopUpdate)
         {
             bool isNotNumber = !int.TryParse(UpdateShopInfoByShopNameOrId, out int id) && UpdateShopInfoByShopNameOrId != "0";
@@ -195,8 +172,8 @@ namespace CarWashShopAPI.Controllers
 
         //--5---------------------------------- PATCH CERTAIN SHOP'S INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ------------------------------- 
 
-        [HttpPatch("PatchShopInfoByShopNameOrId", Name = "patchShopInfoByShopNameOrId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPatch("PatchShopInfoByShopNameID", Name = "patchShopInfoByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult<CarWashShopView>> Patch(string PatchShopInfoByShopNameOrId, [FromBody] JsonPatchDocument<CarWashShopUpdate> shopUpdate)
         {
             if (shopUpdate == null) { return BadRequest("You didn't specify which info do you want to patch.."); }
@@ -232,8 +209,8 @@ namespace CarWashShopAPI.Controllers
         //--6----------------------------------------------- REMOVE CAR WASH SHOP ------------------------------------------------- 
 
         [HttpDelete("DeleteCarWashShop", Name = "deleteCarWashShop")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> DeleteCarWashShop([FromBody] CarWashShopRemovalRequestCreation cwShopRemovalRequest)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        public async Task<ActionResult> Delete([FromBody] CarWashShopRemovalRequestCreation cwShopRemovalRequest)
         {
             string userName = User.Identity.Name;
 

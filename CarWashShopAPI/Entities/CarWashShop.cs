@@ -19,5 +19,6 @@ namespace CarWashShopAPI.Entities
         public int ClosingTime { get; set; }
         public List<CarWashShopsServices> CarWashShopsServices { get; set; } = new List<CarWashShopsServices>();
         public List<CarWashShopsOwners> Owners { get; set; }
+        public List<Booking> Bookings { get; set; }
     }
 }

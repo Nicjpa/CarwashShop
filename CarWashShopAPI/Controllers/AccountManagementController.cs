@@ -15,7 +15,7 @@ namespace CarWashShopAPI.Controllers
 {
     [Route("api/User")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AccountManagementController : ControllerBase
     {
         private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
@@ -23,7 +23,7 @@ namespace CarWashShopAPI.Controllers
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public UserController(
+        public AccountManagementController(
             UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
             IConfiguration config,
@@ -71,7 +71,7 @@ namespace CarWashShopAPI.Controllers
 
 
         [HttpPost("RenewToken", Name = "renewToken")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
         public async Task<ActionResult<UserToken>> Renew()
         {
             var userInfo = new UserInfo() { UserName = User.Identity.Name };
@@ -94,6 +94,7 @@ namespace CarWashShopAPI.Controllers
         }
 
         [HttpPost("CreateAdminAccount", Name = "createAdminAcc")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
         public async Task<ActionResult<UserToken>> CreateAdminAccount([FromBody] UserInfo userInfo)
         {
             return await CreateUser(userInfo, "Admin");
@@ -101,7 +102,6 @@ namespace CarWashShopAPI.Controllers
 
         private async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo, string role)
         {
-            
             try
             {
                 var user = new CustomUser { UserName = userInfo.UserName.ToLower(), Email = userInfo.UserName.ToLower() };

@@ -12,6 +12,6 @@ namespace CarWashShopAPI.DTO.CarWashShopDTOs
         public string Address { get; set; }
         public int OpeningTime { get; set; }
         public int ClosingTime { get; set; }
-        public List<ServiceCreationView> Services { get; set; }
+        public List<ServiceView> Services { get; set; }
     }
 }

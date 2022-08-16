@@ -11,7 +11,13 @@ namespace CarWashShopAPI.Helpers
         public AutoMapperProfile()
         {
             // CAR WASH SHOP MAPPERS
-            CreateMap<ServiceCreationView, Service>();
+            CreateMap<ServiceCreationAndUpdate, Service>()
+                .ReverseMap();
+
+            CreateMap<Service, ServiceView>();
+
+            CreateMap<Service, ServiceViewWithShopAssigned>()
+                .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Name).FirstOrDefault()));
 
             CreateMap<CarWashShopCreation, Service>();
 
@@ -36,12 +42,12 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
         }
 
-        private List<ServiceCreationView> CarWashShopsOwners2CarWashShopView(CarWashShop entity, CarWashShopView view)
+        private List<ServiceView> CarWashShopsOwners2CarWashShopView(CarWashShop entity, CarWashShopView view)
         {
-            var result = new List<ServiceCreationView>();
+            var result = new List<ServiceView>();
             var service = new List<Service>();
             entity.CarWashShopsServices.ForEach(x => service.Add(x.Service));
-            service.ForEach(x => result.Add(new ServiceCreationView { Name = x.Name, Description = x.Description, Price = x.Price }));
+            service.ForEach(x => result.Add(new ServiceView { Id = x.Id, Name = x.Name, Description = x.Description, Price = x.Price }));
             return result;
         }
 

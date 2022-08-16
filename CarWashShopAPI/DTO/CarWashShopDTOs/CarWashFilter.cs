@@ -4,6 +4,7 @@ namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {
     public class CarWashFilter
     {
+        public int? Id { get; set; }
         public string? Name { get; set; }
         public string? AdvertisingDescription { get; set; }
         public int? MinimumAmountOfWashingUnits { get; set; }

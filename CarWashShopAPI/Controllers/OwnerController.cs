@@ -25,21 +25,32 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--1------------------------------ GET LIST OF OWNERS FOR EACH SHOP IN USER'S POSSESSION  ----------------------  
+        //--1------------------------------ GET LIST OF OWNERS FOR EACH SHOP IN USER'S POSSESSION WITH FILTERS  ----------------------  
 
-        [HttpGet("ListOwnersForEachShopInPossession", Name = "listOwnersForEachShopInPossession")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<OwnersViewPerShop>>> ListAllOwnersPerShop()
+        [HttpGet("GetAllOwnersFilteredOrByShopNameID", Name = "getAllOwnersFilteredOrByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        public async Task<ActionResult<List<OwnersViewPerShop>>> GetOwners([FromQuery]ListOfOwnersPerShopFilters filters)
         {
             string userName = User.Identity.Name;
 
-            var carWashShopEntities = await _dbContext.CarWashsShops
+            var carWashShopEntities = _dbContext.CarWashsShops
                 .Include(x => x.Owners).ThenInclude(x => x.Owner)
                 .Where(x => x.Owners.Select(x => x.Owner.UserName).Contains(userName))
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filters.CarWashShopId != null)
+            {
+                carWashShopEntities = carWashShopEntities.Where(x => x.Id == filters.CarWashShopId);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
+                    carWashShopEntities = carWashShopEntities.Where(x => x.Name == filters.CarWashShopName);
+            }
+
 
             if (carWashShopEntities == null || carWashShopEntities.Count() == 0)
-                return Ok("You don't have any CarWashShop created..");
+                return Ok("No car wash shop found..");
 
             var ownersView = _mapper.Map<List<OwnersViewPerShop>>(carWashShopEntities);
 
@@ -48,47 +59,36 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--2------------------------------ GET LIST OF OWNERS FOR THE SHOP IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ----------------------  
+        //--3----------------------------------------------- GET ALL DISBAND REQUESTS WITH FILTERS ------------------------------------------------- 
 
-        [HttpGet("ListOwnersByShopNameOrShopId", Name = "listOwnersByShopNameOrShopId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<OwnersViewPerShop>> ListOwnersByShopNameOrId(string ListOwnersByShopNameOrShopId)
-        {
-            bool isNotNumber = !int.TryParse(ListOwnersByShopNameOrShopId, out int id) && ListOwnersByShopNameOrShopId != "0";
-            string type = isNotNumber ? "name" : "ID";
-            string userName = User.Identity.Name;
-
-            var carWashShopEntity = await _dbContext.CarWashsShops
-                .Include(x => x.Owners).ThenInclude(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Owners.Select(x => x.Owner.UserName).Contains(userName) && (x.Id == id || x.Name.ToUpper() == ListOwnersByShopNameOrShopId.ToUpper()));
-
-            if (carWashShopEntity == null)
-                return NotFound($"You don't have any CarWashShop with {type} '{ListOwnersByShopNameOrShopId}'..");
-
-            var ownerView = _mapper.Map<OwnersViewPerShop>(carWashShopEntity);
-
-            return Ok(ownerView);
-        }
-
-
-
-        //--3----------------------------------------------- GET ALL DISBAND REQUESTS ------------------------------------------------- 
-
-        [HttpGet("GetAllDisbandRequests", Name = "getAllDisbandRequests")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<OwnerDisbandRequestView>>> GetAllDisbandRequests()
+        [HttpGet("GetAllDisbandRequestsOrByShopNameID", Name = "getAllDisbandRequestsOrByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        public async Task<ActionResult<List<OwnerDisbandRequestView>>> GetDisbandRequests([FromQuery] OwnerRequestsFilters filters)
         {
             string userName = User.Identity.Name;
 
-            var allDisbandRequestsEntities = await _dbContext.OwnerRemovalRequests
+            var allDisbandRequestsEntities = _dbContext.OwnerRemovalRequests
                 .Include(x => x.Requester)
                 .Include(x => x.CarWashShop)
                 .Include(x => x.OwnerToBeRemoved)
                 .Where(x => x.OwnerToBeRemoved.UserName == userName)
-                .ToListAsync();
+                .AsQueryable();
 
-            if (allDisbandRequestsEntities == null || allDisbandRequestsEntities.Count == 0)
-                return NotFound("There is no owner removal requests for you..");
+            if (filters.CarWashShopId != null)
+            {
+                allDisbandRequestsEntities = allDisbandRequestsEntities.Where(x => x.CarWashShopId == filters.CarWashShopId);
+            }
+            else
+            {
+                if(!string.IsNullOrWhiteSpace(filters.CarWashShopName))
+                    allDisbandRequestsEntities = allDisbandRequestsEntities.Where(x => x.CarWashShop.Name == filters.CarWashShopName);
+
+                if (filters.NotApproved)
+                    allDisbandRequestsEntities = allDisbandRequestsEntities.Where(x => !x.IsApproved);
+            }
+
+            if (allDisbandRequestsEntities == null || allDisbandRequestsEntities.Count() == 0)
+                return NotFound("No disband request found..");
 
             var allDisbandRequestsView = _mapper.Map<List<OwnerDisbandRequestView>>(allDisbandRequestsEntities);
 
@@ -97,49 +97,35 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--4----------------------------------------------- GET DISBAND REQUEST BY 'ShopName' or 'ShopID' ------------------------------------------------- 
+        //--5----------------------------------------------- GET ALL SHOP REMOVAL REQUESTS WITH FILTERS------------------------------------------------- 
 
-        [HttpGet("GetDisbandRequestByShop", Name = "getDisbandRequestByShop")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<OwnerDisbandRequestView>> GetDisbandRequestsByShop(string GetDisbandRequestByShop)
-        {
-            string userName = User.Identity.Name;
-            bool isNotNumber = !int.TryParse(GetDisbandRequestByShop, out int id) && GetDisbandRequestByShop != "0";
-            string type = isNotNumber ? "name" : "ID";
-
-            var allDisbandRequestsEntities = await _dbContext.OwnerRemovalRequests
-                .Include(x => x.Requester)
-                .Include(x => x.CarWashShop)
-                .Include(x => x.OwnerToBeRemoved)
-                .FirstOrDefaultAsync(x => x.OwnerToBeRemoved.UserName == userName && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == GetDisbandRequestByShop.ToUpper()));
-
-
-            if (allDisbandRequestsEntities == null)
-                return NotFound($"There is no owner removal requests for you under the CarWashShop {type} {GetDisbandRequestByShop}..");
-
-            var allDisbandRequestsView = _mapper.Map<OwnerDisbandRequestView>(allDisbandRequestsEntities);
-
-            return Ok(allDisbandRequestsView);
-        }
-
-
-
-        //--5----------------------------------------------- GET ALL SHOP REMOVAL REQUESTS OF THE OWNER ------------------------------------------------- 
-
-        [HttpGet("GetAllShopRemovalRequests", Name = "getAllShopRemovalRequests")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<OwnerShopRemovalRequestView>>> GetAllShopRemovalRequests()
+        [HttpGet("GetAllShopRemovalRequestsOrByShopNameID", Name = "getAllShopRemovalRequestsOrByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        public async Task<ActionResult<List<OwnerShopRemovalRequestView>>> GetShopRemovalRequests([FromQuery] OwnerRequestsFilters filters)
         {
             string userName = User.Identity.Name;
 
-            var allShopRemovalRequestsEntities = await _dbContext.ShopRemovalRequests
+            var allShopRemovalRequestsEntities =  _dbContext.ShopRemovalRequests
                 .Include(x => x.Owner)
                 .Include(x => x.CarWashShop)
                 .Where(x => x.Owner.UserName == userName)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (filters.CarWashShopId != null)
+            {
+                allShopRemovalRequestsEntities = allShopRemovalRequestsEntities.Where(x => x.CarWashShopId == filters.CarWashShopId);
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
+                    allShopRemovalRequestsEntities = allShopRemovalRequestsEntities.Where(x => x.CarWashShop.Name == filters.CarWashShopName);
+
+                if (filters.NotApproved)
+                    allShopRemovalRequestsEntities = allShopRemovalRequestsEntities.Where(x => !x.IsApproved);
+            }
 
 
-            if (allShopRemovalRequestsEntities == null || allShopRemovalRequestsEntities.Count == 0)
+            if (allShopRemovalRequestsEntities == null || allShopRemovalRequestsEntities.Count() == 0)
                 return NotFound("There is no shop removal requests for you..");
 
             var allShopRemovalRequestsView = _mapper.Map<List<OwnerShopRemovalRequestView>>(allShopRemovalRequestsEntities);
@@ -149,37 +135,10 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--6----------------------------------------------- GET SHOP REMOVAL REQUESTS OF THE OWNER BY 'ShopName' OR 'ShopID' ------------------------------------------------- 
-
-        [HttpGet("GetShopRemovalByShop", Name = "getShopRemovalByShop")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<OwnerShopRemovalRequestView>> GetShopRemovalRequestsByShop(string GetShopRemovalByShop)
-        {
-            string userName = User.Identity.Name;
-            bool isNotNumber = !int.TryParse(GetShopRemovalByShop, out int id) && GetShopRemovalByShop != "0";
-            string type = isNotNumber ? "name" : "ID";
-
-            var ShopRemovalRequestsEntity = await _dbContext.ShopRemovalRequests
-                .Include(x => x.Owner)
-                .Include(x => x.CarWashShop)
-                .Where(x => x.Owner.UserName == userName && (x.CarWashShop.Id == id || x.CarWashShop.Name.ToUpper() == GetShopRemovalByShop.ToUpper()))
-                .FirstOrDefaultAsync();
-
-
-            if (ShopRemovalRequestsEntity == null)
-                return NotFound($"There is no shop removal requests for you under the CarWashShop {type} {GetShopRemovalByShop}..");
-
-            var ShopRemovalRequestsView = _mapper.Map<OwnerShopRemovalRequestView>(ShopRemovalRequestsEntity);
-
-            return Ok(ShopRemovalRequestsView);
-        }
-
-
-
         //--7---------------------------------- ADD NEW OWNERS TO CAR WASH SHOP IN USER'S POSSESSION BY 'ShopName' ------------------------------ 
 
-        [HttpPost("AddOwnerToTheCarWashShopByShopNameOrShopId", Name = "addOwnerToTheCarWashShopByShopNameOrShopId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("AddOwnerToTheCarWashShopByShopNameID", Name = "addOwnerToTheCarWashShopByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult<CarWashShopView>> Post([FromBody] CarWashShopOwnerAdd newOwners)
         {
             string userName = User.Identity.Name;
@@ -232,8 +191,8 @@ namespace CarWashShopAPI.Controllers
 
         //--8---------------------------------- REQUEST OWNER REMOVAL FROM THE CAR WASH SHOP ------------------------------ 
 
-        [HttpPost("OwnerRemovalRequest", Name = "ownerRemovalRequest")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("RequestOwnerRemoval", Name = "requestOwnerRemoval")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult> PostOwnerRemovalRequest([FromBody] OwnerRemovalRequestCreation ownerRemovalRequest)
         {
             string userName = User.Identity.Name;
@@ -283,8 +242,8 @@ namespace CarWashShopAPI.Controllers
 
         //--9----------------------------------------------- APPROVE TO BE DISBANDED AS THE OWNER OF THE SHOP ------------------------------------------------- 
 
-        [HttpPut("ApproveDisbandFromTheShop", Name = "approveDisbandFromTheShop")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("ApproveDisbandFromTheShopByShopNameID", Name = "approveDisbandFromTheShopByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult> ApproveDisbandFromShop(string ApproveDisbandFromTheShop)
         {
             string userName = User.Identity.Name;
@@ -311,8 +270,8 @@ namespace CarWashShopAPI.Controllers
 
         //--10----------------------------------------------- APPROVE CAR WASH SHOP REMOVAL BY 'ShopName' OR 'ShopID' ------------------------------------------------- 
 
-        [HttpPut("ApproveShopRemovalByShopNameOrID", Name = "ApproveShopRemovalByShopNameOrID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPut("ApproveShopRemovalByShopNameID", Name = "ApproveShopRemovalByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult> ApproveShopRemoval(string ApproveShopRemovalByShopNameOrID)
         {
             string userName = User.Identity.Name;
@@ -322,15 +281,11 @@ namespace CarWashShopAPI.Controllers
             var shopRemovalRequest = await _dbContext.ShopRemovalRequests
             .Include(x => x.Owner)
             .Include(x => x.CarWashShop)
-            .Where(x => x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == ApproveShopRemovalByShopNameOrID.ToUpper())
+            .Where(x => (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == ApproveShopRemovalByShopNameOrID.ToUpper()) && !x.IsApproved && x.Owner.UserName == userName)
             .ToListAsync();
 
             if (shopRemovalRequest.Count == 0)
-                return NotFound($"CarWashShop with {type} '{ApproveShopRemovalByShopNameOrID}' doesn't exist..");
-
-            bool isOwner = shopRemovalRequest.Any(x => x.Owner.UserName.Contains(userName));
-            if (!isOwner)
-                return BadRequest("You are not authorized to cancel this request..");
+                return NotFound($"there is no removal requests for the car wash shop with {type} '{ApproveShopRemovalByShopNameOrID}'..");
 
             var requestToApprove = shopRemovalRequest.FirstOrDefault(x => x.Owner.UserName == userName);
             requestToApprove.IsApproved = true;
@@ -345,8 +300,8 @@ namespace CarWashShopAPI.Controllers
 
         //--11----------------------------------------------- CANCEL CAR WASH SHOP REMOVAL REQUEST BY 'ShopName' OR 'ShopID' ------------------------------------------------- 
 
-        [HttpDelete("CancelShopRemovalByShopNameOrID", Name = "cancelShopRemovalByShopNameOrID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpDelete("CancelShopRemovalByShopNameID", Name = "cancelShopRemovalByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
         public async Task<ActionResult> CancelShopRemovalRequest(string CancelShopRemovalByShopNameOrID)
         {
             string userName = User.Identity.Name;

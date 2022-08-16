@@ -10,7 +10,7 @@ namespace CarWashShopAPI
 
         public DbSet<CarWashShop> CarWashsShops { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
         public DbSet<CarWashShopsServices> CarWashShopsServices { get; set; }
         public DbSet<OwnerRemovalRequest> OwnerRemovalRequests { get; set; }
