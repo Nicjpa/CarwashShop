@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
+using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
@@ -21,46 +22,62 @@ namespace CarWashShopAPI.Controllers
     {
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly List<string> _userIds;
 
         public CarWashShopController(CarWashDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _userIds = _dbContext.Users.Select(x => x.Id).ToList();
         }
 
-        //--1------------------------------ GET ALL EXISTING SHOPS IN IN USER'S POSSESSION  ----------------------
+        //--1------------------------------ GET ALL EXISTING SHOPS WITH OR WITHOUT FILTERS IN IN USER'S POSSESSION  ---------------------- 
 
         [HttpGet("ListShopsInYourPossession", Name = "listShopsInYourPossession")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<CarWashShopView>>> GetAllShopsInPossession()
+        public async Task<ActionResult<List<CarWashShopView>>> GetAllShopsInPossession([FromQuery] CarWashFilter shopFilter)
         {
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
-            var carShopEntities = await _dbContext.CarWashShopsOwners
+            string userName = User.Identity.Name;
+            var carShopEntities = _dbContext.CarWashShopsOwners
                 .Include(x => x.CarWashShop)
                 .ThenInclude(a => a.CarWashShopsServices)
                 .ThenInclude(b => b.Service)
-                .Where(x => x.OwnerId == ownerId).ToListAsync();
+                .Include(x => x.Owner)
+                .Where(x => x.Owner.UserName == userName).AsQueryable();
 
             var carWashShop = carShopEntities.Select(x => x.CarWashShop);
             if (carWashShop == null || carWashShop.Count() == 0)
-                return Ok("You didn't create any CarWashShop yet..");
+                return NotFound("You didn't create any CarWashShop yet..");
 
+            if (!string.IsNullOrWhiteSpace(shopFilter.Name))
+                carWashShop = carWashShop.Where(x => x.Name.Contains(shopFilter.Name));
+
+            if (!string.IsNullOrWhiteSpace(shopFilter.AdvertisingDescription))
+                carWashShop = carWashShop.Where(x => x.AdvertisingDescription.Contains(shopFilter.AdvertisingDescription));
+
+            if (shopFilter.MinimumAmountOfWashingUnits != null)
+                carWashShop = carWashShop.Where(x => x.AmountOfWashingUnits >= shopFilter.MinimumAmountOfWashingUnits);
+
+            if (shopFilter.RequiredAndEarlierOpeningTime != null)
+                carWashShop = carWashShop.Where(x => x.OpeningTime <= shopFilter.RequiredAndEarlierOpeningTime);
+
+            if (shopFilter.RequiredAndLaterClosingTime != null)
+                carWashShop = carWashShop.Where(x => x.ClosingTime >= shopFilter.RequiredAndLaterClosingTime);
+
+            if (!string.IsNullOrWhiteSpace(shopFilter.ServiceNameOrDescription))
+                carWashShop = carWashShop
+                    .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.Contains(shopFilter.ServiceNameOrDescription) 
+                             || x.Service.Description.Contains(shopFilter.ServiceNameOrDescription)));
+
+            if (carWashShop == null || carWashShop.Count() == 0)
+                return NotFound("There is no CarWashShop with specified filter parameters..");
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(carWashShop);
-            var servicesView = _mapper.Map<List<CarWashShopView>>(carShopEntities);
 
-            for (int i = 0; i < shopsView.Count; i++)
-            {
-                shopsView[i].Services = servicesView[i].Services;
-            }
             return Ok(shopsView);
         }
 
 
 
-        //--2------------------------------ GET EXISTING SHOP BY 'ShopName' OR 'ShopID' IN USER'S POSSESSION  ----------------------
+        //--2------------------------------ GET EXISTING SHOP BY 'ShopName' OR 'ShopID' IN USER'S POSSESSION  ---------------------- 
 
         [HttpGet("GetYourShopByNameOrId", Name = "getYourShopByNameOrId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -69,98 +86,49 @@ namespace CarWashShopAPI.Controllers
             bool isNotNumber = !int.TryParse(GetYourShopByNameOrId, out int id) && GetYourShopByNameOrId != "0";
             string type = isNotNumber ? "name" : "ID";
 
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
+            string userName = User.Identity.Name;
             var carShopEntities = await _dbContext.CarWashShopsOwners
                 .Include(x => x.CarWashShop)
                 .ThenInclude(a => a.CarWashShopsServices)
                 .ThenInclude(b => b.Service)
-                .FirstOrDefaultAsync(x => x.OwnerId == ownerId && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == GetYourShopByNameOrId.ToUpper()));
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Owner.UserName == userName && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == GetYourShopByNameOrId.ToUpper()));
 
             if (carShopEntities == null)
                 return NotFound($"You don't have any CarWashShop with {type} '{GetYourShopByNameOrId}'..");
 
             var carWashShop = carShopEntities.CarWashShop;
             var shopsView = _mapper.Map<CarWashShopView>(carWashShop);
-            var servicesView = _mapper.Map<CarWashShopView>(carShopEntities);
-            shopsView.Services = servicesView.Services;
 
             return Ok(shopsView);
         }
 
 
 
-        //--3------------------------------ GET LIST OF OWNERS FOR EACH SHOP IN USER'S POSSESSION  ----------------------
-
-        [HttpGet("ListOwnersForEachShopInPossession", Name = "listOwnersForEachShopInPossession")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<OwnersViewPerShop>>> ListAllOwnersPerShop()
-        {
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
-            var carShopsOwnersEntities = await _dbContext.CarWashShopsOwners
-                .Include(x => x.CarWashShop)
-                .ThenInclude(x => x.Owners)
-                .Where(x => x.OwnerId == ownerId).ToListAsync();
-
-            var carWashShop = carShopsOwnersEntities.Select(x => x.CarWashShop);
-            if (carWashShop == null || carWashShop.Count() == 0)
-                return Ok("You don't have any CarWashShop created..");
-
-            var ownersView = _mapper.Map<List<OwnersViewPerShop>>(carWashShop);
-
-            return Ok(ownersView);
-        }
-
-
-
-
-        //PROVERI NA OVOM KONTROLERU
-        //--4------------------------------ GET LIST OF OWNERS FOR THE SHOP IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ----------------------
-
-        [HttpGet("ListOwnersByShopNameOrShopId", Name = "listOwnersByShopNameOrShopId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<OwnersViewPerShop>> ListOwnersByShopNameOrId(string ListOwnersByShopNameOrShopId)
-        {
-            bool isNotNumber = !int.TryParse(ListOwnersByShopNameOrShopId, out int id) && ListOwnersByShopNameOrShopId != "0";
-            string type = isNotNumber ? "name" : "ID";
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
-
-            var carWashShopEntity = await _dbContext.CarWashsShops
-                .Include(x => x.Owners)
-                .FirstOrDefaultAsync(x => x.Owners.Select(x => x.OwnerId).Contains(ownerId) && (x.Id == id || x.Name.ToUpper() == ListOwnersByShopNameOrShopId.ToUpper()));
-
-            if (carWashShopEntity == null)
-                return NotFound($"You don't have any CarWashShop with {type} '{ListOwnersByShopNameOrShopId}'..");
-
-            var ownerView = _mapper.Map<OwnersViewPerShop>(carWashShopEntity);
-
-            return Ok(ownerView);
-        }
-
-
-
-        //--5------------------------------ CREATE NEW SHOP BOUND TO THE EXISTING USER --------------------------------------
+        //--3------------------------------ CREATE NEW SHOP WITH SERVICES BOUND TO THE EXISTING USER -------------------------------------- 
 
         [HttpPost("CreateYourShop", Name = "createYourShop")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Post([FromBody] CarWashShopCreation shopCreation)
         {
-
             if (shopCreation.CarWashShopsOwners.Contains(null))
                 return BadRequest("Each added shop owner must have name");
+            else
+                shopCreation.CarWashShopsOwners.ConvertAll(x => x.ToLower());
+
             if (shopCreation.Services == null || shopCreation.Services.Count == 0)
                 return BadRequest("Your shop needs to have at least one washing service..");
 
-            shopCreation.CarWashShopsOwners = shopCreation.CarWashShopsOwners.ConvertAll(x => x.ToUpper());
-            string ownerName = User.Identity.Name.ToUpper();
+            string userName = User.Identity.Name;
 
-            if (!shopCreation.CarWashShopsOwners.Contains(ownerName))
-                shopCreation.CarWashShopsOwners.Add(ownerName);
+            if (!shopCreation.CarWashShopsOwners.Contains(userName))
+                shopCreation.CarWashShopsOwners.Add(userName);
 
             var carWashShopEntity = new CarWashShop();
 
             try
             {
-                var userIDs = await _dbContext.Users.Where(x => shopCreation.CarWashShopsOwners.Contains(x.NormalizedUserName)).Select(x => x.Id).ToListAsync();
+                var userIDs = await _dbContext.Users.Where(x => shopCreation.CarWashShopsOwners.Contains(x.UserName)).Select(x => x.Id).ToListAsync();
 
                 var services = _mapper.Map<List<Service>>(shopCreation.Services);
                 _dbContext.Services.AddRange(services);
@@ -187,7 +155,7 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--6---------------------------------- UPDATE SHOP'S GENERAL INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' -------------------------------
+        //--4---------------------------------- UPDATE SHOP'S GENERAL INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ------------------------------- 
 
         [HttpPut("UpdateShopInfoByShopNameOrId", Name = "updateShopInfoByShopNameOrId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -196,10 +164,11 @@ namespace CarWashShopAPI.Controllers
             bool isNotNumber = !int.TryParse(UpdateShopInfoByShopNameOrId, out int id) && UpdateShopInfoByShopNameOrId != "0";
             string type = isNotNumber ? "name" : "ID";
 
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
+            string userName = User.Identity.Name;
             var ShopOwners = await _dbContext.CarWashShopsOwners
                 .Include(x => x.CarWashShop)
-                .FirstOrDefaultAsync(x => x.OwnerId == ownerId && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == UpdateShopInfoByShopNameOrId.ToUpper()));
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Owner.UserName == userName && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == UpdateShopInfoByShopNameOrId.ToUpper()));
 
             if (ShopOwners == null)
                 return NotFound($"You don't have any CarWashShop with {type} '{UpdateShopInfoByShopNameOrId}'..");
@@ -214,17 +183,17 @@ namespace CarWashShopAPI.Controllers
                 if (ex.InnerException.Message.Contains("Cannot insert duplicate key row"))
                     return BadRequest($"Cannot change the name to '{shopUpdate.Name}', because a CarWashShop with that name already exists..");
 
-                return BadRequest("Your entries or entry formats are incorrect..");
+                return BadRequest("Your entries or are incorrect..");
             }
 
-            var carShopView = _mapper.Map<CarWashShopView>(carShopEntity);
+            var carShopView = _mapper.Map<CarWashShopUpdate>(carShopEntity);
 
             return Ok(carShopView);
         }
 
 
 
-        //--7---------------------------------- PATCH CERTAIN SHOP'S INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' -------------------------------
+        //--5---------------------------------- PATCH CERTAIN SHOP'S INFO IN USER'S POSSESSION BY 'ShopName' OR 'ShopID' ------------------------------- 
 
         [HttpPatch("PatchShopInfoByShopNameOrId", Name = "patchShopInfoByShopNameOrId")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -235,12 +204,12 @@ namespace CarWashShopAPI.Controllers
             bool isNotNumber = !int.TryParse(PatchShopInfoByShopNameOrId, out int id) && PatchShopInfoByShopNameOrId != "0";
             string type = isNotNumber ? "name" : "ID";
 
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
+            string userName = User.Identity.Name;
             var ShopOwners = await _dbContext.CarWashShopsOwners
                 .Include(x => x.CarWashShop)
-                .FirstOrDefaultAsync(x => x.OwnerId == ownerId && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == PatchShopInfoByShopNameOrId.ToUpper()));
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Owner.UserName == userName && (x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == PatchShopInfoByShopNameOrId.ToUpper()));
 
-            
             if (ShopOwners == null)
                 return NotFound($"You don't have any CarWashShop with {type} '{PatchShopInfoByShopNameOrId}'..");
             var carShopEntity = ShopOwners.CarWashShop;
@@ -260,92 +229,62 @@ namespace CarWashShopAPI.Controllers
 
 
 
-        //--8---------------------------------- ADD NEW OWNERS TO CAR WASH SHOP IN USER'S POSSESSION BY 'ShopName' ----------------------------------------------------
+        //--6----------------------------------------------- REMOVE CAR WASH SHOP ------------------------------------------------- 
 
-        [HttpPost("AddOwnerToTheCarWashShopByShopNameOrShopId", Name = "addOwnerToTheCarWashShopByShopNameOrShopId")]
+        [HttpDelete("DeleteCarWashShop", Name = "deleteCarWashShop")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<CarWashShopView>> Post([FromBody] CarWashShopOwnerAdd newOwners)
+        public async Task<ActionResult> DeleteCarWashShop([FromBody] CarWashShopRemovalRequestCreation cwShopRemovalRequest)
         {
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
+            string userName = User.Identity.Name;
+
+            bool isRequestMadeAlready = _dbContext.ShopRemovalRequests.Include(x => x.CarWashShop).Any(x => x.CarWashShop.Name.ToUpper() == cwShopRemovalRequest.CarWashShopName.ToUpper());
+            if (isRequestMadeAlready)
+                return BadRequest($"Removal request is already made for the '{cwShopRemovalRequest.CarWashShopName}'");
 
             var carWashShop = await _dbContext.CarWashsShops
+                .Include(x => x.CarWashShopsServices)
+                .ThenInclude(x => x.Service)
                 .Include(x => x.Owners)
-                .FirstOrDefaultAsync(x => x.Name.ToUpper() == newOwners.CarWashShopName.ToUpper());
+                .ThenInclude(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Name == cwShopRemovalRequest.CarWashShopName && x.Owners.Select(x => x.Owner.UserName).Contains(userName));
+
             if (carWashShop == null)
-                return NotFound($"CarWashShop with name '{newOwners.CarWashShopName}' doesn't exist..");
+                return BadRequest($"There is no CarWashShop '{carWashShop.Name}' in your possession..");
 
-            var currentOwnerList = carWashShop.Owners.Select(x => x.OwnerId).ToList();
-            if (!currentOwnerList.Contains(ownerId))
-                return BadRequest($"You don't have access to '{newOwners.CarWashShopName}'..");
+            string userId = carWashShop.Owners.Where(x => x.Owner.UserName == userName).Select(x => x.Owner.Id).FirstOrDefault();
 
-            var userIds = _dbContext.Users.Where(x => newOwners.OwnerUserName.Contains(x.NormalizedUserName)).Select(x => x.Id);
-            var userClaims = await _dbContext.UserClaims.Where(x => userIds.Contains(x.UserId) && x.ClaimValue == "Owner").ToListAsync();
-            var usersWithOwnerClaimRole = userClaims.Select(x => x.UserId);
+            int amountOfOwners = carWashShop.Owners.Count();
 
-            newOwners.OwnerUserName = newOwners.OwnerUserName.ConvertAll(x => x.ToUpper());
-            string statusReport = string.Empty;
-            StringBuilder sb = new StringBuilder();
-
-            
-            var legitOwnersList = new List<CarWashShopsOwners>();
-           
-            foreach (string owner in newOwners.OwnerUserName)
+            if (amountOfOwners > 1)
             {
-                if (currentOwnerList.Select(x => x.GetUserName()).Contains(owner.ToUpper()))
+                var OwnersIDs = carWashShop.Owners.Where(x => x.Owner.UserName != userName).Select(x => x.Owner.Id).ToList();
+                var cwShopRemovalRequestList = new List<CarWashShopRemovalRequest>();
+
+                OwnersIDs.ForEach(x => cwShopRemovalRequestList.Add(new CarWashShopRemovalRequest()
                 {
-                    sb.AppendLine($" * '{owner}' is already shop owner *");
-                }
-                else if (usersWithOwnerClaimRole.Select(x => x.GetUserName()).Contains(owner.ToUpper()))
-                {
-                    legitOwnersList.Add(new CarWashShopsOwners() { CarWashShopId = carWashShop.Id, OwnerId = owner });
-                    sb.AppendLine($" * '{owner}' is successfully added among other shop owners *");
-                }
-                else
-                {
-                    sb.AppendLine($" * '{owner}' failed to be added, because it's not registered as 'Owner' *");
-                }
+                    OwnerId = x,
+                    CarWashShopId = carWashShop.Id,
+                    RequestStatement = cwShopRemovalRequest.RequestStatement
+                }));
+
+                _dbContext.ShopRemovalRequests.AddRange(cwShopRemovalRequestList);
+                await _dbContext.SaveChangesAsync();
+
+                string otherOwners = string.Empty;
+                carWashShop.Owners.ForEach(x => otherOwners += $"{x.Owner.UserName}, ");
+                otherOwners = otherOwners.Replace($"{userName}, ", "");
+
+                return Ok($"Removal request has been made, because you are sharing ownership of the '{cwShopRemovalRequest.CarWashShopName}' with {otherOwners}and now it awaits their approval..");
             }
-            
-            _dbContext.CarWashShopsOwners.AddRange(legitOwnersList);
+
+            var carWashServices = new List<Service>();
+            carWashServices = carWashShop.CarWashShopsServices.Select(x => x.Service).ToList();
+
+            _dbContext.Services.RemoveRange(carWashServices);
+            _dbContext.CarWashsShops.Remove(carWashShop);
             await _dbContext.SaveChangesAsync();
 
-            statusReport = sb.ToString();
-
-            return Ok(statusReport);
-        }
-
-
-
-        //--9---------------------------------------- ADD NEW SERVICE TO EXISTING SHOP IN USER'S POSSESSION ---------------------------------------------
-
-        [HttpPost("AddNewServiceToShopByShopNameOrShopId", Name = "addNewServiceToShopByShopNameOrShopId")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> Post(string AddNewServiceToShopByShopNameOrShopId, [FromBody] ServiceCreationView newServiceCreation)
-        {
-            string ownerId = $"{User.FindFirstValue(ClaimTypes.NameIdentifier)}{User.Identity.Name.ToUpper()}";
-            var possibleUserNames = new List<string>();
-
-            bool isNotNumber = !int.TryParse(AddNewServiceToShopByShopNameOrShopId, out int id) && AddNewServiceToShopByShopNameOrShopId != "0";
-            string type = isNotNumber ? "a name" : "ID";
-
-            var shopServiceEntity = await _dbContext.CarWashShopsServices
-                .Include(x => x.CarWashShop).ThenInclude(x => x.Owners)
-                .FirstOrDefaultAsync(x => x.CarWashShopId == id || x.CarWashShop.Name.ToUpper() == AddNewServiceToShopByShopNameOrShopId.ToUpper());
-
-            if (shopServiceEntity == null)
-                return NotFound($"There is no CarWashShop with {type} '{AddNewServiceToShopByShopNameOrShopId}'..");
-
-            shopServiceEntity.CarWashShop.Owners.ForEach(x => possibleUserNames.Add(x.OwnerId));
-            if (!possibleUserNames.Contains(ownerId))
-                return BadRequest($"You don't have access to the CarWashShop with {type} '{AddNewServiceToShopByShopNameOrShopId}'..");
-
-            var newServiceEntity = _mapper.Map<Service>(newServiceCreation);
-            shopServiceEntity.Service = newServiceEntity;
-
-            _dbContext.CarWashShopsServices.Add(shopServiceEntity);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok($"You have successfully added a NEW service '{newServiceEntity.Name}' at your '{shopServiceEntity.CarWashShop.Name}' CarWashShop.");
+            return Ok($"You have successfully removed '{carWashShop.Name}'..");
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace CarWashShopAPI.Controllers
 {
-    [Route("api/user")]
+    [Route("api/User")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -41,9 +41,8 @@ namespace CarWashShopAPI.Controllers
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, userInfo.UserName),
+                new Claim(ClaimTypes.Name, userInfo.UserName.ToLower()),
                 new Claim(ClaimTypes.Email, userInfo.UserName),
-                new Claim(ClaimTypes.NameIdentifier, userInfo.guid)
             };
 
             var identityUser = await _userManager.FindByEmailAsync(userInfo.UserName);
@@ -94,11 +93,18 @@ namespace CarWashShopAPI.Controllers
             return await CreateUser(userInfo, "Consumer");
         }
 
+        [HttpPost("CreateAdminAccount", Name = "createAdminAcc")]
+        public async Task<ActionResult<UserToken>> CreateAdminAccount([FromBody] UserInfo userInfo)
+        {
+            return await CreateUser(userInfo, "Admin");
+        }
+
         private async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo, string role)
         {
+            
             try
             {
-                var user = new CustomUser { UserName = userInfo.UserName, Email = userInfo.UserName.ToLower(), Id = $"{userInfo.guid}{userInfo.UserName.ToUpper()}" };
+                var user = new CustomUser { UserName = userInfo.UserName.ToLower(), Email = userInfo.UserName.ToLower() };
                 var result = await _userManager.CreateAsync(user, userInfo.Password);
 
                 if (result.Succeeded)

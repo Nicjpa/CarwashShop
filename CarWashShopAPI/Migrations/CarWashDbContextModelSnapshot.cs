@@ -58,6 +58,39 @@ namespace CarWashShopAPI.Migrations
                     b.ToTable("CarWashsShops");
                 });
 
+            modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopRemovalRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CarWashShopId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RequestStatement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarWashShopId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("ShopRemovalRequests");
+                });
+
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsOwners", b =>
                 {
                     b.Property<string>("OwnerId")
@@ -111,6 +144,43 @@ namespace CarWashShopAPI.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("CarWashShopAPI.Entities.OwnerRemovalRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CarWashShopId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OwnerToBeRemovedId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RequestStatement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequesterId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarWashShopId");
+
+                    b.HasIndex("OwnerToBeRemovedId");
+
+                    b.HasIndex("RequesterId");
+
+                    b.ToTable("OwnerRemovalRequests");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>
@@ -360,6 +430,25 @@ namespace CarWashShopAPI.Migrations
                     b.HasDiscriminator().HasValue("CustomUser");
                 });
 
+            modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopRemovalRequest", b =>
+                {
+                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWashShop")
+                        .WithMany()
+                        .HasForeignKey("CarWashShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarWashShopAPI.Entities.CustomUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarWashShop");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("CarWashShopAPI.Entities.CarWashShopsOwners", b =>
                 {
                     b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWashShop")
@@ -407,6 +496,29 @@ namespace CarWashShopAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("CarWashShopAPI.Entities.OwnerRemovalRequest", b =>
+                {
+                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", "CarWashShop")
+                        .WithMany()
+                        .HasForeignKey("CarWashShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarWashShopAPI.Entities.CustomUser", "OwnerToBeRemoved")
+                        .WithMany()
+                        .HasForeignKey("OwnerToBeRemovedId");
+
+                    b.HasOne("CarWashShopAPI.Entities.CustomUser", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequesterId");
+
+                    b.Navigation("CarWashShop");
+
+                    b.Navigation("OwnerToBeRemoved");
+
+                    b.Navigation("Requester");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

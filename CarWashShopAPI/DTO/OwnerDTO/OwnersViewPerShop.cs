@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CarWashShopAPI.DTO.CarWashShopDTOs
+namespace CarWashShopAPI.DTO.OwnerDTO
 {
     public class OwnersViewPerShop
     {
