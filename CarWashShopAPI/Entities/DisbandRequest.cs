@@ -1,6 +1,6 @@
 ﻿namespace CarWashShopAPI.Entities
 {
-    public class OwnerRemovalRequest
+    public class DisbandRequest
     {
         public int Id { get; set; }
         public string? RequestStatement { get; set; }

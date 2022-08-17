@@ -2,6 +2,7 @@
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.Entities;
+using CarWashShopAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,9 +28,9 @@ namespace CarWashShopAPI.Controllers
 
         //--1------------------------------ GET LIST OF OWNERS FOR EACH SHOP IN USER'S POSSESSION WITH FILTERS  ----------------------  
 
-        [HttpGet("GetAllOwnersFilteredOrByShopNameID", Name = "getAllOwnersFilteredOrByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
-        public async Task<ActionResult<List<OwnersViewPerShop>>> GetOwners([FromQuery]ListOfOwnersPerShopFilters filters)
+        [HttpGet("GetFilteredAllOwnersOrByShopNameID", Name = "getFilteredAllOwnersOrByShopNameID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult<List<ListOfOwnersPerShopView>>> GetOwners([FromQuery]ListOfOwnersPerShopFilters filters)
         {
             string userName = User.Identity.Name;
 
@@ -50,9 +51,12 @@ namespace CarWashShopAPI.Controllers
 
 
             if (carWashShopEntities == null || carWashShopEntities.Count() == 0)
-                return Ok("No car wash shop found..");
+                return NotFound("No car wash shop found..");
 
-            var ownersView = _mapper.Map<List<OwnersViewPerShop>>(carWashShopEntities);
+            await HttpContext.InsertPagination(carWashShopEntities, filters.RecordsPerPage);
+            List<CarWashShop> shopEntities = await carWashShopEntities.Paginate(filters.Pagination).ToListAsync();
+
+            var ownersView = _mapper.Map<List<ListOfOwnersPerShopView>>(shopEntities);
 
             return Ok(ownersView);
         }
@@ -62,8 +66,8 @@ namespace CarWashShopAPI.Controllers
         //--3----------------------------------------------- GET ALL DISBAND REQUESTS WITH FILTERS ------------------------------------------------- 
 
         [HttpGet("GetAllDisbandRequestsOrByShopNameID", Name = "getAllDisbandRequestsOrByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
-        public async Task<ActionResult<List<OwnerDisbandRequestView>>> GetDisbandRequests([FromQuery] OwnerRequestsFilters filters)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult<List<DisbandRequestView>>> GetDisbandRequests([FromQuery] OwnerRequestsFilters filters)
         {
             string userName = User.Identity.Name;
 
@@ -90,7 +94,10 @@ namespace CarWashShopAPI.Controllers
             if (allDisbandRequestsEntities == null || allDisbandRequestsEntities.Count() == 0)
                 return NotFound("No disband request found..");
 
-            var allDisbandRequestsView = _mapper.Map<List<OwnerDisbandRequestView>>(allDisbandRequestsEntities);
+            await HttpContext.InsertPagination(allDisbandRequestsEntities, filters.RecordsPerPage);
+            List<DisbandRequest> disbandEntities = await allDisbandRequestsEntities.Paginate(filters.Pagination).ToListAsync();
+
+            var allDisbandRequestsView = _mapper.Map<List<DisbandRequestView>>(disbandEntities);
 
             return Ok(allDisbandRequestsView);
         }
@@ -100,8 +107,8 @@ namespace CarWashShopAPI.Controllers
         //--5----------------------------------------------- GET ALL SHOP REMOVAL REQUESTS WITH FILTERS------------------------------------------------- 
 
         [HttpGet("GetAllShopRemovalRequestsOrByShopNameID", Name = "getAllShopRemovalRequestsOrByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
-        public async Task<ActionResult<List<OwnerShopRemovalRequestView>>> GetShopRemovalRequests([FromQuery] OwnerRequestsFilters filters)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult<List<ShopRemovalRequestView>>> GetShopRemovalRequests([FromQuery] OwnerRequestsFilters filters)
         {
             string userName = User.Identity.Name;
 
@@ -128,7 +135,10 @@ namespace CarWashShopAPI.Controllers
             if (allShopRemovalRequestsEntities == null || allShopRemovalRequestsEntities.Count() == 0)
                 return NotFound("There is no shop removal requests for you..");
 
-            var allShopRemovalRequestsView = _mapper.Map<List<OwnerShopRemovalRequestView>>(allShopRemovalRequestsEntities);
+            await HttpContext.InsertPagination(allShopRemovalRequestsEntities, filters.RecordsPerPage);
+            List<CarWashShopRemovalRequest> ShopRemovalEntities = await allShopRemovalRequestsEntities.Paginate(filters.Pagination).ToListAsync();
+
+            var allShopRemovalRequestsView = _mapper.Map<List<ShopRemovalRequestView>>(ShopRemovalEntities);
 
             return Ok(allShopRemovalRequestsView);
         }
@@ -138,7 +148,7 @@ namespace CarWashShopAPI.Controllers
         //--7---------------------------------- ADD NEW OWNERS TO CAR WASH SHOP IN USER'S POSSESSION BY 'ShopName' ------------------------------ 
 
         [HttpPost("AddOwnerToTheCarWashShopByShopNameID", Name = "addOwnerToTheCarWashShopByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult<CarWashShopView>> Post([FromBody] CarWashShopOwnerAdd newOwners)
         {
             string userName = User.Identity.Name;
@@ -192,8 +202,8 @@ namespace CarWashShopAPI.Controllers
         //--8---------------------------------- REQUEST OWNER REMOVAL FROM THE CAR WASH SHOP ------------------------------ 
 
         [HttpPost("RequestOwnerRemoval", Name = "requestOwnerRemoval")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
-        public async Task<ActionResult> PostOwnerRemovalRequest([FromBody] OwnerRemovalRequestCreation ownerRemovalRequest)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult> PostOwnerRemovalRequest([FromBody] DisbandRequestCreation ownerRemovalRequest)
         {
             string userName = User.Identity.Name;
             string ownerNameToRemove = ownerRemovalRequest.OwnerName.ToLower();
@@ -224,7 +234,7 @@ namespace CarWashShopAPI.Controllers
                     return BadRequest($"You don't have access to the CarWashShop '{carWashShop.Name}'..");
             }
 
-            var removalRequest = new OwnerRemovalRequest()
+            var removalRequest = new DisbandRequest()
             {
                 RequestStatement = ownerRemovalRequest.RequestStatement,
                 CarWashShopId = carWashShop.Id,
@@ -243,7 +253,7 @@ namespace CarWashShopAPI.Controllers
         //--9----------------------------------------------- APPROVE TO BE DISBANDED AS THE OWNER OF THE SHOP ------------------------------------------------- 
 
         [HttpPut("ApproveDisbandFromTheShopByShopNameID", Name = "approveDisbandFromTheShopByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult> ApproveDisbandFromShop(string ApproveDisbandFromTheShop)
         {
             string userName = User.Identity.Name;
@@ -271,7 +281,7 @@ namespace CarWashShopAPI.Controllers
         //--10----------------------------------------------- APPROVE CAR WASH SHOP REMOVAL BY 'ShopName' OR 'ShopID' ------------------------------------------------- 
 
         [HttpPut("ApproveShopRemovalByShopNameID", Name = "ApproveShopRemovalByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult> ApproveShopRemoval(string ApproveShopRemovalByShopNameOrID)
         {
             string userName = User.Identity.Name;
@@ -301,7 +311,7 @@ namespace CarWashShopAPI.Controllers
         //--11----------------------------------------------- CANCEL CAR WASH SHOP REMOVAL REQUEST BY 'ShopName' OR 'ShopID' ------------------------------------------------- 
 
         [HttpDelete("CancelShopRemovalByShopNameID", Name = "cancelShopRemovalByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult> CancelShopRemovalRequest(string CancelShopRemovalByShopNameOrID)
         {
             string userName = User.Identity.Name;

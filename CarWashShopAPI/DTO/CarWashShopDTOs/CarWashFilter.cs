@@ -1,9 +1,10 @@
-﻿using CarWashShopAPI.DTO.ServiceDTO;
-
-namespace CarWashShopAPI.DTO.CarWashShopDTOs
+﻿namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {
     public class CarWashFilter
     {
+        public int Page { get; set; } = 1;
+        public int RecordsPerPage { get; set; } = 5;
+        public PaginationDTO Pagination { get { return new PaginationDTO() { Page = Page, RecordsPerPage = RecordsPerPage }; } }
         public int? Id { get; set; }
         public string? Name { get; set; }
         public string? AdvertisingDescription { get; set; }

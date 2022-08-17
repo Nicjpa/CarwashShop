@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.DTO.BookingDTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.DTO.ServiceDTO;
@@ -31,15 +32,17 @@ namespace CarWashShopAPI.Helpers
             CreateMap<CarWashShopUpdate, CarWashShop>()
                 .ReverseMap();
 
-            CreateMap<CarWashShop, OwnersViewPerShop>()
+            CreateMap<CarWashShop, ListOfOwnersPerShopView>()
                 .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashShopOwners2OwnerView));
 
-            CreateMap<OwnerRemovalRequest, OwnerDisbandRequestView>()
+            CreateMap<DisbandRequest, DisbandRequestView>()
                 .ForMember(x => x.RequesterUserName, opt => opt.MapFrom(x => x.Requester.UserName))
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
 
-            CreateMap<CarWashShopRemovalRequest, OwnerShopRemovalRequestView>()
+            CreateMap<CarWashShopRemovalRequest, ShopRemovalRequestView>()
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
+
+            CreateMap<BookingCreation, Booking>();
         }
 
         private List<ServiceView> CarWashShopsOwners2CarWashShopView(CarWashShop entity, CarWashShopView view)
@@ -51,7 +54,7 @@ namespace CarWashShopAPI.Helpers
             return result;
         }
 
-        private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, OwnersViewPerShop view)
+        private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, ListOfOwnersPerShopView view)
         {
             var result = new List<string>();
             entity.Owners.ForEach(x => result.Add( x.Owner.UserName));

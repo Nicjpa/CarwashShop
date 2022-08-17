@@ -2,7 +2,7 @@
 
 namespace CarWashShopAPI.DTO.OwnerDTO
 {
-    public class OwnersViewPerShop
+    public class ListOfOwnersPerShopView
     {
         public int Id { get; set; }
         public string Name { get; set; }

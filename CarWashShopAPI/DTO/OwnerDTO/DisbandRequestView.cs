@@ -2,7 +2,7 @@
 
 namespace CarWashShopAPI.DTO.OwnerDTO
 {
-    public class OwnerDisbandRequestView
+    public class DisbandRequestView
     {
         public string CarWashShopName { get; set; }
         public string? RequestStatement { get; set; }

@@ -1,5 +1,6 @@
 using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
+using CarWashShopAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ namespace CarWashShopAPI
 
             // Add services to the container.
             builder.Services.AddDbContext<CarWashDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
+
+            builder.Services.AddScoped<ICarWashRepository, CarWashRepository>();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -40,8 +43,8 @@ namespace CarWashShopAPI
             builder.Services.AddAuthorization(options => 
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("Owner", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Owner")));
-                options.AddPolicy("Consumer", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Consumer")));
+                options.AddPolicy("OwnerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Owner")));
+                options.AddPolicy("ConsumerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Consumer")));
             });
 
             builder.Services.AddSwaggerGen(c =>

@@ -13,8 +13,9 @@ namespace CarWashShopAPI
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
         public DbSet<CarWashShopsServices> CarWashShopsServices { get; set; }
-        public DbSet<OwnerRemovalRequest> OwnerRemovalRequests { get; set; }
+        public DbSet<DisbandRequest> OwnerRemovalRequests { get; set; }
         public DbSet<CarWashShopRemovalRequest> ShopRemovalRequests { get; set; }
+        public DbSet<CustomUser> CustomUsers { get; set; }
 
 
 

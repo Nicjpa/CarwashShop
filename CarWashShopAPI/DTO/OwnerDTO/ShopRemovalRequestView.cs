@@ -1,6 +1,6 @@
 ﻿namespace CarWashShopAPI.DTO.OwnerDTO
 {
-    public class OwnerShopRemovalRequestView
+    public class ShopRemovalRequestView
     {
         public int CarWashShopId { get; set; }
         public string CarWashShopName { get; set; }

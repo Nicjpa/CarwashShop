@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
+using CarWashShopAPI.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,8 +30,8 @@ namespace CarWashShopAPI.Controllers
 
         //--1---------------------------------------- GET ALL SERVICES WITH FILTERS OR BY 'ServiceId' ASSIGNED TO CAR WASH SHOPS IN OWNER'S POSSESSION -------------------------------------------
 
-        [HttpGet("GetAllServicesFilteredOrByID", Name = "getAllServicesWithFiltersOrByID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [HttpGet("GetFilteredAllServicesOrByID", Name = "getFilteredAllServicesOrByID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult<List<ServiceViewWithShopAssigned>>> Get([FromQuery] FilterServices filterServices)
         {
             string userName = User.Identity.Name;
@@ -39,7 +41,9 @@ namespace CarWashShopAPI.Controllers
                 .ThenInclude(x => x.CarWashShop)
                 .ThenInclude(x => x.Owners)
                 .ThenInclude(x => x.Owner)
-                .Where(x => x.CarWashShops.Any(x => x.CarWashShop.Owners.Any(x => x.Owner.UserName == userName))).AsQueryable();
+                .Where(x => x.CarWashShops.Any(x => x.CarWashShop.Owners.Any(x => x.Owner.UserName == userName)))
+                .OrderBy(x => x.Name)
+                .AsQueryable();
 
             if(serviceEntities.Count() == 0 || serviceEntities == null)
                 return NotFound("You didn't create any CarWashShop with services yet..");
@@ -69,7 +73,10 @@ namespace CarWashShopAPI.Controllers
             if (serviceEntities == null || serviceEntities.Count() == 0)
                 return NotFound("There is no Service with specified filter parameters..");
 
-            var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(serviceEntities);
+            await HttpContext.InsertPagination(serviceEntities, filterServices.RecordsPerPage);
+            List<Service> shopEntities = await serviceEntities.Paginate(filterServices.Pagination).ToListAsync();
+
+            var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(shopEntities);
 
             return Ok(allServicesView);
         }
@@ -79,7 +86,7 @@ namespace CarWashShopAPI.Controllers
         //--2---------------------------------------- ADD NEW SERVICE TO EXISTING SHOP IN USER'S POSSESSION -------------------------------------------
 
         [HttpPost("AddNewServiceToShopByShopNameID", Name = "addNewServiceToShopByShopNameID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult> Post(string AddNewServiceToShopByShopNameOrShopID, [FromBody] ServiceCreationAndUpdate newServiceCreation)
         {
             string userName = User.Identity.Name;
@@ -108,6 +115,8 @@ namespace CarWashShopAPI.Controllers
             _dbContext.CarWashShopsServices.Add(shopServiceEntity);
             await _dbContext.SaveChangesAsync();
 
+            var newShopCreated = _mapper.Map<ServiceView>(newServiceEntity);
+
             return Ok($"You have successfully added a NEW service '{newServiceEntity.Name}' at your '{shopServiceEntity.CarWashShop.Name}' CarWashShop.");
         }
 
@@ -116,7 +125,7 @@ namespace CarWashShopAPI.Controllers
         //--3---------------------------------------- UPDATE SERVICE ON EXISTING SHOP IN USER'S POSSESSION BY 'ServiceID' -------------------------------------------
 
         [HttpPut("UpdateShopServiceByID", Name = "updateShopServiceByID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult<ServiceView>> Put(int UpdateShopServiceByID, [FromBody] ServiceCreationAndUpdate serviceUpdate)
         {
             string userName = User.Identity.Name;
@@ -146,7 +155,7 @@ namespace CarWashShopAPI.Controllers
         //--3---------------------------------------- PATCH SERVICE ON EXISTING SHOP IN USER'S POSSESSION BY 'ServiceID' -------------------------------------------
 
         [HttpPatch("PatchShopServiceByID", Name = "patchShopServiceByID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult<ServiceView>> Patch(int PatchShopServiceByID, [FromBody] JsonPatchDocument<ServiceCreationAndUpdate> serviceUpdate)
         {
             string userName = User.Identity.Name;
@@ -182,7 +191,7 @@ namespace CarWashShopAPI.Controllers
         //--4---------------------------------------- DELETE SERVICE FROM EXISTING SHOP IN USER'S POSSESSION BY 'ServiceID' -------------------------------------------
 
         [HttpDelete("DeleteServiceByID", Name = "deleteServiceByID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "Owner")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
         public async Task<ActionResult> Delete(int DeleteServiceById)
         {
             string userName = User.Identity.Name;
