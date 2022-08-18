@@ -9,6 +9,7 @@ namespace CarWashShopAPI.Entities
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Address { get; set; }
+        public string? ContactPhone { get; set; }
         public string? Picture { get; set; }
 
     }

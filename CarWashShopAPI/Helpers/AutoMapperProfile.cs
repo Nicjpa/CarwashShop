@@ -4,6 +4,7 @@ using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
+using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Helpers
 {
@@ -43,6 +44,41 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
 
             CreateMap<BookingCreation, Booking>();
+
+            CreateMap<Booking, BookingViewConsumerSide>()
+                .ForMember(x => x.ScheduledDate, opt => opt.MapFrom(x => x.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")))
+                .ForMember(x => x.ScheduledTime, opt => opt.MapFrom(x => x.ScheduledDateTime.Hour.ToString() + ":00"))
+                .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Service.Price))
+                .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name))
+                .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name))
+                .ForMember(x => x.IsConfirmed, opt => opt.MapFrom(IsConfirmedConsumerSide));
+
+            CreateMap<Booking, BookingViewOwnerSide>()
+                .ForMember(x => x.ScheduledDate, opt => opt.MapFrom(x => x.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")))
+                .ForMember(x => x.ScheduledTime, opt => opt.MapFrom(x => x.ScheduledDateTime.Hour.ToString() + ":00"))
+                .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Service.Price))
+                .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name))
+                .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name))
+                .ForMember(x => x.IsConfirmed, opt => opt.MapFrom(IsConfirmedOwnerSide))
+                .ForMember(x => x.ConsumerUsername, opt => opt.MapFrom(x => x.Consumer.UserName))
+                .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Consumer.Email))
+                .ForMember(x => x.ContactPhone, opt => opt.MapFrom(x => x.Consumer.ContactPhone));
+        }
+
+        private bool IsConfirmedConsumerSide(Booking entity, BookingViewConsumerSide view)
+        {
+            bool isConfirmed;
+            if (entity.BookingStatus == BookingStatus.Confirmed) { isConfirmed = true; } 
+            else { isConfirmed = false; }   
+            return isConfirmed;
+        }
+
+        private bool IsConfirmedOwnerSide(Booking entity, BookingViewOwnerSide view)
+        {
+            bool isConfirmed;
+            if (entity.BookingStatus == BookingStatus.Confirmed) { isConfirmed = true; }
+            else { isConfirmed = false; }
+            return isConfirmed;
         }
 
         private List<ServiceView> CarWashShopsOwners2CarWashShopView(CarWashShop entity, CarWashShopView view)

@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
-using CarWashShopAPI.DTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
-using CarWashShopAPI.DTO.OwnerDTO;
-using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
-using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Text;
+
 
 namespace CarWashShopAPI.Controllers
 {
@@ -45,7 +38,7 @@ namespace CarWashShopAPI.Controllers
             if (carWashShops == null || carWashShops.Count() == 0)
                 return NotFound("You didn't create any CarWashShop yet..");
 
-            carWashShops = await _carWashShopRepository.FilterTheQuery(carWashShops, shopFilter);
+            carWashShops = await _carWashShopRepository.QueryFilter(carWashShops, shopFilter);
 
             if (carWashShops == null || carWashShops.Count() == 0)
                 return NotFound("There is no CarWashShop with specified filter parameters..");
@@ -80,7 +73,16 @@ namespace CarWashShopAPI.Controllers
 
             try
             {
-                var userIDs = await _dbContext.Users.Where(x => shopCreation.CarWashShopsOwners.Contains(x.UserName)).Select(x => x.Id).ToListAsync();
+                var userIDs = await _dbContext.Users
+                    .Where(x => shopCreation.CarWashShopsOwners.Contains(x.UserName))
+                    .Select(x => x.Id)
+                    .ToListAsync();
+
+                var approvedOwnersIDs = await _dbContext.UserClaims
+                    .Where(x => userIDs
+                    .Contains(x.UserId) && x.ClaimValue == "Owner")
+                    .Select(x => x.UserId)
+                    .ToListAsync();
 
                 var services = _mapper.Map<List<Service>>(shopCreation.Services);
                 _dbContext.Services.AddRange(services);
@@ -88,7 +90,7 @@ namespace CarWashShopAPI.Controllers
 
                 carWashShopEntity = _mapper.Map<CarWashShop>(shopCreation);
                 carWashShopEntity.Owners = new List<CarWashShopsOwners>();
-                userIDs.ForEach(x => carWashShopEntity.Owners.Add(new CarWashShopsOwners { OwnerId = x }));
+                approvedOwnersIDs.ForEach(x => carWashShopEntity.Owners.Add(new CarWashShopsOwners { OwnerId = x }));
                 services.ForEach(x => carWashShopEntity.CarWashShopsServices.Add(new CarWashShopsServices() { ServiceId = x.Id }));
 
                 _dbContext.CarWashsShops.Add(carWashShopEntity);

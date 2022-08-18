@@ -31,23 +31,28 @@ namespace CarWashShopAPI.Controllers
         //--1---------------------------------------- GET ALL SERVICES WITH FILTERS OR BY 'ServiceId' ASSIGNED TO CAR WASH SHOPS IN OWNER'S POSSESSION -------------------------------------------
 
         [HttpGet("GetFilteredAllServicesOrByID", Name = "getFilteredAllServicesOrByID")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<ServiceViewWithShopAssigned>>> Get([FromQuery] FilterServices filterServices)
         {
             string userName = User.Identity.Name;
+            var userRole = User.Claims.ToList()[2].Value;
 
             var serviceEntities = _dbContext.Services
                 .Include(x => x.CarWashShops)
                 .ThenInclude(x => x.CarWashShop)
                 .ThenInclude(x => x.Owners)
                 .ThenInclude(x => x.Owner)
-                .Where(x => x.CarWashShops.Any(x => x.CarWashShop.Owners.Any(x => x.Owner.UserName == userName)))
                 .OrderBy(x => x.Name)
                 .AsQueryable();
 
-            if(serviceEntities.Count() == 0 || serviceEntities == null)
-                return NotFound("You didn't create any CarWashShop with services yet..");
+            if(userRole == "Owner")
+            {
+                serviceEntities = serviceEntities.Where(x => x.CarWashShops.Any(x => x.CarWashShop.Owners.Any(x => x.Owner.UserName == userName)));
 
+                if (serviceEntities.Count() == 0 || serviceEntities == null)
+                    return NotFound("You didn't create any CarWashShop with services yet..");
+            }
+            
             if (filterServices.ServiceID != null)
             {
                 serviceEntities = serviceEntities.Where(x => x.Id == filterServices.ServiceID);

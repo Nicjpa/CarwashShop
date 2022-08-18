@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.DTO.BookingDTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.Entities;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Controllers
 {
@@ -168,8 +170,7 @@ namespace CarWashShopAPI.Controllers
             var PotentialOwnersUserNames = newOwners.OwnerUserName.ConvertAll(x => x.ToLower());
 
             var PotentialOwnersIDs = await _dbContext.Users
-                .Where(x => PotentialOwnersUserNames
-                .Contains(x.UserName))
+                .Where(x => PotentialOwnersUserNames.Contains(x.UserName))
                 .Select(x => x.Id)
                 .ToListAsync();
 
@@ -339,10 +340,147 @@ namespace CarWashShopAPI.Controllers
 
 
 
-       
+        //--12----------------------------------------------- CONFIRM OR REJECT BOOKING FOR THE CAR WASH SERVICE FOR THE OWNER'S SHOP BY 'BookingID' -------------------------------------------------
+
+        [HttpPut("ConfirmRejectBooking")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult> Put(int id, [FromQuery] BookingStatus status)
+        {
+            string userName = User.Identity.Name;
+
+            var bookingEntity = await _dbContext.Bookings
+                .Include(x => x.CarWashShop)
+                .ThenInclude(x => x.Owners)
+                .FirstOrDefaultAsync(x => x.Id == id && x.CarWashShop.Owners.Select(x => x.Owner.UserName).Contains(userName));
+
+            if (bookingEntity == null)
+                return NotFound($"There is no booking for your car wash shop with ID '{id}'");
+
+            if (DateTime.Now.AddHours(1) > bookingEntity.ScheduledDateTime)
+                return BadRequest("It needs to be at least 1 hour prior to the booking scheduled time");
+
+            bookingEntity.BookingStatus = status;
+
+            _dbContext.Entry(bookingEntity).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+
+            return Ok($"You have {bookingEntity.BookingStatus} booking with ID: '{id}'");
+        }
+
+
+        //--13-----------------------------------------------FILTERED GET ALL BOOKINGS FOR ALL SHOPS IN POSSESSION OR FOR CERTAIN SHOP BY 'ShopID' -------------------------------------------------
+
+        [HttpGet("GetAllBookingsOrByShopID", Name = "getAllBookingsOrByShopID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        public async Task<ActionResult<List<BookingViewOwnerSide>>> GetAllBookings([FromQuery] BookingFilters bookingFilter)
+        {
+            string userName = User.Identity.Name;
+
+            var bookingsEntity = _dbContext.Bookings
+                .Include(x => x.CarWashShop)
+                .ThenInclude(x => x.Owners)
+                .Include(x => x.Service)
+                .Include(x => x.Consumer)
+                .OrderBy(x => x.ScheduledDateTime)
+                .Where(x => x.CarWashShop.Owners.Select(x => x.Owner.UserName).Contains(userName))
+                .AsQueryable();
+
+            if (bookingFilter.BookingID != null)
+            {
+                bookingsEntity = bookingsEntity.Where(x => x.Id == bookingFilter.BookingID);
+            }
+            else
+            {
+                if (bookingFilter.CarWashShopID != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.CarWashShopId == bookingFilter.CarWashShopID);
+
+                if (bookingFilter.ServiceID != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ServiceId == bookingFilter.ServiceID);
+
+                if (!string.IsNullOrWhiteSpace(bookingFilter.CarWashShopName))
+                    bookingsEntity = bookingsEntity.Where(x => x.CarWashShop.Name == bookingFilter.CarWashShopName);
+
+                if (!string.IsNullOrWhiteSpace(bookingFilter.ServiceName))
+                    bookingsEntity = bookingsEntity.Where(x => x.Service.Name == bookingFilter.ServiceName);
+
+                if (bookingFilter.OnScheduledDate != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date == bookingFilter.OnScheduledDate);
+
+                if (bookingFilter.ScheduledDatesBefore != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date < bookingFilter.ScheduledDatesBefore);
+
+                if (bookingFilter.ScheduledDatesAfter != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date > bookingFilter.ScheduledDatesAfter);
+
+                if (bookingFilter.AtScheduledHour != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour == bookingFilter.AtScheduledHour);
+
+                if (bookingFilter.ScheduledHoursBefore != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour < bookingFilter.ScheduledHoursBefore);
+
+                if (bookingFilter.ScheduledHoursAfter != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour > bookingFilter.ScheduledHoursAfter);
+
+                if (bookingFilter.IsActiveBooking)
+                    bookingsEntity = bookingsEntity.Where(x => !x.IsPaid);
+
+                if (bookingFilter.IsConfirmed)
+                    bookingsEntity = bookingsEntity.Where(x => x.BookingStatus == BookingStatus.Confirmed);
+
+                if (bookingFilter.IsPending)
+                    bookingsEntity = bookingsEntity.Where(x => x.BookingStatus == BookingStatus.Pending);
+
+                if (bookingFilter.Price != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.Service.Price == bookingFilter.Price);
+
+                if (bookingFilter.MinPrice != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.Service.Price >= bookingFilter.MinPrice);
+
+                if (bookingFilter.MaxPrice != null)
+                    bookingsEntity = bookingsEntity.Where(x => x.Service.Price <= bookingFilter.MaxPrice);
+            }
+
+            if (bookingsEntity == null || bookingsEntity.Count() == 0)
+                return NotFound("No bookings found with specified filters");
+
+            var bookingsView = _mapper.Map<List<BookingViewOwnerSide>>(bookingsEntity);
+
+            return Ok(bookingsView);
+        }
 
 
 
-        
+        //--13-----------------------------------------------FILTERED GET ALL BOOKINGS FOR ALL SHOPS IN POSSESSION OR FOR CERTAIN SHOP BY 'ShopID' -------------------------------------------------
+
+        [HttpGet("GetAllBookingsOrByShopID", Name = "getAllBookingsOrByShopID")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "OwnerPolicy")]
+        //public async Task<ActionResult> Get()
+        //{
+        //    string userName = User.Identity.Name;
+
+        //    var bookingsEntity = _dbContext.Bookings
+        //        .Include(x => x.CarWashShop)
+        //        .ThenInclude(x => x.Owners)
+        //        .Include(x => x.Service)
+        //        .Include(x => x.Consumer)
+        //        .Where(x => x.CarWashShop.Owners.Select(x => x.Owner.UserName).Contains(userName))
+        //        .AsQueryable();
+
+        //    var shopEntity = bookingsEntity.Select(x => x.CarWashShop);
+        //    var revenueReports = new List<RevenueReport>();
+
+        //    foreach(var shop in shopEntity)
+        //    {
+        //        revenueReports.Add(new RevenueReport() { CarWashShopID = shop.Id, CarWashShopName = shop.Name});
+        //        revenueReports.Select(x => x.ByServicesRevenue.Add())
+
+        //        foreach (var booking in bookingsEntity)
+        //        {
+        //            shop.
+        //        }
+        //    }
+
+        //    return Ok();
+        //}
     }
 }

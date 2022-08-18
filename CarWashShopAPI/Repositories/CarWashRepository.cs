@@ -31,7 +31,7 @@ namespace CarWashShopAPI.Repositories
             return CarWashShopOwners.Select(x => x.CarWashShop);
         }
 
-        public async Task<IQueryable<CarWashShop>> FilterTheQuery(IQueryable<CarWashShop> carWashShop, CarWashFilter filterDTO)
+        public async Task<IQueryable<CarWashShop>> QueryFilter(IQueryable<CarWashShop> carWashShop, CarWashFilter filterDTO)
         {
             if (filterDTO.Id != null)
             {

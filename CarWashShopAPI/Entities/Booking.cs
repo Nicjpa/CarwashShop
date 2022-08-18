@@ -1,4 +1,6 @@
-﻿namespace CarWashShopAPI.Entities
+﻿using static CarWashShopAPI.DTO.Enums;
+
+namespace CarWashShopAPI.Entities
 {
     public class Booking
     {
@@ -10,6 +12,8 @@
         public int ServiceId { get; set; }
         public Service Service { get; set; }
         public DateTime ScheduledDateTime { get; set; }
+        public DateTime DateCreated { get; set; }
         public bool IsPaid { get; set; } = false;
+        public BookingStatus BookingStatus { get; set; } = BookingStatus.Pending;
     }
 }

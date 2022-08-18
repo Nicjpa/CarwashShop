@@ -1,13 +1,14 @@
 ﻿using CarWashShopAPI.CustomValidations;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace CarWashShopAPI.DTO.BookingDTO
 {
     public class BookingCreation
     {
+        [Required]
         public int CarWashShopId { get; set; }
+        [Required]
         public int ServiceId { get; set; }
 
         [DataType(DataType.Date)]
@@ -26,5 +27,7 @@ namespace CarWashShopAPI.DTO.BookingDTO
                 return DateTime.Parse($"{ScheduledDate} {ts}");
             } 
         }
+        [JsonIgnore]
+        public DateTime DateCreated { get { return DateTime.Now; } }
     }
 }

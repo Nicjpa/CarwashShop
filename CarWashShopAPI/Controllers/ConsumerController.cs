@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Controllers
 {
@@ -23,6 +24,10 @@ namespace CarWashShopAPI.Controllers
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
+
+
+        //--1----------------------------------------------- GET ALL SHOPS WITH FILTERS OR BY 'ShopID' -------------------------------------------------
 
         [HttpGet("GetFilteredAllShopsOrByShopID", Name = "getFilteredAllShopsOrByShopID")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -76,9 +81,11 @@ namespace CarWashShopAPI.Controllers
 
 
 
+        //--2----------------------------------------------- GET ALL BOOKINGS WITH FILTERS OR BY 'BookingID' -------------------------------------------------
+
         [HttpGet("GetFilteredAllBookingsOrByID", Name = "getFilteredAllBookingsOrByID")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "ConsumerPolicy")]
-        public async Task<ActionResult<List<Booking>>> GetYourBookings([FromQuery] BookingFilters bookingFilter)
+        public async Task<ActionResult<List<BookingViewConsumerSide>>> GetYourBookings([FromQuery] BookingFilters bookingFilter)
         {
             string userName = User.Identity.Name;
 
@@ -112,22 +119,28 @@ namespace CarWashShopAPI.Controllers
                     bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date == bookingFilter.OnScheduledDate);
 
                 if (bookingFilter.ScheduledDatesBefore != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date < bookingFilter.OnScheduledDate);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date < bookingFilter.ScheduledDatesBefore);
 
                 if (bookingFilter.ScheduledDatesAfter != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date > bookingFilter.OnScheduledDate);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date > bookingFilter.ScheduledDatesAfter);
 
                 if (bookingFilter.AtScheduledHour != null)
                     bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour == bookingFilter.AtScheduledHour);
 
                 if (bookingFilter.ScheduledHoursBefore != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour < bookingFilter.AtScheduledHour);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour < bookingFilter.ScheduledHoursBefore);
 
                 if (bookingFilter.ScheduledHoursAfter != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour > bookingFilter.AtScheduledHour);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour > bookingFilter.ScheduledHoursAfter);
 
                 if (bookingFilter.IsActiveBooking)
                     bookingsEntity = bookingsEntity.Where(x => !x.IsPaid);
+
+                if (bookingFilter.IsConfirmed)
+                    bookingsEntity = bookingsEntity.Where(x => x.BookingStatus == BookingStatus.Confirmed);
+
+                if (bookingFilter.IsPending)
+                    bookingsEntity = bookingsEntity.Where(x => x.BookingStatus == BookingStatus.Pending);
 
                 if (bookingFilter.Price != null)
                     bookingsEntity = bookingsEntity.Where(x => x.Service.Price == bookingFilter.Price);
@@ -142,9 +155,17 @@ namespace CarWashShopAPI.Controllers
             if (bookingsEntity == null || bookingsEntity.Count() == 0)
                 return NotFound("No bookings found with specified filters");
 
-            return Ok();
+            await HttpContext.InsertPagination(bookingsEntity, bookingFilter.RecordsPerPage);
+            List<Booking> bookingEntities = await bookingsEntity.Paginate(bookingFilter.Pagination).ToListAsync();
+
+            var bookingView = _mapper.Map<List<BookingViewConsumerSide>>(bookingEntities);
+
+            return Ok(bookingView);
         }
 
+
+
+        //--3----------------------------------------------- CREATE BOOKING FOR THE CAR WASH SERVICE -------------------------------------------------
 
         [HttpPost("ScheduleAService", Name = "scheduleAService")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "ConsumerPolicy")]
@@ -168,13 +189,15 @@ namespace CarWashShopAPI.Controllers
                                 $"\nCarwashID: '{bookingCreation.CarWashShopId}'" +
                                 $"\nServiceID: '{bookingCreation.ServiceId}'");
 
-            if (bookingCreation.ScheduledDateTime < DateTime.Now.Add(new TimeSpan(1, 0, 0)))
-                return BadRequest($"Booking needs to be scheduled at least 1 hour before the service starts.." +
+            if (bookingCreation.ScheduledDateTime < DateTime.Now.AddHours(2))
+                return BadRequest($"Booking needs to be scheduled at least 2 hours prior to the service start.." +
                                   $"\nCURRENT DATE: {DateTime.Now.Date.ToString("ddd, dd MMM yyyy")}" +
                                   $"\nCURRENT TIME: {DateTime.Now.ToString("HH:mm")}");
 
             carWashShop.Bookings.ForEach(x => { if(x.ScheduledDateTime == bookingCreation.ScheduledDateTime) { amountOfUsedWashingUnits++; } });
-            if (amountOfUsedWashingUnits == carWashShop.AmountOfWashingUnits)
+
+            if (!(bookingCreation.ScheduledDateTime.Hour >= carWashShop.OpeningTime && bookingCreation.ScheduledDateTime.Hour < carWashShop.ClosingTime)
+                || amountOfUsedWashingUnits == carWashShop.AmountOfWashingUnits)
                 return BadRequest("There is no available schedule for the selected date and time..");
 
             var bookingEntity = _mapper.Map<Booking>(bookingCreation);
@@ -188,13 +211,15 @@ namespace CarWashShopAPI.Controllers
             _dbContext.Bookings.Add(bookingEntity);
             await _dbContext.SaveChangesAsync();
 
-            return Ok($"You have booked your service '{bookedServiceName}'" +
+            return Ok($"You have booked your service '{bookedServiceName}', it requires confirmation.." +
                       $"\nSHOP NAME: '{carWashShop.Name}'" +
                       $"\nDATE: '{bookingEntity.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")}'" +
                       $"\nTIME: {bookingEntity.ScheduledDateTime.Hour}:00");
         }
 
 
+
+        //--4----------------------------------------------- CANCEL BOOKING BY 'BookingID' -------------------------------------------------
 
         [HttpDelete("{id:int}", Name = "cancelBookingById")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "ConsumerPolicy")]
@@ -208,14 +233,18 @@ namespace CarWashShopAPI.Controllers
                 _dbContext.Bookings.Remove(bookingEntity);
                 await _dbContext.SaveChangesAsync();
 
-                var timeThresholdToCancelBooking = bookingEntity.ScheduledDateTime.Add(new TimeSpan(0, -15, 0));
+                var timeThresholdToCancelBooking = bookingEntity.ScheduledDateTime.AddMinutes(-15);
                 if(DateTime.Now > timeThresholdToCancelBooking)
                     return BadRequest("You cannot cancel your booking less than 15 minutes before the scheduled time..");
 
                 return Ok($"You have successfully canceled your booking scheduled for '{bookingEntity.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'. ");
             }
-
             return NotFound($"You don't have booking with ID: '{id}'..");
         }
+
+
+
+
+
     }
 }
