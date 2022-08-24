@@ -1,9 +1,11 @@
-﻿namespace CarWashShopAPI.DTO.BookingDTO
+﻿using static CarWashShopAPI.DTO.Enums;
+
+namespace CarWashShopAPI.DTO.BookingDTO
 {
     public class BookingFilters
     {
         public int Page { get; set; } = 1;
-        public int RecordsPerPage { get; set; } = 10;
+        public int RecordsPerPage { get; set; } = 20;
         public PaginationDTO Pagination { get { return new PaginationDTO() { Page = Page, RecordsPerPage = RecordsPerPage }; } }
         public int? BookingID { get; set; }
         public int? CarWashShopID { get; set; }
@@ -16,8 +18,7 @@
         public int? AtScheduledHour { get; set; }
         public int? ScheduledHoursBefore { get; set; }
         public int? ScheduledHoursAfter { get; set; }
-        public bool IsConfirmed { get; set; }
-        public bool IsPending { get; set; }
+        public BookingStatus BookingStatus { get; set; }
         public bool IsActiveBooking { get; set; }
         public decimal? Price { get; set; }
         public decimal? MinPrice { get; set; }

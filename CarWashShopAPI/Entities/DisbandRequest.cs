@@ -11,6 +11,6 @@
         public int CarWashShopId { get; set; }
         public CarWashShop CarWashShop { get; set; }
         public bool IsApproved { get; set; } = false;
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }

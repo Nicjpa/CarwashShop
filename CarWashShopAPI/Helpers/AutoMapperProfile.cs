@@ -3,6 +3,7 @@ using CarWashShopAPI.DTO.BookingDTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.DTO.ServiceDTO;
+using CarWashShopAPI.DTO.UserDTOs;
 using CarWashShopAPI.Entities;
 using static CarWashShopAPI.DTO.Enums;
 
@@ -12,14 +13,14 @@ namespace CarWashShopAPI.Helpers
     {
         public AutoMapperProfile()
         {
-            // CAR WASH SHOP MAPPERS
             CreateMap<ServiceCreationAndUpdate, Service>()
                 .ReverseMap();
 
             CreateMap<Service, ServiceView>();
 
             CreateMap<Service, ServiceViewWithShopAssigned>()
-                .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Name).FirstOrDefault()));
+                .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Name).FirstOrDefault()))
+                .ForMember(x => x.CarWashShopId, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Id).FirstOrDefault()));
 
             CreateMap<CarWashShopCreation, Service>();
 
@@ -40,7 +41,7 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.RequesterUserName, opt => opt.MapFrom(x => x.Requester.UserName))
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
 
-            CreateMap<CarWashShopRemovalRequest, ShopRemovalRequestView>()
+            CreateMap<ShopRemovalRequest, ShopRemovalRequestView>()
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
 
             CreateMap<BookingCreation, Booking>();
@@ -50,8 +51,8 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.ScheduledTime, opt => opt.MapFrom(x => x.ScheduledDateTime.Hour.ToString() + ":00"))
                 .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Service.Price))
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name))
-                .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name))
-                .ForMember(x => x.IsConfirmed, opt => opt.MapFrom(IsConfirmedConsumerSide));
+                .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name));
+                
 
             CreateMap<Booking, BookingViewOwnerSide>()
                 .ForMember(x => x.ScheduledDate, opt => opt.MapFrom(x => x.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")))
@@ -59,26 +60,14 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Service.Price))
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name))
                 .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name))
-                .ForMember(x => x.IsConfirmed, opt => opt.MapFrom(IsConfirmedOwnerSide))
                 .ForMember(x => x.ConsumerUsername, opt => opt.MapFrom(x => x.Consumer.UserName))
                 .ForMember(x => x.Email, opt => opt.MapFrom(x => x.Consumer.Email))
-                .ForMember(x => x.ContactPhone, opt => opt.MapFrom(x => x.Consumer.ContactPhone));
-        }
+                .ForMember(x => x.ContactPhone, opt => opt.MapFrom(x => x.Consumer.PhoneNumber))
+                .ForMember(x => x.DateCreated, opt => opt.MapFrom(x => x.DateCreated.ToString("ddd, dd MMM yyyy HH':'mm")));
 
-        private bool IsConfirmedConsumerSide(Booking entity, BookingViewConsumerSide view)
-        {
-            bool isConfirmed;
-            if (entity.BookingStatus == BookingStatus.Confirmed) { isConfirmed = true; } 
-            else { isConfirmed = false; }   
-            return isConfirmed;
-        }
+            CreateMap<CustomUser, UserView>();
+            CreateMap<UserInfo, UserLogin>();
 
-        private bool IsConfirmedOwnerSide(Booking entity, BookingViewOwnerSide view)
-        {
-            bool isConfirmed;
-            if (entity.BookingStatus == BookingStatus.Confirmed) { isConfirmed = true; }
-            else { isConfirmed = false; }
-            return isConfirmed;
         }
 
         private List<ServiceView> CarWashShopsOwners2CarWashShopView(CarWashShop entity, CarWashShopView view)

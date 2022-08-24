@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
 using CarWashShopAPI.DTO.UserDTOs;
 using CarWashShopAPI.Entities;
+using CarWashShopAPI.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Text;
+using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Controllers
 {
@@ -17,125 +16,108 @@ namespace CarWashShopAPI.Controllers
     [ApiController]
     public class AccountManagementController : ControllerBase
     {
-        private readonly UserManager<CustomUser> _userManager;
         private readonly SignInManager<CustomUser> _signInManager;
-        private readonly IConfiguration _config;
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IAccountRepository _accountRepository;
+        private readonly UserManager<CustomUser> _userManager;
 
         public AccountManagementController(
-            UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
-            IConfiguration config,
             CarWashDbContext dbContext,
-            IMapper mapper)
+            IMapper mapper,
+            IAccountRepository accountRepository,
+            UserManager<CustomUser> userManager
+            )
         {
-            _userManager = userManager;
             _signInManager = signInManager;
-            _config = config;
             _dbContext = dbContext;
             _mapper = mapper;
+            _accountRepository = accountRepository;
+            _userManager = userManager;
         }
 
-        private async Task<UserToken> BuildToken(UserInfo userInfo)
+        [HttpPost("CreateUser", Name = "createUser")]
+        public async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo, RoleClaim role)
         {
-            var claims = new List<Claim>()
+            var user = new CustomUser
             {
-                new Claim(ClaimTypes.Name, userInfo.UserName.ToLower()),
-                new Claim(ClaimTypes.Email, userInfo.UserName),
+                FirstName = userInfo.FirstName.ToUpper(),
+                LastName = userInfo.LastName.ToUpper(),
+                Address = userInfo.Address.ToUpper(),
+                PhoneNumber = userInfo.PhoneNumber,
+                Email = userInfo.Email,
+                UserName = userInfo.UserName.ToLower(),
+                Role = role.ToString()
             };
 
-            var identityUser = await _userManager.FindByEmailAsync(userInfo.UserName);
-            var claimsDB = await _userManager.GetClaimsAsync(identityUser);
+            var result = await _userManager.CreateAsync(user, userInfo.Password);
 
-            claims.AddRange(claimsDB);
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expiration = DateTime.UtcNow.AddYears(1);
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: null,
-                audience: null,
-                claims: claims,
-                expires: expiration,
-                signingCredentials: creds);
-
-            return new UserToken
+            if (result.Succeeded)
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = expiration
-            };
-        }
+                var buildToken = _mapper.Map<UserLogin>(userInfo);
 
-
-        [HttpPost("RenewToken", Name = "renewToken")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
-        public async Task<ActionResult<UserToken>> Renew()
-        {
-            var userInfo = new UserInfo() { UserName = User.Identity.Name };
-            return await BuildToken(userInfo);
-        }
-
-
-
-        [HttpPost("CreateOwnerAccount", Name = "createOwnerAcc")]
-        public async Task<ActionResult<UserToken>> CreateOwnerAccount([FromBody] UserInfo userInfo)
-        {
-            return await CreateUser(userInfo, "Owner");
-        }
-
-
-        [HttpPost("CreateConsumerAccount", Name = "createConsumerAcc")]
-        public async Task<ActionResult<UserToken>> CreateConsumerAccount([FromBody] UserInfo userInfo)
-        {
-            return await CreateUser(userInfo, "Consumer");
-        }
-
-        [HttpPost("CreateAdminAccount", Name = "createAdminAcc")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
-        public async Task<ActionResult<UserToken>> CreateAdminAccount([FromBody] UserInfo userInfo)
-        {
-            return await CreateUser(userInfo, "Admin");
-        }
-
-        private async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo, string role)
-        {
-            try
-            {
-                var user = new CustomUser { UserName = userInfo.UserName.ToLower(), Email = userInfo.UserName.ToLower() };
-                var result = await _userManager.CreateAsync(user, userInfo.Password);
-
-                if (result.Succeeded)
-                {
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role));
-                    return await BuildToken(userInfo);
-                }
-                else
-                {
-                    return BadRequest(result.Errors);
-                }
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.ToString()));
+                return await _accountRepository.BuildToken(buildToken);
             }
-            catch
-            {
-                return BadRequest($"Username {userInfo.UserName} already exists..");
-            }
+            else
+                return BadRequest(result.Errors);
         }
+
+
 
         [HttpPost("Login", Name = "login")]
-        public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo model)
+        public async Task<ActionResult<UserToken>> Login([FromBody] UserLogin model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
-            {
-                return await BuildToken(model);
-            }
+                return await _accountRepository.BuildToken(model);
             else
-            {
                 return BadRequest("Invalid login attempt");
+            
+        }
+
+
+
+        [HttpGet("GetUsers")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult<List<UserView>>> Get([FromQuery] UserFilter filter)
+        {
+            var userEntities = await _accountRepository.GetUsers(filter);
+
+            if (userEntities == null || !userEntities.Any())
+                return NotFound("No user found..");
+
+            var usersPaginated = await _accountRepository.Pagination(HttpContext, userEntities, filter.RecordsPerPage, filter.Pagination);
+
+            var userView = _mapper.Map<List<UserView>>(usersPaginated);
+
+            return Ok(userView);
+        }
+
+
+
+        [HttpDelete("DeleteUserByEmail")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult> Get(string userEmail)
+        {
+            var user = await _dbContext.CustomUsers.FirstOrDefaultAsync(x => x.Email == userEmail);
+
+            if (user == null)
+                return NotFound($"User with '{userEmail}' doesn't exist..");
+
+            if (user.UserName == User.Identity.Name)
+                return BadRequest("You cannot delete yourself!");
+
+            if (user.Role == "Owner")
+            {
+                await _accountRepository.DeleteUserAssets(user);
+
+                _dbContext.CustomUsers.Remove(user);
+                await _dbContext.SaveChangesAsync();
             }
+            return Ok($"You have successfully deleted user with email '{user.Email}' and username '{user.UserName}'.");
         }
     }
 }

@@ -1,6 +1,8 @@
 using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories;
+using CarWashShopAPI.Repositories.IRepositories;
+using CarWashShopAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +19,29 @@ namespace CarWashShopAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<CarWashDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
+            builder.Services.AddDbContext<CarWashDbContext>(options => {
+
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection"));
+                options.EnableSensitiveDataLogging();
+            });
 
             builder.Services.AddScoped<ICarWashRepository, CarWashRepository>();
+            builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+            builder.Services.AddScoped<IServiceRepository, ShopServiceRepository>();
+            builder.Services.AddScoped<IConsumerRepository, ConsumerRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddTransient<IRadarRepository, RadarRepository>();
+
+            builder.Services.AddTransient<IHostedService, RadarService>();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
-            builder.Services.AddIdentity<CustomUser, IdentityRole>()
-                .AddEntityFrameworkStores<CarWashDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddIdentity<CustomUser, IdentityRole>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<CarWashDbContext>()
+            .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -42,7 +58,6 @@ namespace CarWashShopAPI
 
             builder.Services.AddAuthorization(options => 
             {
-                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("OwnerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Owner")));
                 options.AddPolicy("ConsumerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Consumer")));
             });

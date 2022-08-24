@@ -12,8 +12,8 @@ namespace CarWashShopAPI.Entities
         public int ServiceId { get; set; }
         public Service Service { get; set; }
         public DateTime ScheduledDateTime { get; set; }
-        public DateTime DateCreated { get; set; }
         public bool IsPaid { get; set; } = false;
         public BookingStatus BookingStatus { get; set; } = BookingStatus.Pending;
+        public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }

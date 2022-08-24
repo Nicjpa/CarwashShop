@@ -24,10 +24,9 @@ namespace CarWashShopAPI.DTO.BookingDTO
             get 
             {
                 TimeSpan ts = new TimeSpan(ScheduledHour, 0, 0);
-                return DateTime.Parse($"{ScheduledDate} {ts}");
+                DateTime.TryParse($"{ScheduledDate} {ts}", out DateTime dateTime);
+                return dateTime;
             } 
         }
-        [JsonIgnore]
-        public DateTime DateCreated { get { return DateTime.Now; } }
     }
 }
