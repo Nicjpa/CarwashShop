@@ -15,5 +15,6 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<string> GetLoggedInOwnerID(CarWashShop carWashShop, string userName);
         public Task<string> ConcatenateCoOwnerNames(CarWashShop carWashShop, string userName);
         public Task<List<ShopRemovalRequest>> CreateShopRemovalRequests(CarWashShop carWashShop, string userName, CarWashShopRemovalRequestCreation statement);
+        public Task<bool> CheckIfRequestExist(int id);
     }
 }

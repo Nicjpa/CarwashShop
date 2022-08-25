@@ -48,7 +48,7 @@ namespace CarWashShopAPI.Controllers
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
 
-            return Ok(allServicesView);
+            return allServicesView;
         }
 
 
@@ -79,12 +79,12 @@ namespace CarWashShopAPI.Controllers
 
             var newServiceCreated = _mapper.Map<ServiceView>(newServiceEntity);
 
-            return Ok(newServiceCreated);
+            return newServiceCreated;
         }
 
 
 
-        //--3----------------------------------------------------- UPDATE SERVICE  -------------------------------------------
+        //--3----------------------------------------------------- UPDATE SERVICE BY ID -------------------------------------------
 
         [HttpPut("UpdateShopService", Name = "updateShopService")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
@@ -103,7 +103,7 @@ namespace CarWashShopAPI.Controllers
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
 
-            return Ok(serviceView);
+            return serviceView;
         }
 
 
@@ -122,10 +122,10 @@ namespace CarWashShopAPI.Controllers
                 return NotFound($"You don't have any service with ID '{serviceID}'..");
 
             var serviceEntityPatch = _mapper.Map<ServiceCreationAndUpdate>(serviceEntity);
-
+            
             serviceUpdate.ApplyTo(serviceEntityPatch, ModelState);
 
-            if(!TryValidateModel(serviceEntityPatch)) 
+            if (!TryValidateModel(serviceEntityPatch))
                 return BadRequest("Check your patch inputs..");
 
             _mapper.Map(serviceEntityPatch, serviceEntity);
@@ -133,7 +133,7 @@ namespace CarWashShopAPI.Controllers
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
 
-            return Ok(serviceView);
+            return serviceView;
         }
 
 
@@ -142,7 +142,7 @@ namespace CarWashShopAPI.Controllers
 
         [HttpDelete("RemoveService", Name = "removeService")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
-        public async Task<ActionResult> Delete(int serviceID)
+        public async Task<ActionResult<string>> Delete(int serviceID)
         {
             string userName = User.Identity.Name;
 

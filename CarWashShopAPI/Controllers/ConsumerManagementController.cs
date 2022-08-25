@@ -32,7 +32,7 @@ namespace CarWashShopAPI.Controllers
         //--1----------------------------------------------- GET ALL SHOPS WITH FILTERS OR BY 'ShopID' -------------------------------------------------
 
         [HttpGet("GetAllShops-ConsumerSide", Name = "getAllShops-ConsumerSide")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<CarWashShopView>>> GetShops([FromQuery] CarWashFilter filter)
         {
             var carShopsEntities = await _consumerRepository.GetAllShops(filter);
@@ -44,7 +44,7 @@ namespace CarWashShopAPI.Controllers
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(shopsPaginated);
 
-            return Ok(shopsView);
+            return shopsView;
         }
 
 
@@ -66,12 +66,12 @@ namespace CarWashShopAPI.Controllers
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
 
-            return Ok(allServicesView);
+            return allServicesView;
         }
 
 
 
-        //--2----------------------------------------------- FILTERED GET ALL BOOKINGS WITH  OR BY 'BookingID' -------------------------------------------------
+        //--3----------------------------------------------- FILTERED GET ALL BOOKINGS WITH  OR BY 'BookingID' -------------------------------------------------
 
         [HttpGet("GetAllBookings", Name = "getAllBookings")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Consumer")]
@@ -88,16 +88,16 @@ namespace CarWashShopAPI.Controllers
 
             var bookingsView = _mapper.Map<List<BookingViewConsumerSide>>(bookingsPaginated);
 
-            return Ok(bookingsView);
+            return bookingsView;
         }
 
 
 
-        //--3----------------------------------------------- CREATE BOOKING FOR THE CAR WASH SERVICE -------------------------------------------------
+        //--4----------------------------------------------- CREATE BOOKING FOR THE CAR WASH SERVICE -------------------------------------------------
 
         [HttpPost("ScheduleAService", Name = "scheduleAService")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Consumer")]
-        public async Task<ActionResult> Post([FromBody] BookingCreation bookingCreation)
+        public async Task<ActionResult<BookingViewConsumerSide>> CreateBookng([FromBody] BookingCreation bookingCreation)
         {
             string userName = User.Identity.Name;
             string userId = await _consumerRepository.GetUserID(userName);
@@ -118,9 +118,13 @@ namespace CarWashShopAPI.Controllers
 
             carWashShop.Bookings.ForEach(x => { if(x.ScheduledDateTime == bookingCreation.ScheduledDateTime) { amountOfUsedWashingUnits++; } });
 
-            if (!(bookingCreation.ScheduledDateTime.Hour >= carWashShop.OpeningTime && bookingCreation.ScheduledDateTime.Hour < carWashShop.ClosingTime)
-                || amountOfUsedWashingUnits == carWashShop.AmountOfWashingUnits)
-                return BadRequest("There is no available schedule for the selected date and time..");
+            if(amountOfUsedWashingUnits == carWashShop.AmountOfWashingUnits)
+                return BadRequest($"Unfortunately all '{carWashShop.AmountOfWashingUnits}' washing units are already booked for the selected date and time..");
+
+            if (!(bookingCreation.ScheduledDateTime.Hour >= carWashShop.OpeningTime && bookingCreation.ScheduledDateTime.Hour < carWashShop.ClosingTime))
+                return BadRequest($"Your scheduled hour '{bookingCreation.ScheduledDateTime.ToString("HH:mm")}' is out of the '{carWashShop.Name}' working hours.." +
+                                  $"\nOPENING TIME: {carWashShop.OpeningTime}" +
+                                  $"\nCLOSING TIME: {carWashShop.ClosingTime}");
 
             var bookingEntity = _mapper.Map<Booking>(bookingCreation);
             bookingEntity.ConsumerId = userId;
@@ -130,16 +134,16 @@ namespace CarWashShopAPI.Controllers
 
             var bookingView = _mapper.Map<BookingViewConsumerSide>(bookingEntity);
 
-            return Ok(bookingView);
+            return bookingView;
         }
 
 
 
-        //--4----------------------------------------------- CANCEL BOOKING BY 'BookingID' -------------------------------------------------
+        //--5----------------------------------------------- CANCEL BOOKING BY 'BookingID' -------------------------------------------------
 
         [HttpDelete("cancelBookingById", Name = "cancelBookingById")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Consumer")]
-        public async Task<ActionResult> Delete(int bookingID)
+        public async Task<ActionResult<string>> CancelBooking(int bookingID)
         {
             string userName = User.Identity.Name;
             var bookingEntity = await _consumerRepository.GetBookingByID(bookingID, userName);
@@ -153,7 +157,7 @@ namespace CarWashShopAPI.Controllers
                 _dbContext.Bookings.Remove(bookingEntity);
                 await _dbContext.SaveChangesAsync();
 
-                return Ok($"You have successfully canceled your booking scheduled for '{bookingEntity.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'. ");
+                return Ok($"You have successfully canceled your booking scheduled for '{bookingEntity.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'.");
             }
             return NotFound($"You don't have booking with ID: '{bookingID}'..");
         }

@@ -12,7 +12,7 @@ namespace CarWashShopAPI.Repositories
     {
         private readonly CarWashDbContext _dbContext;
 
-        public CarWashRepository(CarWashDbContext dbContext, IMapper mapper)
+        public CarWashRepository(CarWashDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -30,15 +30,15 @@ namespace CarWashShopAPI.Repositories
             else
             {
                 if (!string.IsNullOrWhiteSpace(filterDTO.CarWashName))
-                    carWashShop = carWashShop.Where(x => x.Name.Contains(filterDTO.CarWashName));
+                    carWashShop = carWashShop.Where(x => x.Name.ToLower().Contains(filterDTO.CarWashName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filterDTO.AdvertisingDescription))
-                    carWashShop = carWashShop.Where(x => x.AdvertisingDescription.Contains(filterDTO.AdvertisingDescription));
+                    carWashShop = carWashShop.Where(x => x.AdvertisingDescription.ToLower().Contains(filterDTO.AdvertisingDescription.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filterDTO.ServiceNameOrDescription))
                     carWashShop = carWashShop
-                        .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.Contains(filterDTO.ServiceNameOrDescription)
-                                 || x.Service.Description.Contains(filterDTO.ServiceNameOrDescription)));
+                        .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.ToLower().Contains(filterDTO.ServiceNameOrDescription.ToLower())
+                                 || x.Service.Description.ToLower().Contains(filterDTO.ServiceNameOrDescription.ToLower())));
 
                 if (filterDTO.MinimumAmountOfWashingUnits != null)
                     carWashShop = carWashShop.Where(x => x.AmountOfWashingUnits >= filterDTO.MinimumAmountOfWashingUnits);
@@ -91,12 +91,12 @@ namespace CarWashShopAPI.Repositories
 
         public async Task<CarWashShop> GetShopByID(int id, string userName)
         {
-            var entity = await _dbContext.CarWashShopsOwners
-                .Include(x => x.CarWashShop)
-                .Include(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Owner.UserName == userName && x.CarWashShopId == id);
+            var entity = await _dbContext.CarWashsShops
+                .Include(x => x.Owners)
+                .ThenInclude(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Owners.Any(x => x.Owner.UserName == userName) && x.Id == id);
 
-            return entity.CarWashShop;
+            return entity;
         }
 
         public async Task<CarWashShop> GetShopWithServicesByID(int id, string userName)
@@ -143,6 +143,13 @@ namespace CarWashShopAPI.Repositories
             return cwShopRemovalRequestList;
         }
 
-        
+        public async Task<bool> CheckIfRequestExist(int id)
+        {
+            bool doesExist = await _dbContext.ShopRemovalRequests
+                .Include(x => x.CarWashShop)
+                .AnyAsync(x => x.CarWashShop.Id == id);
+
+            return doesExist;
+        }
     }
 }

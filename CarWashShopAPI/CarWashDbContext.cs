@@ -199,13 +199,13 @@ namespace CarWashShopAPI
             {
                 Id = "caba2ea1-ab92-4db7-a2fa-0d01d6d6195f",
                 FirstName = "Monica",
-                LastName = "Borderi",
+                LastName = "Bordei",
                 Address = "Silverlake Lane 96",
                 Role = "Owner",
                 UserName = "monica",
                 NormalizedUserName = "MONICA",
-                Email = "michael.santos@gmail.com",
-                NormalizedEmail = "MICHAEL.SANTOS@GMAIL.COM",
+                Email = "monica.bordei@gmail.com",
+                NormalizedEmail = "MONICA.BORDEI@GMAIL.COM",
                 EmailConfirmed = false,
                 PasswordHash = hasher.HashPassword(null, password),
                 PhoneNumber = "+1 582-322-0444"

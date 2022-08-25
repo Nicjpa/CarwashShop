@@ -49,14 +49,14 @@ namespace CarWashShopAPI.Controllers
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(shopEntities);
 
-            return Ok(shopsView);
+            return shopsView;
         }
 
         //--3------------------------------ CREATE NEW SHOP WITH NEW SERVICES -------------------------------------- 
 
         [HttpPost("CreateNewShop", Name = "createNewShop")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
-        public async Task<ActionResult> Post([FromBody] CarWashShopCreation shopCreation)
+        public async Task<ActionResult<CarWashShopView>> Post([FromBody] CarWashShopCreation shopCreation)
         {
             string userName = User.Identity.Name;
 
@@ -99,7 +99,7 @@ namespace CarWashShopAPI.Controllers
 
             var newCarWashShop = _mapper.Map<CarWashShopView>(carWashShopEntity);
 
-            return new CreatedAtRouteResult("getAllShops-OwnersSide", new { newCarWashShop.Id }, newCarWashShop);
+            return newCarWashShop;
         }
 
 
@@ -130,7 +130,7 @@ namespace CarWashShopAPI.Controllers
 
             var carShopView = _mapper.Map<CarWashShopView>(carWashShopEntity);
 
-            return Ok(carShopView);
+            return carShopView;
         }
 
 
@@ -163,7 +163,7 @@ namespace CarWashShopAPI.Controllers
 
             var carWashShopView = _mapper.Map<CarWashShopView>(carShopEntity);
 
-            return Ok(carWashShopView);
+            return carWashShopView;
         }
 
 
@@ -176,7 +176,7 @@ namespace CarWashShopAPI.Controllers
         {
             string userName = User.Identity.Name;
 
-            bool isRequestMadeAlready = _dbContext.ShopRemovalRequests.Include(x => x.CarWashShop).Any(x => x.CarWashShop.Id == shopID);
+            bool isRequestMadeAlready = await _carWashShopRepository.CheckIfRequestExist(shopID); 
             if (isRequestMadeAlready)
                 return BadRequest($"Removal request is already made for the CarWashShop with ID: '{shopID}'");
 

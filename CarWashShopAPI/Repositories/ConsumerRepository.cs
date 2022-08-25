@@ -37,15 +37,15 @@ namespace CarWashShopAPI.Repositories
             else
             {
                 if (!string.IsNullOrWhiteSpace(filter.CarWashName))
-                    entities = entities.Where(x => x.Name.Contains(filter.CarWashName));
+                    entities = entities.Where(x => x.Name.ToLower().Contains(filter.CarWashName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.AdvertisingDescription))
-                    entities = entities.Where(x => x.AdvertisingDescription.Contains(filter.AdvertisingDescription));
+                    entities = entities.Where(x => x.AdvertisingDescription.ToLower().Contains(filter.AdvertisingDescription.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.ServiceNameOrDescription))
                     entities = entities
-                        .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.Contains(filter.ServiceNameOrDescription)
-                                 || x.Service.Description.Contains(filter.ServiceNameOrDescription)));
+                        .Where(x => x.CarWashShopsServices.Any(x => x.Service.Name.ToLower().Contains(filter.ServiceNameOrDescription.ToLower())
+                                 || x.Service.Description.ToLower().Contains(filter.ServiceNameOrDescription.ToLower())));
 
                 if (filter.MinimumAmountOfWashingUnits != null)
                     entities = entities.Where(x => x.AmountOfWashingUnits >= filter.MinimumAmountOfWashingUnits);

@@ -98,19 +98,19 @@ namespace CarWashShopAPI.Repositories
                     entities = entities.Where(x => x.Role == filter.Role.ToString());
 
                 if (!string.IsNullOrWhiteSpace(filter.Email))
-                    entities = entities.Where(x => x.Email.Contains(filter.Email));
+                    entities = entities.Where(x => x.Email.ToLower().Contains(filter.Email.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.UserName))
-                    entities = entities.Where(x => x.UserName.Contains(filter.UserName));
+                    entities = entities.Where(x => x.UserName.ToLower().Contains(filter.UserName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.FirstName))
-                    entities = entities.Where(x => x.FirstName.Contains(filter.FirstName));
+                    entities = entities.Where(x => x.FirstName.ToLower().Contains(filter.FirstName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.LastName))
-                    entities = entities.Where(x => x.LastName.Contains(filter.LastName));
+                    entities = entities.Where(x => x.LastName.ToLower().Contains(filter.LastName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.Address))
-                    entities = entities.Where(x => x.Address.Contains(filter.Address));
+                    entities = entities.Where(x => x.Address.ToLower().Contains(filter.Address.ToLower()));
             }
             return entities;
         }

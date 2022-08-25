@@ -307,10 +307,10 @@ namespace CarWashShopAPI.Repositories
                     entities = entities.Where(x => x.ServiceId == filters.ServiceID);
 
                 if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
-                    entities = entities.Where(x => x.CarWashShop.Name == filters.CarWashShopName);
+                    entities = entities.Where(x => x.CarWashShop.Name.ToLower() == filters.CarWashShopName.ToLower());
 
                 if (!string.IsNullOrWhiteSpace(filters.ServiceName))
-                    entities = entities.Where(x => x.Service.Name == filters.ServiceName);
+                    entities = entities.Where(x => x.Service.Name.ToLower() == filters.ServiceName.ToLower());
 
                 if (filters.OnScheduledDate != null)
                     entities = entities.Where(x => x.ScheduledDateTime.Date == filters.OnScheduledDate);

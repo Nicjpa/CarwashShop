@@ -17,20 +17,23 @@ namespace CarWashShopAPI.Controllers
     public class AccountManagementController : ControllerBase
     {
         private readonly SignInManager<CustomUser> _signInManager;
+        private readonly IConfiguration _configuration;
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
         private readonly UserManager<CustomUser> _userManager;
 
         public AccountManagementController(
+            UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
+            IConfiguration configuration,
             CarWashDbContext dbContext,
             IMapper mapper,
-            IAccountRepository accountRepository,
-            UserManager<CustomUser> userManager
+            IAccountRepository accountRepository
             )
         {
             _signInManager = signInManager;
+            _configuration = configuration;
             _dbContext = dbContext;
             _mapper = mapper;
             _accountRepository = accountRepository;
