@@ -18,13 +18,20 @@ namespace CarWashShopAPI.Controllers
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ICarWashRepository _carWashShopRepository;
+        private readonly ILogger<OwnerCarWashShopCRUDController> _logger;
 
-        public OwnerCarWashShopCRUDController(CarWashDbContext dbContext, IMapper mapper, ICarWashRepository carWashShopRepository
+        public OwnerCarWashShopCRUDController
+            (
+            CarWashDbContext dbContext, 
+            IMapper mapper, 
+            ICarWashRepository carWashShopRepository,
+            ILogger<OwnerCarWashShopCRUDController> logger
             )
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _carWashShopRepository = carWashShopRepository;
+            _logger = logger;
         }
 
 
@@ -35,20 +42,32 @@ namespace CarWashShopAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
         public async Task<ActionResult<List<CarWashShopView>>> Get([FromQuery] CarWashFilter shopFilter)
         {
+            string userName = User.Identity.Name;
+
             var carWashShops = await _carWashShopRepository.GetAllShopsInPossesion(User.Identity.Name);
 
             if (carWashShops == null || !carWashShops.Any())
+            {
+                _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetShops-OwnerSide' " +
+                    $"/ no shops in possession / '0' SHOPS FOUND ");
                 return NotFound("You didn't create any CarWashShop yet..");
+            }
 
             carWashShops = await _carWashShopRepository.QueryFilter(carWashShops, shopFilter);
 
             if (carWashShops == null || !carWashShops.Any())
+            {
+                _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetShops-OwnerSide' " +
+                    $"/ no filtered results / '0' SHOPS FOUND ");
                 return NotFound("There is no CarWashShop with specified filter parameters..");
+            }
 
             var shopEntities = await _carWashShopRepository.Pagination(HttpContext, carWashShops, shopFilter.RecordsPerPage, shopFilter.Pagination);
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(shopEntities);
 
+            _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' " +
+                $"/ MethodName: 'GetShops-OwnerSide' / '{shopsView.Count}' SHOPS FOUND ");
             return shopsView;
         }
 
@@ -60,13 +79,22 @@ namespace CarWashShopAPI.Controllers
         {
             string userName = User.Identity.Name;
 
-            if (shopCreation.CarWashShopsOwners.Contains(null))
-                return BadRequest("Each added shop owner must have name");
-            else
+            if (_dbContext.CarWashsShops.Any(x => x.Name == shopCreation.Name))
+            {
+                _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'CreateNewShop-OwnerSide' " +
+                    $"/ shop with a same name already exists / FAILED TO CREATE SHOP ");
+                return BadRequest($"CarWashShop '{shopCreation.Name}' already exists..");
+            }
+
+            if (shopCreation.CarWashShopsOwners.Any())
                 shopCreation.CarWashShopsOwners.ConvertAll(x => x.ToLower());
 
             if (shopCreation.Services == null || shopCreation.Services.Count == 0)
+            {
+                _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'CreateNewShop-OwnerSide' " +
+                    $"/ no service was created with a shop / FAILED TO CREATE SHOP ");
                 return BadRequest("Your shop needs to have at least one washing service..");
+            }
 
             if (!shopCreation.CarWashShopsOwners.Contains(userName))
                 shopCreation.CarWashShopsOwners.Add(userName);
@@ -89,16 +117,17 @@ namespace CarWashShopAPI.Controllers
 
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                if (ex.InnerException.Message.Contains("Cannot insert duplicate key row"))
-                    return BadRequest($"CarWashShop '{carWashShopEntity.Name}' already exists..");
-
-                return BadRequest("Your entries or entry formats are incorrect..");
+                _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'CreateNewShop-OwnerSide' " +
+                    $"/ database exception {ex.Message} / FAILED TO CREATE SHOP ");
+              return BadRequest("Your entries or entry formats are incorrect..");
             }
 
             var newCarWashShop = _mapper.Map<CarWashShopView>(carWashShopEntity);
 
+            _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'CreateNewShop-OwnerSide' " +
+                    $"/ NEW SHOP CREATED SUCCESSFULLY ");
             return newCarWashShop;
         }
 
@@ -111,25 +140,39 @@ namespace CarWashShopAPI.Controllers
         public async Task<ActionResult<CarWashShopView>> Put(int shopID, [FromBody] CarWashShopUpdate shopUpdate)
         {
             string userName = User.Identity.Name;
+
+            if (_dbContext.CarWashsShops.Any(x => x.Name == shopUpdate.Name))
+            {
+                _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopInfo-OwnerSide' " +
+                    $"/ shop with a same name already exists / FAILED TO UPDATE SHOP'S INFO ");
+                return BadRequest($"CarWashShop '{shopUpdate.Name}' already exists..");
+            }
+
             var carWashShopEntity = await _carWashShopRepository.GetShopByID(shopID, userName);
 
             if (carWashShopEntity == null)
+            {
+                _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopInfo-OwnerSide' " +
+                    $"/ bad shop ID entry / FAILED TO UPDATE SHOP'S INFO ");
                 return NotFound($"You don't have any CarWashShop with ID: '{shopID}'..");
+            }
 
             carWashShopEntity = _mapper.Map(shopUpdate, carWashShopEntity);
             _dbContext.Entry(carWashShopEntity).State = EntityState.Modified;
 
             try { await _dbContext.SaveChangesAsync(); }
-            catch (Exception ex)
+
+            catch(Exception ex)
             {
-                if (ex.InnerException.Message.Contains("Cannot insert duplicate key row"))
-                    return BadRequest($"Cannot change the name to '{shopUpdate.Name}', because a CarWashShop with that name already exists..");
-
-                return BadRequest("Your entries or are incorrect..");
+                _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopInfo-OwnerSide' " +
+                    $"/ database exception {ex.Message} / FAILED TO UPDATE SHOP'S INFO ");
+                return BadRequest("Your entries or are incorrect.."); 
             }
-
+            
             var carShopView = _mapper.Map<CarWashShopView>(carWashShopEntity);
 
+            _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopInfo-OwnerSide' " +
+                    $"/ SHOP'S INFO SUCCESSFULLY UPDATED ");
             return carShopView;
         }
 
@@ -141,13 +184,23 @@ namespace CarWashShopAPI.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
         public async Task<ActionResult<CarWashShopView>> Patch(int shopID, [FromBody] JsonPatchDocument<CarWashShopUpdate> shopUpdate)
         {
-            if (shopUpdate == null) { return BadRequest("You didn't specify which info do you want to patch.."); }
-
             string userName = User.Identity.Name;
+
+            if (shopUpdate == null) 
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopInfo-OwnerSide' " +
+                    $"/ property to patch is not specified / FAILED TO PATCH SHOP'S INFO ");
+                return BadRequest("You didn't specify which info do you want to patch..");
+            }
+
             var carShopEntity = await _carWashShopRepository.GetShopByID(shopID, userName);
 
             if (carShopEntity == null)
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopInfo-OwnerSide' " +
+                    $"/ bad shop ID entry / FAILED TO PATCH SHOP'S INFO ");
                 return NotFound($"You don't have any CarWashShop with ID: '{shopID}'..");
+            }
 
             var carShopEntityPatch = _mapper.Map<CarWashShopUpdate>(carShopEntity);
 
@@ -155,35 +208,49 @@ namespace CarWashShopAPI.Controllers
 
             var isValid = TryValidateModel(carShopEntityPatch);
 
-            if (!isValid) 
-                return BadRequest("Check your patch inputs.."); 
+            if (!isValid)
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopInfo-OwnerSide' " +
+                    $"/ patch model validation failed / FAILED TO PATCH SHOP'S INFO ");
+                return BadRequest("Check your patch inputs..");
+            }
 
             _mapper.Map(carShopEntityPatch, carShopEntity);
             await _dbContext.SaveChangesAsync();
 
             var carWashShopView = _mapper.Map<CarWashShopView>(carShopEntity);
 
+            _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopInfo-OwnerSide' " +
+                    $"/ SUCCESSFULLY TO PATCH SHOP'S INFO ");
             return carWashShopView;
         }
 
 
 
-        //--6----------------------------------------------- REMOVE THEB SHOP ------------------------------------------------- 
+        //--6----------------------------------------------- REMOVE THE SHOP ------------------------------------------------- 
 
         [HttpDelete("RemoveShop", Name = "RemoveShop")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Owner")]
-        public async Task<ActionResult> Delete(int shopID, [FromBody] CarWashShopRemovalRequestCreation statementCreation)
-        {
+        public async Task<ActionResult<string>> Delete(int shopID, [FromBody] CarWashShopRemovalRequestCreation statementCreation)
+         {
             string userName = User.Identity.Name;
 
-            bool isRequestMadeAlready = await _carWashShopRepository.CheckIfRequestExist(shopID); 
+            bool isRequestMadeAlready = await _carWashShopRepository.CheckIfRequestExist(shopID);
             if (isRequestMadeAlready)
+            {
+                _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveShop-OwnerSide' " +
+                    $"/ shop removal request already exists / NO REQUESTS MADE ");
                 return BadRequest($"Removal request is already made for the CarWashShop with ID: '{shopID}'");
+            }
 
             var carWashShop = await _carWashShopRepository.GetShopWithServicesByID(shopID, userName);
 
             if (carWashShop == null)
+            {
+                _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveShop-OwnerSide' " +
+                    $"/ bad shop ID entry / SHOP REMOVAL FAILED ");
                 return BadRequest($"There is no CarWashShop with ID: '{shopID}' in your possession..");
+            }
 
             string userId = await _carWashShopRepository.GetLoggedInOwnerID(carWashShop, userName);
 
@@ -198,6 +265,8 @@ namespace CarWashShopAPI.Controllers
                 
                 string otherOwners = await _carWashShopRepository.ConcatenateCoOwnerNames(carWashShop, userName);
 
+                _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveShop-OwnerSide' " +
+                    $"/ remove shop failed, multiple owners / SHOP REMOVAL REQUESTS ARE MADE ");
                 return Ok($"Removal request has been made, because you are sharing ownership of the '{carWashShop.Name}' with {otherOwners}and now it awaits their approval..");
             }
 
@@ -207,6 +276,8 @@ namespace CarWashShopAPI.Controllers
             _dbContext.CarWashsShops.Remove(carWashShop);
             await _dbContext.SaveChangesAsync();
 
+            _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveShop-OwnerSide' " +
+                    $"/ SHOP HAS BEEN SUCCESSFULLY REMOVED ");
             return Ok($"You have successfully removed '{carWashShop.Name}'..");
         }
     }

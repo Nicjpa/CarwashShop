@@ -3,34 +3,51 @@ using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories;
 using CarWashShopAPI.Repositories.IRepositories;
 using CarWashShopAPI.Services;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Elasticsearch;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.Text;
 
 namespace CarWashShopAPI
 {
     public class Program
     {
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+        .Build();
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<CarWashDbContext>(options => {
+            var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
+            builder.Host.UseSerilog(logger);
+
+            builder.Services.AddDbContext<CarWashDbContext>(options =>
+            {
 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection"));
                 options.EnableSensitiveDataLogging();
             });
 
-            builder.Services.AddScoped<ICarWashRepository, CarWashRepository>();
-            builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
-            builder.Services.AddScoped<IServiceRepository, ShopServiceRepository>();
-            builder.Services.AddScoped<IConsumerRepository, ConsumerRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            builder.Services.AddTransient<IRadarRepository, RadarRepository>();
+            builder.Services.AddLogging();
+
+            builder.Services.AddMyServiceDependencies();
 
             builder.Services.AddTransient<IHostedService, RadarService>();
 
@@ -56,7 +73,7 @@ namespace CarWashShopAPI
                     }
                 );
 
-            builder.Services.AddAuthorization(options => 
+            builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("OwnerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Owner")));
                 options.AddPolicy("ConsumerPolicy", policy => policy.RequireAssertion(opt => opt.User.IsInRole("Admin") || opt.User.IsInRole("Consumer")));
@@ -86,7 +103,7 @@ namespace CarWashShopAPI
                 });
             });
 
-            builder.Services.AddControllers().AddNewtonsoftJson(); 
+            builder.Services.AddControllers().AddNewtonsoftJson();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -102,6 +119,8 @@ namespace CarWashShopAPI
 
             app.UseHttpsRedirection();
 
+            //app.UseSerilogRequestLogging();
+
             //app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -111,6 +130,18 @@ namespace CarWashShopAPI
             app.MapControllers();
 
             app.Run();
+
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+        WebHost.CreateDefaultBuilder(args)
+               .UseStartup<Program>()
+               .UseConfiguration(Configuration)
+               .UseSerilog()
+               .Build();
+
+
+
     }
+
 }

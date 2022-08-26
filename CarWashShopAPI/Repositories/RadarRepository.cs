@@ -8,9 +8,12 @@ namespace CarWashShopAPI.Repositories
     public class RadarRepository : IRadarRepository
     {
         private readonly IServiceProvider _serviceProvider;
-        public RadarRepository(IServiceProvider serviceProvider)
+        private readonly ILogger<RadarRepository> _logger;
+
+        public RadarRepository(IServiceProvider serviceProvider, ILogger<RadarRepository> logger)
         {
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
         public async void DoBookingWork(object? state)
         {
@@ -19,7 +22,11 @@ namespace CarWashShopAPI.Repositories
                 var currentMoment = DateTime.Now;
                 var dbContext = scope.ServiceProvider.GetRequiredService<CarWashDbContext>();
 
-                var bookingsToCheck = await dbContext.Bookings.Where(x => !x.IsPaid).ToListAsync();
+                var bookingsToCheck = await dbContext.Bookings
+                    .Include(x => x.Service)
+                    .Include(x => x.CarWashShop)
+                    .Where(x => !x.IsPaid)
+                    .ToListAsync();
 
                 var confirmedBookings = bookingsToCheck.Where(x => x.BookingStatus == BookingStatus.Confirmed);
                 var rejectedBookings = bookingsToCheck.Where(x => x.BookingStatus == BookingStatus.Rejected);
@@ -28,13 +35,23 @@ namespace CarWashShopAPI.Repositories
                 foreach (var booking in confirmedBookings)
                 {
                     if (currentMoment > booking.ScheduledDateTime.AddHours(1))
+                    {
                         booking.IsPaid = true;
+
+                        _logger.LogInformation($" / booking ID: '{booking.Id}' " +
+                            $"/ booking charge: '{booking.Service.Price}' / BOOKING CHARGE ");
+                    }
                 }
 
                 foreach (var booking in pendingBookings)
                 {
                     if (currentMoment > booking.DateCreated.AddMinutes(20))
+                    {
                         booking.BookingStatus = BookingStatus.Confirmed;
+
+                        _logger.LogInformation($" / booking ID: '{booking.Id}' / shop name: '{booking.CarWashShop.Name}' " +
+                            $"/ booked service: '{booking.Service.Name}' / BOOKING CONFIRMED ");
+                    }
                 }
                 dbContext.Bookings.RemoveRange(rejectedBookings);
                 await dbContext.SaveChangesAsync();
@@ -48,7 +65,9 @@ namespace CarWashShopAPI.Repositories
                 var currentMoment = DateTime.Now;
                 var dbContext = scope.ServiceProvider.GetRequiredService<CarWashDbContext>();
 
-                var RemovalRequests = await dbContext.ShopRemovalRequests.ToListAsync();
+                var RemovalRequests = await dbContext.ShopRemovalRequests
+                    .Include(x => x.Owner)
+                    .ToListAsync();
 
                 var allRemoveShopIDs = new List<int>();
                 foreach (var request in RemovalRequests)
@@ -75,7 +94,12 @@ namespace CarWashShopAPI.Repositories
                             approveCounter++;
 
                         if (currentMoment > request.DateCreated.AddDays(7))
+                        {
                             dbContext.ShopRemovalRequests.Remove(request);
+
+                            _logger.LogInformation($" / shop removal request ID: '{request.Id}' " +
+                                $"/ owner username: '{request.Owner.UserName}' / SHOP REMOVAL CANCELED AFTER 7 DAYS ");
+                        }
                     }
 
                     if (approveCounter == ownerCount)
@@ -84,6 +108,9 @@ namespace CarWashShopAPI.Repositories
                         dbContext.ShopRemovalRequests.RemoveRange(approvedRequests);
                         dbContext.CarWashsShops.Remove(shop);
                         dbContext.Services.RemoveRange(shop.CarWashShopsServices.Select(x => x.Service));
+
+                        _logger.LogInformation($" / removed shop ID: '{shop.Id}' " +
+                            $"/ removed shop name: '{shop.Name}' / SHOP REMOVED SUCCESSFULLY ");
                     }
                 }
                 await dbContext.SaveChangesAsync();
@@ -96,7 +123,9 @@ namespace CarWashShopAPI.Repositories
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<CarWashDbContext>();
 
-                var allDisbandRequests = await dbContext.OwnerRemovalRequests.ToListAsync();
+                var allDisbandRequests = await dbContext.OwnerRemovalRequests
+                    .Include(x => x.OwnerToBeRemoved)
+                    .ToListAsync();
 
                 foreach (var request in allDisbandRequests)
                 {
@@ -107,6 +136,8 @@ namespace CarWashShopAPI.Repositories
                             CarWashShopId = request.CarWashShopId,
                             OwnerId = request.OwnerToBeRemovedId
                         });
+                        _logger.LogInformation($" / owner ID: '{request.OwnerToBeRemoved.Id}' " +
+                            $"/ owner username: '{request.OwnerToBeRemoved.UserName}' / OWNER HAS BEEN DISBANDED ");
 
                         var shopRemovalRequests = await dbContext.ShopRemovalRequests
                             .FirstOrDefaultAsync(x => x.CarWashShopId == request.CarWashShopId && x.OwnerId == request.OwnerToBeRemovedId);
@@ -122,6 +153,9 @@ namespace CarWashShopAPI.Repositories
                         if (currentMoment > request.DateCreated.AddDays(7))
                         {
                             dbContext.OwnerRemovalRequests.Remove(request);
+
+                            _logger.LogInformation($" / owner ID: '{request.OwnerToBeRemoved.Id}' " +
+                                $"/ owner username: '{request.OwnerToBeRemoved.UserName}' / OWNER DISBAND REQUEST CANCELED AFTER 7 DATAS");
                         }
                     }
                 }

@@ -14,6 +14,8 @@ namespace CarWashShopAPI.Helpers
         public AutoMapperProfile()
         {
             CreateMap<ServiceCreationAndUpdate, Service>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.CarWashShops, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Service, ServiceView>();
@@ -22,16 +24,30 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Name).FirstOrDefault()))
                 .ForMember(x => x.CarWashShopId, opt => opt.MapFrom(x => x.CarWashShops.Select(x => x.CarWashShop.Id).FirstOrDefault()));
 
-            CreateMap<CarWashShopCreation, Service>();
+            CreateMap<CarWashShopCreation, Service>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Description, opt => opt.Ignore())
+                .ForMember(x => x.Price, opt => opt.Ignore())
+                .ForMember(x => x.CarWashShops, opt => opt.Ignore());
 
             CreateMap<CarWashShop, CarWashShopView>()
                 .ForMember(x => x.Services, opt => opt.MapFrom(CarWashShopsOwners2CarWashShopView));
 
             CreateMap<CarWashShopCreation, CarWashShop>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.Bookings, opt => opt.Ignore())
+                .ForMember(x => x.DisbandRequests, opt => opt.Ignore())
+                .ForMember(x => x.ShopRemovalRequests, opt => opt.Ignore())
                 .ForMember(x => x.Owners, opt => opt.Ignore())
                 .ForMember(x => x.CarWashShopsServices, opt => opt.Ignore());
 
             CreateMap<CarWashShopUpdate, CarWashShop>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.CarWashShopsServices, opt => opt.Ignore())
+                .ForMember(x => x.Owners, opt => opt.Ignore())
+                .ForMember(x => x.Bookings, opt => opt.Ignore())
+                .ForMember(x => x.DisbandRequests, opt => opt.Ignore())
+                .ForMember(x => x.ShopRemovalRequests, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<CarWashShop, ListOfOwnersPerShopView>()
@@ -44,7 +60,15 @@ namespace CarWashShopAPI.Helpers
             CreateMap<ShopRemovalRequest, ShopRemovalRequestView>()
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name));
 
-            CreateMap<BookingCreation, Booking>();
+            CreateMap<BookingCreation, Booking>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.ConsumerId, opt => opt.Ignore())
+                .ForMember(x => x.Consumer, opt => opt.Ignore())
+                .ForMember(x => x.CarWashShop, opt => opt.Ignore())
+                .ForMember(x => x.Service, opt => opt.Ignore())
+                .ForMember(x => x.IsPaid, opt => opt.Ignore())
+                .ForMember(x => x.BookingStatus, opt => opt.Ignore())
+                .ForMember(x => x.DateCreated, opt => opt.Ignore());
 
             CreateMap<Booking, BookingViewConsumerSide>()
                 .ForMember(x => x.ScheduledDate, opt => opt.MapFrom(x => x.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")))
@@ -52,7 +76,7 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.Price, opt => opt.MapFrom(x => x.Service.Price))
                 .ForMember(x => x.CarWashShopName, opt => opt.MapFrom(x => x.CarWashShop.Name))
                 .ForMember(x => x.ServiceName, opt => opt.MapFrom(x => x.Service.Name));
-                
+
 
             CreateMap<Booking, BookingViewOwnerSide>()
                 .ForMember(x => x.ScheduledDate, opt => opt.MapFrom(x => x.ScheduledDateTime.Date.ToString("ddd, dd MMM yyyy")))
@@ -82,7 +106,7 @@ namespace CarWashShopAPI.Helpers
         private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, ListOfOwnersPerShopView view)
         {
             var result = new List<string>();
-            entity.Owners.ForEach(x => result.Add( x.Owner.UserName));
+            entity.Owners.ForEach(x => result.Add(x.Owner.UserName));
             return result;
         }
     }

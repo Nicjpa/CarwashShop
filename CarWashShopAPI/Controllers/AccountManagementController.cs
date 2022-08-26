@@ -21,6 +21,7 @@ namespace CarWashShopAPI.Controllers
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
+        private readonly ILogger<AccountManagementController> _logger;
         private readonly UserManager<CustomUser> _userManager;
 
         public AccountManagementController(
@@ -29,7 +30,8 @@ namespace CarWashShopAPI.Controllers
             IConfiguration configuration,
             CarWashDbContext dbContext,
             IMapper mapper,
-            IAccountRepository accountRepository
+            IAccountRepository accountRepository,
+            ILogger<AccountManagementController> logger
             )
         {
             _signInManager = signInManager;
@@ -37,6 +39,7 @@ namespace CarWashShopAPI.Controllers
             _dbContext = dbContext;
             _mapper = mapper;
             _accountRepository = accountRepository;
+            _logger = logger;
             _userManager = userManager;
         }
 
@@ -61,10 +64,19 @@ namespace CarWashShopAPI.Controllers
                 var buildToken = _mapper.Map<UserLogin>(userInfo);
 
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.ToString()));
+
+                _logger.LogInformation($" / POST / MethodName: 'CreateUser' " +
+                   $"/ user has been created '{userInfo.UserName.ToLower()}' / USER HAS BEEN CREATED - TOKEN GRANTED ");
+
                 return await _accountRepository.BuildToken(buildToken);
             }
             else
+            {
+                _logger.LogInformation($" / POST / MethodName: 'CreateUser' " +
+                   $"/ unable to build token: {result.Errors} / CREATE USER FAILED ");
+
                 return BadRequest(result.Errors);
+            }
         }
 
 
@@ -75,10 +87,19 @@ namespace CarWashShopAPI.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
+            {
+                _logger.LogInformation($" / POST / MethodName: 'Login' " +
+                   $"/ user '{model.UserName}' logged in / LOGIN SUCCESS - TOKEN GRANTED ");
+
                 return await _accountRepository.BuildToken(model);
+            }
             else
+            {
+                _logger.LogInformation($" / POST / MethodName: 'Login' " +
+                   $"/ user '{model.UserName}' failed to login / FAILED TO LOGIN ");
+
                 return BadRequest("Invalid login attempt");
-            
+            }
         }
 
 
@@ -90,11 +111,19 @@ namespace CarWashShopAPI.Controllers
             var userEntities = await _accountRepository.GetUsers(filter);
 
             if (userEntities == null || !userEntities.Any())
+            {
+                _logger.LogInformation($" / GET / MethodName: 'Login' " +
+                   $"/ user '{filter.UserName}' not found / FAILED TO FIND USER ");
+
                 return NotFound("No user found..");
+            }
 
             var usersPaginated = await _accountRepository.Pagination(HttpContext, userEntities, filter.RecordsPerPage, filter.Pagination);
 
             var userView = _mapper.Map<List<UserView>>(usersPaginated);
+
+            _logger.LogInformation($" / GET / MethodName: 'Login' " +
+                   $"/ user '{filter.UserName}' found / USER FOUND ");
 
             return Ok(userView);
         }
@@ -108,18 +137,32 @@ namespace CarWashShopAPI.Controllers
             var user = await _dbContext.CustomUsers.FirstOrDefaultAsync(x => x.Email == userEmail);
 
             if (user == null)
+            {
+                _logger.LogInformation($" / DELETE / MethodName: 'Login' " +
+                   $"/ user with email '{userEmail}' not found / BAD ATTEMPT TO DELETE USER ");
+
                 return NotFound($"User with '{userEmail}' doesn't exist..");
+            }
 
             if (user.UserName == User.Identity.Name)
+            {
+                _logger.LogInformation($" / DELETE / MethodName: 'Login' " +
+                   $"/ admin is tried to delete himself :) / BAD ATTEMPT TO DELETE YOURSELF ");
+
                 return BadRequest("You cannot delete yourself!");
+            }
+                
 
             if (user.Role == "Owner")
             {
                 await _accountRepository.DeleteUserAssets(user);
-
                 _dbContext.CustomUsers.Remove(user);
                 await _dbContext.SaveChangesAsync();
             }
+
+            _logger.LogInformation($" / DELETE / MethodName: 'Login' " +
+                   $"/ user '{user.UserName}' with email '{user.Email}' has been deleted / USER REMOVED ");
+
             return Ok($"You have successfully deleted user with email '{user.Email}' and username '{user.UserName}'.");
         }
     }

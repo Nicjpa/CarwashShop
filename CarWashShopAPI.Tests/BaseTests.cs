@@ -1,28 +1,34 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.Controllers;
 using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories;
 using CarWashShopAPI.Repositories.IRepositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+
 using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Tests
 {
     public class BaseTests
     {
+
+
+
         protected CarWashDbContext BuildDbContext(string databaseName)
         {
             var options = new DbContextOptionsBuilder<CarWashDbContext>()
@@ -67,8 +73,108 @@ namespace CarWashShopAPI.Tests
             var repo = new CarWashRepository(dbContext);
             return repo;
         }
+        protected IOwnerRepository BuildOwnerRepo(CarWashDbContext dbContext)
+        {
+            var repo = new OwnerRepository(dbContext);
+            return repo;
+        }
 
-        public async Task<string> PopulatedDataBase()
+        protected IAccountRepository BuildAccountRepo(CarWashDbContext dbContext, UserManager<CustomUser> userManager, IConfiguration configuration)
+        {
+            var repo = new AccountRepository(dbContext, userManager, configuration);
+            return repo;
+        }
+
+        protected ILoggerFactory BuildLoggerFactory()
+        {
+            var loggerFactory = new LoggerFactory();
+            return loggerFactory;
+        }
+
+
+        protected ILogger<ConsumerManagementController> BuildLogger(ILoggerFactory loggerFactory)
+        {
+            var logger = new Logger<ConsumerManagementController>(loggerFactory);
+            return logger;
+        }
+
+
+        protected AccountManagementController BuildAccountsController(string databaseName)
+        {
+            var context = BuildDbContext(databaseName);
+            var myUserStore = new UserStore<CustomUser>(context);
+            var userManager = BuildUserManager(myUserStore);
+            var mapper = BuildMapper();
+            var loggerMoq = Mock.Of<ILogger<AccountManagementController>>();
+            var httpContext = new DefaultHttpContext();
+            MockAuth(httpContext);
+            var signInManager = SetupSignInManager(userManager, httpContext);
+
+            var myConfiguration = new Dictionary<string, string>()
+            {
+                {"JWT:key", "ASJIDAIFHAVUNVAJDSNHUVEJHVHUIEVNDMVVLSJVIRWSJVRIWJHV" }
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfiguration)
+                .Build();
+
+            var repo = BuildAccountRepo(context, userManager, configuration);
+
+            return new AccountManagementController(userManager, signInManager, configuration, context, mapper, repo, loggerMoq);
+        }
+
+        protected static UserManager<TUser> BuildUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
+        {
+            store = store ?? new Mock<IUserStore<TUser>>().Object;
+            var options = new Mock<IOptions<IdentityOptions>>();
+            var idOptions = new IdentityOptions();
+            idOptions.Lockout.AllowedForNewUsers = false;
+
+            options.Setup(o => o.Value).Returns(idOptions);
+
+            var userValidators = new List<IUserValidator<TUser>>();
+
+            var validator = new Mock<IUserValidator<TUser>>();
+            userValidators.Add(validator.Object);
+            var pwdValidators = new List<PasswordValidator<TUser>>();
+            pwdValidators.Add(new PasswordValidator<TUser>());
+
+            var userManager = new UserManager<TUser>(store, options.Object, new PasswordHasher<TUser>(),
+            userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
+            new IdentityErrorDescriber(), null,
+            new Mock<ILogger<UserManager<TUser>>>().Object);
+
+            validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
+            .Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
+
+            return userManager;
+        }
+
+        protected static SignInManager<TUser> SetupSignInManager<TUser>(UserManager<TUser> manager,
+            HttpContext context, ILogger logger = null, IdentityOptions identityOptions = null,
+            IAuthenticationSchemeProvider schemeProvider = null) where TUser : class
+        {
+            var contextAccessor = new Mock<IHttpContextAccessor>();
+            contextAccessor.Setup(a => a.HttpContext).Returns(context);
+            identityOptions = identityOptions ?? new IdentityOptions();
+            var options = new Mock<IOptions<IdentityOptions>>();
+            options.Setup(a => a.Value).Returns(identityOptions);
+            var claimsFactory = new UserClaimsPrincipalFactory<TUser>(manager, options.Object);
+            schemeProvider = schemeProvider ?? new Mock<IAuthenticationSchemeProvider>().Object;
+            var sm = new SignInManager<TUser>(manager, contextAccessor.Object, claimsFactory, options.Object, null, schemeProvider, new DefaultUserConfirmation<TUser>());
+            sm.Logger = logger ?? (new Mock<ILogger<SignInManager<TUser>>>()).Object;
+            return sm;
+
+        }
+
+        protected Mock<IAuthenticationService> MockAuth(HttpContext context)
+        {
+            var auth = new Mock<IAuthenticationService>();
+            context.RequestServices = new ServiceCollection().AddSingleton(auth.Object).BuildServiceProvider();
+            return auth;
+        }
+        protected async Task<string> PopulatedDataBase()
         {
             string dataBaseName = Guid.NewGuid().ToString();
             var dbContext = BuildDbContext(dataBaseName);
@@ -249,8 +355,10 @@ namespace CarWashShopAPI.Tests
             // SHOPS_OWNERS
             dbContext.CarWashShopsOwners.AddRange(new List<CarWashShopsOwners>()
             { 
-                new CarWashShopsOwners() {CarWashShopId = 1, OwnerId = "edebb245-2066-4126-b9e4-dc020ffdafe7" },
+                new CarWashShopsOwners() {CarWashShopId = 1, OwnerId = "edebb245-2066-4126-b9e4-dc020ffdafe7"},
+                new CarWashShopsOwners() {CarWashShopId = 1, OwnerId = "f02b000c-622d-4c3f-b215-7e08cea2469c"},
                 new CarWashShopsOwners() {CarWashShopId = 1, OwnerId = "e8952694-1ca9-44b1-a8fa-73988bb4eee5"},
+                new CarWashShopsOwners() {CarWashShopId = 2, OwnerId = "e8952694-1ca9-44b1-a8fa-73988bb4eee5"},
                 new CarWashShopsOwners() {CarWashShopId = 2, OwnerId = "caba2ea1-ab92-4db7-a2fa-0d01d6d6195f"},
                 new CarWashShopsOwners() {CarWashShopId = 3, OwnerId = "caba2ea1-ab92-4db7-a2fa-0d01d6d6195f"},
                 new CarWashShopsOwners() {CarWashShopId = 4, OwnerId = "71a07f92-c8b6-47a8-8f1f-0eb340062e57"},
@@ -536,7 +644,7 @@ namespace CarWashShopAPI.Tests
                     CarWashShopId = 2,
                     ServiceId  = 1,
                     ScheduledDateTime = DateTime.Now,
-                    IsPaid = false,
+                    IsPaid = true,
                     BookingStatus = BookingStatus.Rejected
                 },
 
@@ -547,7 +655,7 @@ namespace CarWashShopAPI.Tests
                     CarWashShopId = 2,
                     ServiceId  = 2,
                     ScheduledDateTime = new DateTime(2022, 10, 05, 11, 0, 0),
-                    IsPaid = false,
+                    IsPaid = true,
                     BookingStatus = BookingStatus.Pending
                 },
 
@@ -557,8 +665,8 @@ namespace CarWashShopAPI.Tests
                     ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                     CarWashShopId = 2,
                     ServiceId  = 2,
-                    ScheduledDateTime = new DateTime(2022, 9, 7, 19, 0, 0),
-                    IsPaid = false,
+                    ScheduledDateTime = DateTime.Now.AddHours(-1),
+                    IsPaid = true,
                     BookingStatus = BookingStatus.Pending
                 },
 
@@ -608,57 +716,136 @@ namespace CarWashShopAPI.Tests
                     BookingStatus = BookingStatus.Pending
                 },
 
+
+
+                new Booking()
+                {
+                    Id = 9,
+                    ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
+                    CarWashShopId = 3,
+                    ServiceId  = 9,
+                    ScheduledDateTime = new DateTime(2077, 5, 15, 15, 0, 0),
+                    IsPaid = true,
+                    BookingStatus = BookingStatus.Confirmed
+                },
+
+                new Booking()
+                {
+                    Id = 10,
+                    ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
+                    CarWashShopId = 2,
+                    ServiceId  = 3,
+                    ScheduledDateTime = new DateTime(2022, 10, 12, 15, 0, 0),
+                    IsPaid = true,
+                    BookingStatus = BookingStatus.Confirmed
+                },
+
+                new Booking()
+                {
+                    Id = 11,
+                    ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
+                    CarWashShopId = 2,
+                    ServiceId  = 3,
+                    ScheduledDateTime = new DateTime(2022, 11, 05, 11, 0, 0),
+                    IsPaid = true,
+                    BookingStatus = BookingStatus.Pending
+                },
+
+                new Booking()
+                {
+                    Id = 12,
+                    ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
+                    CarWashShopId = 3,
+                    ServiceId  = 7,
+                    ScheduledDateTime = new DateTime(2022, 12, 7, 19, 0, 0),
+                    IsPaid = false,
+                    BookingStatus = BookingStatus.Pending
+                },
+
             });
+
+            dbContext.OwnerRemovalRequests.AddRange(new List<DisbandRequest>(){
+
+                new DisbandRequest()
+                {
+                     Id = 1,
+                     RequestStatement = "",
+                     RequesterId = "74ea7ef1-0444-447a-9780-0b3a0126a20b",
+                     OwnerToBeRemovedId = "f02b000c-622d-4c3f-b215-7e08cea2469c",
+                     CarWashShopId = 5,
+                     IsApproved = true,
+                     DateCreated = DateTime.Now
+                },
+
+                new DisbandRequest()
+                {
+                     Id = 2,
+                     RequestStatement = "",
+                     RequesterId = "edebb245-2066-4126-b9e4-dc020ffdafe7",
+                     OwnerToBeRemovedId = "e8952694-1ca9-44b1-a8fa-73988bb4eee5",
+                     CarWashShopId = 1,
+                     IsApproved = true,
+                     DateCreated = DateTime.Now
+                },
+
+                new DisbandRequest()
+                {
+                     Id = 3,
+                     RequestStatement = "",
+                     RequesterId = "caba2ea1-ab92-4db7-a2fa-0d01d6d6195f",
+                     OwnerToBeRemovedId = "e8952694-1ca9-44b1-a8fa-73988bb4eee5",
+                     CarWashShopId = 2,
+                     IsApproved = false,
+                     DateCreated = DateTime.Now
+                },
+
+            });
+
+            dbContext.ShopRemovalRequests.AddRange(new List<ShopRemovalRequest>() 
+            {
+                new ShopRemovalRequest()
+                {
+                    Id = 1,
+                    OwnerId = "f02b000c-622d-4c3f-b215-7e08cea2469c",
+                    CarWashShopId = 5,
+                    RequestStatement = "",
+                    IsApproved  = true,
+                    DateCreated  = DateTime.Now
+                },
+
+                new ShopRemovalRequest()
+                {
+                    Id = 2,
+                    OwnerId = "e8952694-1ca9-44b1-a8fa-73988bb4eee5",
+                    CarWashShopId = 5,
+                    RequestStatement = "",
+                    IsApproved  = false,
+                    DateCreated  = DateTime.Now
+                },
+
+                new ShopRemovalRequest()
+                {
+                    Id = 3,
+                    OwnerId = "f02b000c-622d-4c3f-b215-7e08cea2469c",
+                    CarWashShopId = 1,
+                    RequestStatement = "",
+                    IsApproved  = false,
+                    DateCreated  = DateTime.Now
+                },
+
+                new ShopRemovalRequest()
+                {
+                    Id = 4,
+                    OwnerId = "edebb245-2066-4126-b9e4-dc020ffdafe7",
+                    CarWashShopId = 1,
+                    RequestStatement = "",
+                    IsApproved  = false,
+                    DateCreated  = DateTime.Now
+                },
+            });
+
             await dbContext.SaveChangesAsync();
             return dataBaseName;
         }
-        //protected ControllerContext BuildControllerContextWithDefaultUser()
-        //{
-        //    var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-        //    {
-        //        new Claim(ClaimTypes.Role, "Consumer")
-        //    }, "test"));
-
-        //    return new ControllerContext()
-        //    {
-        //        HttpContext = new DefaultHttpContext() { User = user }
-        //    };
-        //}
-
-
-        //protected WebApplicationFactory<Program> BuildWebApplicationFactory(string databaseName, bool bypassSecurity = true)
-        //{
-        //    var factory = new WebApplicationFactory<Program>();
-
-        //    factory = factory.WithWebHostBuilder(builder =>
-        //    {
-        //        builder.ConfigureTestServices(services =>
-        //        {
-        //            var descriptorDbContext = services.SingleOrDefault(d =>
-        //            d.ServiceType == typeof(DbContextOptions<CarWashDbContext>));
-
-        //            if (descriptorDbContext != null)
-        //            {
-        //                services.Remove(descriptorDbContext);
-        //            }
-
-        //            services.AddDbContext<CarWashDbContext>(options =>
-        //            {
-        //                options.UseInMemoryDatabase(databaseName);
-        //            });
-
-        //            if (bypassSecurity)
-        //            {
-        //                services.AddSingleton<IAuthorizationHandler, AllowAnonymousHandler>();
-
-        //                services.AddControllers(options =>
-        //                {
-        //                    options.Filters.Add(new FakeUserFilter());
-        //                });
-        //            }
-        //        });
-        //    });
-        //    return factory;
-        //}
     }
 }

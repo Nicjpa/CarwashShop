@@ -21,12 +21,18 @@ namespace CarWashShopAPI.Controllers
         private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IServiceRepository _serviceRepository;
+        private readonly ILogger<OwnerServiceCRUDController> _logger;
 
-        public OwnerServiceCRUDController(CarWashDbContext dbContext, IMapper mapper, IServiceRepository serviceRepository )
+        public OwnerServiceCRUDController(
+            CarWashDbContext dbContext, 
+            IMapper mapper, 
+            IServiceRepository serviceRepository, 
+            ILogger<OwnerServiceCRUDController> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _serviceRepository = serviceRepository;
+            _logger = logger;
         }
 
 
@@ -42,11 +48,18 @@ namespace CarWashShopAPI.Controllers
             var serviceEntities = await _serviceRepository.GetAllServices(userName, filters);
 
             if (serviceEntities == null || !serviceEntities.Any())
-                return NotFound("There is no Service with specified filter parameters..");
+            {
+                _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetAllServices-OwnerSide' " +
+                    $"/ no filtered results / '0' SERVICES FOUND ");
 
+                return NotFound("There is no Service with specified filter parameters..");
+            }
             var servicesPaginated = await _serviceRepository.Pagination(HttpContext, serviceEntities, filters.RecordsPerPage, filters.Pagination);
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
+
+            _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetAllServices-OwnerSide' " +
+                    $"/ results found / '{allServicesView.Count}' SERVICES FOUND ");
 
             return allServicesView;
         }
@@ -65,11 +78,21 @@ namespace CarWashShopAPI.Controllers
             var shopServiceEntity = await _serviceRepository.GetCarWashShopService(shopId);
 
             if (shopServiceEntity == null)
+            {
+                _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'AddNewServiceToShop-OwnerSide' " +
+                    $"/ no shop found, bad shop ID '{shopId}' / ADD SERVICE FAILED ");
+
                 return NotFound($"There is no CarWashShop with ID: '{shopId}'..");
+            }
 
             shopServiceEntity.CarWashShop.Owners.ForEach(x => possibleUserNames.Add(x.Owner.UserName));
             if (!possibleUserNames.Contains(userName))
+            {
+                _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'AddNewServiceToShop-OwnerSide' " +
+                    $"/ invalid attempt to access foreign shop '{shopServiceEntity.CarWashShop.Name}' with ID '{shopId}' / ADD SERVICE FAILED ");
+
                 return BadRequest($"You don't have access to the {shopServiceEntity.CarWashShop.Name} with ID: '{shopId}'..");
+            }
 
             var newServiceEntity = _mapper.Map<Service>(newServiceCreation);
             shopServiceEntity.Service = newServiceEntity;
@@ -78,6 +101,9 @@ namespace CarWashShopAPI.Controllers
             await _dbContext.SaveChangesAsync();
 
             var newServiceCreated = _mapper.Map<ServiceView>(newServiceEntity);
+
+            _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'AddNewServiceToShop-OwnerSide' " +
+                    $"/ new service added to the shop with ID '{shopId}' / ADDED SERVICE SUCCESSFULLY ");
 
             return newServiceCreated;
         }
@@ -95,13 +121,21 @@ namespace CarWashShopAPI.Controllers
             var serviceEntity = await _serviceRepository.GetServiceByID(serviceID, userName);
 
             if (serviceEntity == null)
+            {
+                _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopService-OwnerSide' " +
+                    $"/ no service found with ID '{serviceID}' / SERVICE UPDATE FAILED ");
+
                 return NotFound($"You don't have any service with ID '{serviceID}'..");
+            }
 
             serviceEntity = _mapper.Map(serviceUpdate, serviceEntity);
             _dbContext.Entry(serviceEntity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
+
+            _logger.LogInformation($" / PUT / UserName: '{userName.ToUpper()}' / MethodName: 'UpdateShopService-OwnerSide' " +
+                   $"/ updated service with ID '{serviceID}' / SERVICE UPDATED SUCCESSFULLY ");
 
             return serviceView;
         }
@@ -116,22 +150,42 @@ namespace CarWashShopAPI.Controllers
         {
             string userName = User.Identity.Name;
 
+            if (serviceUpdate == null)
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopService-OwnerSide' " +
+                    $"/ no info specified to patch the service with ID '{serviceID}' / PATCH SERVICE FAILED ");
+
+                return BadRequest("You didn't specify which info do you want to patch.."); 
+            }
+
             var serviceEntity = await _serviceRepository.GetServiceByID(serviceID, userName);
 
             if (serviceEntity == null)
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopService-OwnerSide' " +
+                    $"/ no service found, bad ID '{serviceID}' / PATCH SERVICE FAILED ");
+
                 return NotFound($"You don't have any service with ID '{serviceID}'..");
+            }
 
             var serviceEntityPatch = _mapper.Map<ServiceCreationAndUpdate>(serviceEntity);
             
             serviceUpdate.ApplyTo(serviceEntityPatch, ModelState);
 
             if (!TryValidateModel(serviceEntityPatch))
+            {
+                _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopService-OwnerSide' " +
+                   $"/ bad input entry to patch service with ID '{serviceID}' / PATCH SERVICE FAILED ");
                 return BadRequest("Check your patch inputs..");
+            }
 
             _mapper.Map(serviceEntityPatch, serviceEntity);
             await _dbContext.SaveChangesAsync();
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
+
+            _logger.LogInformation($" / PATCH / UserName: '{userName.ToUpper()}' / MethodName: 'PatchShopService-OwnerSide' " +
+                  $"/ successfully patched service with ID '{serviceID}' / PATCH SERVICE SUCCESS ");
 
             return serviceView;
         }
@@ -149,7 +203,12 @@ namespace CarWashShopAPI.Controllers
             var shopEntity = await _serviceRepository.GetShopToRemoveServiceByID(serviceID, userName);
 
             if (shopEntity == null)
+            {
+                _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveServiceFromShop-OwnerSide' " +
+                  $"/ no service found with ID '{serviceID}' / REMOVE SERVICE FAILED ");
+
                 return NotFound($"You don't have any service with ID '{serviceID}'..");
+            }
 
             var service = shopEntity.CarWashShopsServices
                 .Select(x => x.Service)
@@ -161,10 +220,18 @@ namespace CarWashShopAPI.Controllers
             string shopName = shopEntity.Name;
 
             if (amountOfServicesInShop == 1)
+            {
+                _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveServiceFromShop-OwnerSide' " +
+                  $"/ attempt to remove only shop service, ID '{serviceID}' / REMOVE SERVICE FAILED ");
+
                 return BadRequest($"You cannot delete the last and only existing service that you have in '{shopName}' CarWashShop..");
+            }
 
             _dbContext.Services.Remove(service);
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveServiceFromShop-OwnerSide' " +
+                  $"/ service '{service.Name}' has been removed from the shop '{shopName}' / SERVICE HAS BEEN SUCCESSFULLY REMOVED ");
 
             return Ok($"You have successfully removed '{service.Name}' service from the {shopName} CarWashShop..");
         }

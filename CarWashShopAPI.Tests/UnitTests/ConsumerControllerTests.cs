@@ -36,10 +36,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new CarWashFilter();
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+            string userName = await GetUserName(dbContext, "vishnu");
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+           {
+                new Claim(ClaimTypes.Name, userName)
+           }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetShops(filter);
 
             // Verification
@@ -57,10 +64,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new CarWashFilter() { CarWashShopId = 1 };
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+            string userName = await GetUserName(dbContext, "vishnu");
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+           {
+                new Claim(ClaimTypes.Name, userName)
+           }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetShops(filter);
 
             // Verification
@@ -78,10 +92,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new CarWashFilter() { CarWashName = "Tsu" };
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+            string userName = await GetUserName(dbContext, "vishnu");
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+           {
+                new Claim(ClaimTypes.Name, userName)
+           }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetShops(filter);
 
             // Verification
@@ -101,10 +122,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new CarWashFilter() { CarWashName = "shop" };
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+            string userName = await GetUserName(dbContext, "vishnu");
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+           {
+                new Claim(ClaimTypes.Name, userName)
+           }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetShops(filter);
 
             // Verification
@@ -128,10 +156,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new FilterServices();
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+            string userName = await GetUserName(dbContext, "vishnu");
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, userName)
+            }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetServices(filter);
 
             // Verification
@@ -149,10 +184,18 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new FilterServices() { MinPrice = 10, MaxPrice = 15};
+            string userName = await GetUserName(dbContext, "vishnu");
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, userName)
+            }));
+
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetServices(filter);
 
             // Verification
@@ -170,10 +213,18 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildConsumerRepo(dbContext);
             var filter = new FilterServices() { ServiceID = 15 };
+            string userName = await GetUserName(dbContext, "vishnu");
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+
+            var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, userName)
+            }));
+            
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
-            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
+            controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.GetServices(filter);
 
             // Verification
@@ -204,8 +255,10 @@ namespace CarWashShopAPI.Tests.UnitTests
                 new Claim(ClaimTypes.Name, userName)
             }));
 
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
+
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetYourBookings(filter);
@@ -232,9 +285,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetYourBookings(filter);
@@ -243,7 +297,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             var result = response.Value;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(4, result.Count);
         }
 
         [TestMethod]
@@ -261,9 +315,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetYourBookings(filter);
@@ -305,9 +360,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -347,9 +403,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -389,9 +446,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -433,9 +491,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"Booking needs to be scheduled at least 2 hours prior to the service start.." +
                                   $"\nCURRENT DATE: {DateTime.Now.Date.ToString("ddd, dd MMM yyyy")}" +
                                   $"\nCURRENT TIME: {DateTime.Now.ToString("HH:mm")}";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -480,9 +539,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"Your scheduled hour '{creation.ScheduledDateTime.ToString("HH:mm")}' is out of the '{shop.Name}' working hours.." +
                                   $"\nOPENING TIME: {shop.OpeningTime}" +
                                   $"\nCLOSING TIME: {shop.ClosingTime}";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -525,9 +585,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             string badReqMessage = $"Unfortunately all '{shop.AmountOfWashingUnits}' washing units are already booked for the selected date and time..";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CreateBookng(creation);
@@ -562,9 +623,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             string OkReqMessage = $"You have successfully canceled your booking scheduled for '{booking.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'.";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             Assert.IsTrue(dbContext.Bookings.Any(x => x.Id == bookingId));
@@ -599,9 +661,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             string badReqMessage = "You cannot cancel your booking less than 15 minutes before the scheduled time..";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             Assert.IsTrue(dbContext.Bookings.Any(x => x.Id == lateBookingId));
@@ -635,9 +698,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             string notFoundMessage = $"You don't have booking with ID: '{unexsistingBookingId}'..";
+            var loggerMoq = Mock.Of<ILogger<ConsumerManagementController>>();
 
             // Testing
-            var controller = new ConsumerManagementController(dbContext, mapper, repository);
+            var controller = new ConsumerManagementController(dbContext, mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             Assert.IsFalse(dbContext.Bookings.Any(x => x.Id == unexsistingBookingId));
