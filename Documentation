@@ -62,6 +62,7 @@ I M P L E M E N T E D   C O N C E P T S:
 2) ASP.NET Identity:
 - extended user entity
 - role user claims
+- tokens
 
 3) CustomDIRepositories:
 - each controller has his own customRepository
