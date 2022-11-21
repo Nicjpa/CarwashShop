@@ -68,14 +68,12 @@ namespace CarWashShopAPI.Repositories
                 var RemovalRequests = await dbContext.ShopRemovalRequests
                     .Include(x => x.Owner)
                     .ToListAsync();
-
-                var allRemoveShopIDs = new List<int>();
-                foreach (var request in RemovalRequests)
-                {
-                    if (!allRemoveShopIDs.Contains(request.CarWashShopId))
-                        allRemoveShopIDs.Add(request.CarWashShopId);
-                }
-
+      
+                var allRemoveShopIDs = RemovalRequests
+                    .Distinct()
+                    .Select(x => x.CarWashShopId)
+                    .ToList();
+ 
                 var allShopsForRemoval = await dbContext.CarWashsShops
                     .Include(x => x.Owners)
                     .Include(x => x.CarWashShopsServices)

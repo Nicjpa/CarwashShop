@@ -151,5 +151,45 @@ namespace CarWashShopAPI.Repositories
 
             return doesExist;
         }
+
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateEntity<T>(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task<bool> CheckShopName(string shopName)
+        {
+            return await _dbContext.CarWashsShops.AnyAsync(x => x.Name == shopName);
+        }
+
+        public async Task AddRangeOfServices(List<Service> services)
+        {
+            _dbContext.Services.AddRange(services);
+        }
+
+        public async Task RemoveRangeOfServices(List<Service> services)
+        {
+            _dbContext.Services.RemoveRange(services);
+        }
+
+        public async Task AddCarWashShop(CarWashShop shop)
+        {
+            _dbContext.CarWashsShops.Add(shop);
+        }
+
+        public async Task RemoveCarWashShop(CarWashShop shop)
+        {
+            _dbContext.CarWashsShops.Remove(shop);
+        }
+
+        public async Task AddRangeOfShopRemovals(List<ShopRemovalRequest> shopRemovals)
+        {
+            _dbContext.ShopRemovalRequests.AddRange(shopRemovals);
+        }
     }
 }

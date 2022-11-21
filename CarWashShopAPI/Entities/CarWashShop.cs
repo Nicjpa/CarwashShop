@@ -1,10 +1,4 @@
-﻿
-
-
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
-
-namespace CarWashShopAPI.Entities
+﻿namespace CarWashShopAPI.Entities
 {
     public class CarWashShop
     {

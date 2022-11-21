@@ -34,7 +34,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "monica");
             var filter = new CarWashFilter();
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -42,7 +42,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.Get(filter);
 
@@ -77,8 +77,8 @@ namespace CarWashShopAPI.Tests.UnitTests
                 new Claim(ClaimTypes.Name, userName)
             }));
 
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.Get(filter);
 
@@ -129,8 +129,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.Post(filter);
 
@@ -182,8 +182,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = "Your shop needs to have at least one washing service..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.Post(filter);
 
@@ -229,8 +229,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"CarWashShop '{shop.Name}' already exists..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             var response = await controller.Post(filter);
 
@@ -253,10 +253,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "andry");
-            int shopId = 1;
 
             var update = new CarWashShopUpdate()
             {
+                Id = 1,
                 Name = "Updated Shop Name",
                 AdvertisingDescription = "some description",
                 AmountOfWashingUnits = 16,
@@ -271,11 +271,11 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Put(shopId, update);
+            var response = await controller.Put(update);
 
             // Verification
             var result = response.Value;
@@ -300,10 +300,9 @@ namespace CarWashShopAPI.Tests.UnitTests
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "andry");
             var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync();
-            int shopId = 1;
-
             var update = new CarWashShopUpdate()
             {
+                Id = 1,
                 Name = shop.Name,
                 AdvertisingDescription = "some description",
                 AmountOfWashingUnits = 16,
@@ -320,11 +319,11 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"CarWashShop '{update.Name}' already exists..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Put(shopId, update);
+            var response = await controller.Put(update);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -343,10 +342,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "andry");
-            int shopId = 101;
 
             var update = new CarWashShopUpdate()
             {
+                Id = 101,
                 Name = "AquaStrike",
                 AdvertisingDescription = "some description",
                 AmountOfWashingUnits = 16,
@@ -360,14 +359,14 @@ namespace CarWashShopAPI.Tests.UnitTests
                 new Claim(ClaimTypes.Name, userName),
             }));
 
-            string notFoundMessage = $"You don't have any CarWashShop with ID: '{shopId}'..";
+            string notFoundMessage = $"You don't have any CarWashShop with ID: '{update.Id}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Put(shopId, update);
+            var response = await controller.Put(update);
 
             // Verification
             var result = response.Result as NotFoundObjectResult;
@@ -402,8 +401,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, userName) }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             controller.ObjectValidator = objectValidator.Object;
@@ -436,8 +435,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = "You didn't specify which info do you want to patch..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
@@ -471,8 +470,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"You don't have any CarWashShop with ID: '{shopId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
@@ -498,21 +497,20 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "linda");
-            int shopId = 4;
-            var deleteStatement = new CarWashShopRemovalRequestCreation();
-            var shopName = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == shopId);
+            var deleteStatement = new CarWashShopRemovalRequestCreation() { ShopId = 4 };
+            var shopName = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == deleteStatement.ShopId);
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, userName) }));
             string okMessage = $"You have successfully removed '{shopName.Name}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Delete(shopId, deleteStatement);
+            var response = await controller.Delete(deleteStatement);
 
-            bool isShopDeleted = await dbContext.CarWashsShops.AnyAsync(x => x.Id == shopId);
+            bool isShopDeleted = await dbContext.CarWashsShops.AnyAsync(x => x.Id == deleteStatement.ShopId);
             
             // Verification
             var result = response.Result as OkObjectResult;
@@ -532,12 +530,11 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "mohinder");
-            int shopId = 2;
-            var deleteStatement = new CarWashShopRemovalRequestCreation();
+            var deleteStatement = new CarWashShopRemovalRequestCreation() { ShopId = 2};
             var shopName = await dbContext.CarWashsShops
                 .Include(x => x.Owners)
                 .ThenInclude(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Id == shopId);
+                .FirstOrDefaultAsync(x => x.Id == deleteStatement.ShopId);
 
             string otherOwners = await repository.ConcatenateCoOwnerNames(shopName, userName);
             int numOfOtherOwners = shopName.Owners.Count(x => x.Owner.UserName != userName);
@@ -547,15 +544,15 @@ namespace CarWashShopAPI.Tests.UnitTests
             string okMessage = $"Removal request has been made, because you are sharing ownership of the '{shopName.Name}' with {otherOwners}and now it awaits their approval..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Delete(shopId, deleteStatement);
+            var response = await controller.Delete(deleteStatement);
 
-            bool doesShopExist = await dbContext.CarWashsShops.AnyAsync(x => x.Id == shopId);
-            bool requestsAreMade = await dbContext.ShopRemovalRequests.Where(x => x.CarWashShopId == shopId).CountAsync() == numOfOtherOwners ? true : false;
+            bool doesShopExist = await dbContext.CarWashsShops.AnyAsync(x => x.Id == deleteStatement.ShopId);
+            bool requestsAreMade = await dbContext.ShopRemovalRequests.Where(x => x.CarWashShopId == deleteStatement.ShopId).CountAsync() == numOfOtherOwners ? true : false;
 
             // Verification
             var result = response.Result as OkObjectResult;
@@ -575,18 +572,17 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "linda");
-            int shopId = 99;
-            var deleteStatement = new CarWashShopRemovalRequestCreation();
+            var deleteStatement = new CarWashShopRemovalRequestCreation() { ShopId = 99};
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, userName) }));
-            string badReqMessage = $"There is no CarWashShop with ID: '{shopId}' in your possession..";
+            string badReqMessage = $"There is no CarWashShop with ID: '{deleteStatement.ShopId}' in your possession..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.Delete(shopId, deleteStatement);
+            var response = await controller.Delete(deleteStatement);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -604,22 +600,21 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildCarWashRepo(dbContext);
             string userName = await GetUserName(dbContext, "alexp");
-            int shopId = 5;
-            var deleteStatement = new CarWashShopRemovalRequestCreation();
+            var deleteStatement = new CarWashShopRemovalRequestCreation() { ShopId = 5};
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, userName) }));
-            string badReqMessage = $"Removal request is already made for the CarWashShop with ID: '{shopId}'";
+            string badReqMessage = $"Removal request is already made for the CarWashShop with ID: '{deleteStatement.ShopId}'";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerCarWashShopCRUDController>>();
-            var controller = new OwnerCarWashShopCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerShopController>>();
+            var controller = new OwnerShopController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            await controller.Delete(shopId, deleteStatement);
+            await controller.Delete(deleteStatement);
 
-            var response = await controller.Delete(shopId, deleteStatement);
+            var response = await controller.Delete(deleteStatement);
 
-            bool requestsAlreadyExists = await dbContext.ShopRemovalRequests.AnyAsync(x => x.CarWashShopId == shopId);
+            bool requestsAlreadyExists = await dbContext.ShopRemovalRequests.AnyAsync(x => x.CarWashShopId == deleteStatement.ShopId);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;

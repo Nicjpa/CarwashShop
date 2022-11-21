@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.DTO;
 using CarWashShopAPI.DTO.BookingDTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
-using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace CarWashShopAPI.Controllers
 {
@@ -16,19 +16,16 @@ namespace CarWashShopAPI.Controllers
     [ApiController]
     public class ConsumerManagementController : ControllerBase
     {
-        private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IConsumerRepository _consumerRepository;
         private readonly ILogger<ConsumerManagementController> _logger;
         public ConsumerManagementController
             (
-            CarWashDbContext dbContext, 
             IMapper mapper, 
             IConsumerRepository consumerRepository, 
             ILogger<ConsumerManagementController> logger
             )
         {
-            _dbContext = dbContext;
             _mapper = mapper;
             _consumerRepository = consumerRepository;
             _logger = logger;
@@ -52,7 +49,7 @@ namespace CarWashShopAPI.Controllers
                 return NotFound("There is no CarWashShop found..");
             }
 
-            var shopsPaginated = await _consumerRepository.Pagination(HttpContext, carShopsEntities, filter.RecordsPerPage, filter.Pagination);
+            var shopsPaginated = await _consumerRepository.Pagination(HttpContext, carShopsEntities, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(shopsPaginated);
 
@@ -78,7 +75,7 @@ namespace CarWashShopAPI.Controllers
                 return NotFound("There is no Service found..");
             }
 
-            var servicesPaginated = await _consumerRepository.Pagination(HttpContext, serviceEntities, filter.RecordsPerPage, filter.Pagination);
+            var servicesPaginated = await _consumerRepository.Pagination(HttpContext, serviceEntities, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
 
@@ -104,7 +101,7 @@ namespace CarWashShopAPI.Controllers
                 return NotFound("No bookings found with specified filters");
             }
 
-            var bookingsPaginated = await _consumerRepository.Pagination(HttpContext, bookingsEntity, filter.RecordsPerPage, filter.Pagination);
+            var bookingsPaginated = await _consumerRepository.Pagination(HttpContext, bookingsEntity, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var bookingsView = _mapper.Map<List<BookingViewConsumerSide>>(bookingsPaginated);
 
@@ -170,8 +167,8 @@ namespace CarWashShopAPI.Controllers
             var bookingEntity = _mapper.Map<Booking>(bookingCreation);
             bookingEntity.ConsumerId = userId;
 
-            _dbContext.Bookings.Add(bookingEntity);
-            await _dbContext.SaveChangesAsync();
+            await _consumerRepository.AddBooking(bookingEntity);
+            await _consumerRepository.Commit();
 
             var bookingView = _mapper.Map<BookingViewConsumerSide>(bookingEntity);
 
@@ -201,8 +198,8 @@ namespace CarWashShopAPI.Controllers
                     return BadRequest("You cannot cancel your booking less than 15 minutes before the scheduled time..");
                 }
 
-                _dbContext.Bookings.Remove(bookingEntity);
-                await _dbContext.SaveChangesAsync();
+                await _consumerRepository.DeleteBooking(bookingEntity);
+                await _consumerRepository.Commit();
 
                 _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'CancelBooking-ConsumerSide' " +
                         $"/ SUCCESSFULLY CANCELED ");

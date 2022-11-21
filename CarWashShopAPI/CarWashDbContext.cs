@@ -19,7 +19,7 @@ namespace CarWashShopAPI
         public DbSet<DisbandRequest> OwnerRemovalRequests { get; set; }
         public DbSet<ShopRemovalRequest> ShopRemovalRequests { get; set; }
         public DbSet<CustomUser> CustomUsers { get; set; }
-        public DbSet<IncomeEntity> Income { get; set; }
+        public DbSet<ShopIncome> Income { get; set; }
       
 
 

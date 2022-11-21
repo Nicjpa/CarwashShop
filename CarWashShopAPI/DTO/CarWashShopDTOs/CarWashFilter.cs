@@ -1,10 +1,7 @@
 ﻿namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {
-    public class CarWashFilter
+    public class CarWashFilter : PaginationDTO
     {
-        public int Page { get; set; } = 1;
-        public int RecordsPerPage { get; set; } = 20;
-        public PaginationDTO Pagination { get { return new PaginationDTO() { Page = Page, RecordsPerPage = RecordsPerPage }; } }
         public int? CarWashShopId { get; set; }
         public string? CarWashName { get; set; }
         public string? AdvertisingDescription { get; set; }

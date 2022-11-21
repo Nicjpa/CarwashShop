@@ -69,9 +69,10 @@ namespace CarWashShopAPI.Tests.UnitTests
                 UserName = "linda",
                 Email = "linda.jones@gmail.com",
                 PhoneNumber = "+1 223-814-3940",
-                Password = "Mercury!"
+                Password = "Mercury!",
+                Role = RoleClaim.Owner
             };
-            await accountController.CreateUser(userInfo, RoleClaim.Owner);
+            await accountController.CreateUser(userInfo);
         }
 
 

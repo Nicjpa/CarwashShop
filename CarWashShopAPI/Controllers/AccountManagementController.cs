@@ -17,8 +17,6 @@ namespace CarWashShopAPI.Controllers
     public class AccountManagementController : ControllerBase
     {
         private readonly SignInManager<CustomUser> _signInManager;
-        private readonly IConfiguration _configuration;
-        private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
         private readonly ILogger<AccountManagementController> _logger;
@@ -27,16 +25,12 @@ namespace CarWashShopAPI.Controllers
         public AccountManagementController(
             UserManager<CustomUser> userManager,
             SignInManager<CustomUser> signInManager,
-            IConfiguration configuration,
-            CarWashDbContext dbContext,
             IMapper mapper,
             IAccountRepository accountRepository,
             ILogger<AccountManagementController> logger
             )
         {
             _signInManager = signInManager;
-            _configuration = configuration;
-            _dbContext = dbContext;
             _mapper = mapper;
             _accountRepository = accountRepository;
             _logger = logger;
@@ -44,7 +38,7 @@ namespace CarWashShopAPI.Controllers
         }
 
         [HttpPost("CreateUser", Name = "createUser")]
-        public async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo, RoleClaim role)
+        public async Task<ActionResult<UserToken>> CreateUser(UserInfo userInfo)
         {
             var user = new CustomUser
             {
@@ -54,7 +48,7 @@ namespace CarWashShopAPI.Controllers
                 PhoneNumber = userInfo.PhoneNumber,
                 Email = userInfo.Email,
                 UserName = userInfo.UserName.ToLower(),
-                Role = role.ToString()
+                Role = userInfo.Role.ToString()
             };
 
             var result = await _userManager.CreateAsync(user, userInfo.Password);
@@ -63,7 +57,7 @@ namespace CarWashShopAPI.Controllers
             {
                 var buildToken = _mapper.Map<UserLogin>(userInfo);
 
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role.ToString()));
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, user.Role));
 
                 _logger.LogInformation($" / POST / MethodName: 'CreateUser' " +
                    $"/ user has been created '{userInfo.UserName.ToLower()}' / USER HAS BEEN CREATED - TOKEN GRANTED ");
@@ -132,9 +126,9 @@ namespace CarWashShopAPI.Controllers
 
         [HttpDelete("DeleteUserByEmail")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult> Get(string userEmail)
+        public async Task<ActionResult> DeleteUserByEmail(string userEmail)
         {
-            var user = await _dbContext.CustomUsers.FirstOrDefaultAsync(x => x.Email == userEmail);
+            var user = await _accountRepository.GetUserByEmail(userEmail);
 
             if (user == null)
             {
@@ -156,8 +150,8 @@ namespace CarWashShopAPI.Controllers
             if (user.Role == "Owner")
             {
                 await _accountRepository.DeleteUserAssets(user);
-                _dbContext.CustomUsers.Remove(user);
-                await _dbContext.SaveChangesAsync();
+                await _accountRepository.RemoveUser(user);
+                await _accountRepository.Commit();
             }
 
             _logger.LogInformation($" / DELETE / MethodName: 'Login' " +

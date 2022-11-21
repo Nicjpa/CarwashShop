@@ -33,7 +33,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
             string userName = await GetUserName(dbContext, "monica");
-            var filter = new ListOfOwnersPerShopFilters();
+            var filter = new OwnersPerShopFilters();
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -42,7 +42,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetOwners(filter);
@@ -64,7 +64,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
             string userName = await GetUserName(dbContext, "msantos");
-            var filter = new ListOfOwnersPerShopFilters() { CarWashShopId = 5};
+            var filter = new OwnersPerShopFilters() { CarWashShopId = 5};
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -73,7 +73,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetOwners(filter);
@@ -97,7 +97,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
             string userName = await GetUserName(dbContext, "msantos");
-            var filter = new ListOfOwnersPerShopFilters() { CarWashShopName = "CarWashShopName" };
+            var filter = new OwnersPerShopFilters() { CarWashShopName = "CarWashShopName" };
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -108,7 +108,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetOwners(filter);
@@ -143,7 +143,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllBookings(filter);
@@ -177,7 +177,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllBookings(filter);
@@ -211,7 +211,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllBookings(filter);
@@ -245,7 +245,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllDisbandRequests(filter);
@@ -275,7 +275,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllDisbandRequests(filter);
@@ -307,7 +307,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetAllDisbandRequests(filter);
@@ -341,7 +341,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetShopRemovalRequests(filter);
@@ -371,7 +371,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetShopRemovalRequests(filter);
@@ -405,7 +405,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetShopRemovalRequests(filter);
@@ -439,7 +439,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.GetTotalRevenue(filter);
@@ -469,10 +469,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 3;
             string userName = await GetUserName(dbContext, "monica");
             var filter = new CarWashShopOwnerAdd()
             {
+                ShopId = 3,
                 OwnerUserName = new List<string>()
                 {
                     "mohinder",
@@ -489,14 +489,14 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            int amountOfOwnersBefore = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == shopId).CountAsync();
+            int amountOfOwnersBefore = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == filter.ShopId).CountAsync();
 
-            var response = await controller.AddNewCoOwnerToShop(shopId, filter);
+            var response = await controller.AddNewCoOwnerToShop(filter);
 
-            int amountOfOwnersAfter = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == shopId).CountAsync();
+            int amountOfOwnersAfter = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == filter.ShopId).CountAsync();
             // Verification
             var result = response.Result as OkObjectResult;
 
@@ -515,10 +515,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 2;
             string userName = await GetUserName(dbContext, "monica");
             var filter = new CarWashShopOwnerAdd()
             {
+                ShopId = 2,
                 OwnerUserName = new List<string>()
                 {
                     "monica",       // duplicate
@@ -538,14 +538,14 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            int amountOfOwnersBefore = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == shopId).CountAsync();
+            int amountOfOwnersBefore = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == filter.ShopId).CountAsync();
 
-            var response = await controller.AddNewCoOwnerToShop(shopId, filter);
+            var response = await controller.AddNewCoOwnerToShop(filter);
 
-            int amountOfOwnersAfter = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == shopId).CountAsync();
+            int amountOfOwnersAfter = await dbContext.CarWashShopsOwners.Where(x => x.CarWashShopId == filter.ShopId).CountAsync();
 
             // Verification
             var result = response.Result as OkObjectResult;
@@ -564,10 +564,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 7;
             string userName = await GetUserName(dbContext, "monica");
             var filter = new CarWashShopOwnerAdd()
             {
+                ShopId = 7,
                 OwnerUserName = new List<string>()
                 {
                     "monica",       // duplicate
@@ -583,14 +583,14 @@ namespace CarWashShopAPI.Tests.UnitTests
                 new Claim(ClaimTypes.Name, userName)
             }));
 
-            string notFoundMessage = $"CarWashShop with ID: '{shopId}' doesn't exist..";
+            string notFoundMessage = $"CarWashShop with ID: '{filter.ShopId}' doesn't exist..";
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.AddNewCoOwnerToShop(shopId, filter);
+            var response = await controller.AddNewCoOwnerToShop(filter);
 
             // Verification
             var result = response.Result as NotFoundObjectResult;
@@ -609,10 +609,10 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 5;
             string userName = await GetUserName(dbContext, "monica");
             var filter = new CarWashShopOwnerAdd()
             {
+                ShopId = 5,
                 OwnerUserName = new List<string>()
                 {
                     "monica",       // duplicate
@@ -628,16 +628,16 @@ namespace CarWashShopAPI.Tests.UnitTests
                 new Claim(ClaimTypes.Name, userName)
             }));
 
-            var selectedShop = await repository.GetCarWashShopToAssignOwners(shopId);
+            var selectedShop = await repository.GetCarWashShopToAssignOwners(filter.ShopId);
 
             string badReqMessage = $"You don't have access to '{selectedShop.Name}'..";
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.AddNewCoOwnerToShop(shopId, filter);
+            var response = await controller.AddNewCoOwnerToShop(filter);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -658,10 +658,9 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 2;
             string userName = await GetUserName(dbContext, "mohinder");
-            var filter = new DisbandRequestCreation() { OwnerName = "monica"};
-            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == shopId);
+            var filter = new DisbandRequestCreation() { ShopId = 2,OwnerName = "monica"};
+            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == filter.ShopId);
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -673,10 +672,10 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.RequestOwnerRemoval(shopId, filter);
+            var response = await controller.RequestOwnerRemoval(filter);
 
             // Verification
             var result = response.Result as OkObjectResult;
@@ -694,10 +693,9 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 2;
             string userName = await GetUserName(dbContext, "monica");
-            var filter = new DisbandRequestCreation() { OwnerName = "mohinder" };
-            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == shopId);
+            var filter = new DisbandRequestCreation() { ShopId = 2, OwnerName = "mohinder" };
+            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == filter.ShopId);
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -709,10 +707,10 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.RequestOwnerRemoval(shopId, filter);
+            var response = await controller.RequestOwnerRemoval(filter);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -731,10 +729,9 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 5;
             string userName = await GetUserName(dbContext, "monica");
-            var filter = new DisbandRequestCreation() { OwnerName = "alexp" };
-            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == shopId);
+            var filter = new DisbandRequestCreation() {ShopId = 5, OwnerName = "alexp" };
+            var shop = await dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == filter.ShopId);
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -745,10 +742,10 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.RequestOwnerRemoval(shopId, filter);
+            var response = await controller.RequestOwnerRemoval(filter);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -767,23 +764,22 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 2;
             string userName = await GetUserName(dbContext, "monica");
-            var filter = new DisbandRequestCreation() { OwnerName = "alexp" };
+            var filter = new DisbandRequestCreation() { ShopId = 2, OwnerName = "alexp" };
  
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, userName)
             }));
 
-            string badReqMessage = $"Owner name '{filter.OwnerName}' doesn't match with the CarWashShop ID: '{shopId}'..";
+            string badReqMessage = $"Owner name '{filter.OwnerName}' doesn't match with the CarWashShop ID: '{filter.ShopId}'..";
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.RequestOwnerRemoval(shopId, filter);
+            var response = await controller.RequestOwnerRemoval(filter);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -802,9 +798,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             var dbContext = BuildDbContext(databaseName);
             var mapper = BuildMapper();
             var repository = BuildOwnerRepo(dbContext);
-            int shopId = 2;
             string userName = await GetUserName(dbContext, "monica");
-            var filter = new DisbandRequestCreation() { OwnerName = "monica" };
+            var filter = new DisbandRequestCreation() { ShopId = 2, OwnerName = "monica" };
 
             var userClaims = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -815,10 +810,10 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
-            var response = await controller.RequestOwnerRemoval(shopId, filter);
+            var response = await controller.RequestOwnerRemoval(filter);
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
@@ -851,7 +846,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ConfirmRejectBooking(filter);
@@ -885,7 +880,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ConfirmRejectBooking(filter);
@@ -918,7 +913,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ConfirmRejectBooking(filter);
@@ -951,7 +946,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ConfirmRejectBooking(filter);
@@ -988,7 +983,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ApproveDisbandFromShop(shopId);
@@ -1021,7 +1016,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ApproveDisbandFromShop(shopId);
@@ -1057,7 +1052,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ApproveShopRemoval(shopId);
@@ -1091,7 +1086,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ApproveShopRemoval(shopId);
@@ -1124,7 +1119,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.ApproveShopRemoval(shopId);
@@ -1161,7 +1156,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CancelShopRemovalRequest(shopId);
@@ -1196,7 +1191,7 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Testing
             var loggerMoq = Mock.Of<ILogger<OwnerManagementController>>();
-            var controller = new OwnerManagementController(dbContext, mapper, repository, loggerMoq);
+            var controller = new OwnerManagementController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.CancelShopRemovalRequest(shopId);

@@ -1,0 +1,404 @@
+11/16/2022 00:56:46  / shop removal request ID: '4' / owner username: 'monica' / SHOP REMOVAL CANCELED AFTER 7 DAYS 
+11/16/2022 01:49:01  / POST / MethodName: 'Login' / user 'vesec' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 01:49:20  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '3' SERVICES FOUND 
+11/16/2022 01:49:29  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '3' SERVICES FOUND 
+11/16/2022 01:52:12  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '1' SERVICES FOUND 
+11/16/2022 01:52:17  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '2' SERVICES FOUND 
+11/16/2022 01:56:40  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '1' SERVICES FOUND 
+11/16/2022 01:56:42  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '2' SERVICES FOUND 
+11/16/2022 12:38:21  / POST / MethodName: 'Login' / user 'vesec' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 12:42:19  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '3' SERVICES FOUND 
+11/16/2022 12:43:04  / PUT / UserName: 'VESEC' / MethodName: 'UpdateShopService-OwnerSide' / updated service with ID '28' / SERVICE UPDATED SUCCESSFULLY 
+11/16/2022 12:43:16  / GET / UserName: 'VESEC' / MethodName: 'GetAllServices-OwnerSide' / results found / '3' SERVICES FOUND 
+11/16/2022 12:43:34  / PUT / UserName: 'VESEC' / MethodName: 'UpdateShopService-OwnerSide' / no service found with ID '8' / SERVICE UPDATE FAILED 
+11/16/2022 12:43:41  / PUT / UserName: 'VESEC' / MethodName: 'UpdateShopService-OwnerSide' / no service found with ID '899' / SERVICE UPDATE FAILED 
+11/16/2022 12:43:43  / PUT / UserName: 'VESEC' / MethodName: 'UpdateShopService-OwnerSide' / no service found with ID '899' / SERVICE UPDATE FAILED 
+11/16/2022 16:23:48  / POST / MethodName: 'CreateUser' / unable to build token: System.Collections.Generic.List`1[Microsoft.AspNetCore.Identity.IdentityError] / CREATE USER FAILED 
+11/16/2022 16:23:57  / POST / MethodName: 'CreateUser' / user has been created 'ludilozezanje' / USER HAS BEEN CREATED - TOKEN GRANTED 
+11/16/2022 16:31:12  / POST / MethodName: 'CreateUser' / user has been created 'zezanje' / USER HAS BEEN CREATED - TOKEN GRANTED 
+11/16/2022 16:31:42  / POST / MethodName: 'CreateUser' / user has been created 'testtt' / USER HAS BEEN CREATED - TOKEN GRANTED 
+11/16/2022 16:31:52  / GET / UserName: 'TESTTT' / MethodName: 'GetOwners-OwnerSide' / no filtered results / '0' SHOPS FOUND 
+11/16/2022 16:32:06  / GET / UserName: 'TESTTT' / MethodName: 'GetShops-OwnerSide' / no shops in possession / '0' SHOPS FOUND 
+11/16/2022 16:32:14  / POST / UserName: 'TESTTT' / MethodName: 'CreateNewShop-OwnerSide' / NEW SHOP CREATED SUCCESSFULLY 
+11/16/2022 16:32:35  / POST / UserName: 'TESTTT' / MethodName: 'CreateNewShop-OwnerSide' / shop with a same name already exists / FAILED TO CREATE SHOP 
+11/16/2022 16:32:39  / POST / UserName: 'TESTTT' / MethodName: 'CreateNewShop-OwnerSide' / NEW SHOP CREATED SUCCESSFULLY 
+11/16/2022 16:32:48  / GET / UserName: 'TESTTT' / MethodName: 'GetShops-OwnerSide' / '2' SHOPS FOUND 
+11/16/2022 16:35:04  / POST / MethodName: 'CreateUser' / user has been created 'zimaa' / USER HAS BEEN CREATED - TOKEN GRANTED 
+11/16/2022 16:35:26  / POST / UserName: 'ZIMAA' / MethodName: 'CreateNewShop-OwnerSide' / shop with a same name already exists / FAILED TO CREATE SHOP 
+11/16/2022 16:35:30  / POST / UserName: 'ZIMAA' / MethodName: 'CreateNewShop-OwnerSide' / NEW SHOP CREATED SUCCESSFULLY 
+11/16/2022 16:35:46  / GET / UserName: 'ZIMAA' / MethodName: 'GetShops-OwnerSide' / '1' SHOPS FOUND 
+11/16/2022 16:35:56  / PUT / UserName: 'ZIMAA' / MethodName: 'UpdateShopService-OwnerSide' / no service found with ID '373' / SERVICE UPDATE FAILED 
+11/16/2022 16:35:59  / PUT / UserName: 'ZIMAA' / MethodName: 'UpdateShopService-OwnerSide' / updated service with ID '37' / SERVICE UPDATED SUCCESSFULLY 
+11/16/2022 22:06:26  / POST / MethodName: 'Login' / user 'msantos' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 22:07:15  / DELETE / UserName: 'MSANTOS' / MethodName: 'RemoveShop-OwnerSide' / remove shop failed, multiple owners / SHOP REMOVAL REQUESTS ARE MADE 
+11/16/2022 22:08:51  / POST / MethodName: 'Login' / user 'ehabes' failed to login / FAILED TO LOGIN 
+11/16/2022 22:09:04  / POST / MethodName: 'Login' / user 'ehabes' failed to login / FAILED TO LOGIN 
+11/16/2022 22:09:38  / POST / MethodName: 'Login' / user 'monica' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 22:09:54  / DELETE / UserName: 'MONICA' / MethodName: 'RemoveShop-OwnerSide' / remove shop failed, multiple owners / SHOP REMOVAL REQUESTS ARE MADE 
+11/16/2022 22:10:37  / POST / MethodName: 'Login' / user 'marktan' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 22:10:38  / POST / MethodName: 'Login' / user 'marktan' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/16/2022 22:10:59  / GET / UserName: 'MARKTAN' / MethodName: 'GetShopRemovalRequests-OwnerSide' / no filtered results / '0' SHOP REMOVAL REQUESTS FOUND 
+11/16/2022 22:11:11  / GET / UserName: 'MARKTAN' / MethodName: 'GetShops-OwnerSide' / '2' SHOPS FOUND 
+11/17/2022 20:57:07  / POST / MethodName: 'Login' / user 'cindy' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 20:59:17  / GET / UserName: 'CINDY' / MethodName: 'GetServices-ConsumerSide' / '20' SERVICES FOUND
+11/17/2022 20:59:51  / GET / UserName: 'CINDY' / MethodName: 'GetShops-ConsumerSide' / '16' SHOPS FOUND
+11/17/2022 21:01:07  / GET / UserName: 'CINDY' / MethodName: 'GetBookings-ConsumerSide' / '6' BOOKINGS FOUND
+11/17/2022 21:10:15  / GET / UserName: 'CINDY' / MethodName: 'GetServices-ConsumerSide' / '20' SERVICES FOUND
+11/17/2022 21:10:46  / GET / UserName: 'CINDY' / MethodName: 'GetBookings-ConsumerSide' / '6' BOOKINGS FOUND
+11/17/2022 21:49:39  / POST / MethodName: 'Login' / user 'cindy' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 21:50:15  / POST / MethodName: 'Login' / user 'monica' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 21:50:38  / POST / MethodName: 'Login' / user 'cindy' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 21:53:43  / POST / MethodName: 'Login' / user 'cindy' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 21:53:52  / POST / MethodName: 'Login' / user 'monica' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/17/2022 21:54:23  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/18/2022 10:29:36  / POST / MethodName: 'Login' / user 'linda' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/18/2022 10:29:52  / GET / UserName: 'LINDA' / MethodName: 'GetShops-ConsumerSide' / '16' SHOPS FOUND
+11/18/2022 10:30:13  / GET / UserName: 'LINDA' / MethodName: 'GetShops-ConsumerSide' / '1' SHOPS FOUND
+11/18/2022 10:30:25  / GET / UserName: 'LINDA' / MethodName: 'GetShops-ConsumerSide' / '1' SHOPS FOUND
+11/18/2022 10:30:29  / GET / UserName: 'LINDA' / MethodName: 'GetShops-ConsumerSide' / '0' SHOPS FOUND 
+11/18/2022 10:30:43  / GET / UserName: 'LINDA' / MethodName: 'GetShops-ConsumerSide' / '1' SHOPS FOUND
+11/18/2022 10:31:14  / GET / UserName: 'LINDA' / MethodName: 'GetServices-ConsumerSide' / '1' SERVICES FOUND
+11/20/2022 17:15:57  / POST / MethodName: 'CreateUser' / unable to build token: System.Collections.Generic.List`1[Microsoft.AspNetCore.Identity.IdentityError] / CREATE USER FAILED 
+11/20/2022 17:18:00  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/20/2022 17:18:11 An unhandled exception has occurred while executing the request.
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+List`1 -> List`1
+System.Collections.Generic.List`1[[CarWashShopAPI.Entities.CustomUser, CarWashShopAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[CarWashShopAPI.DTO.UserDTOs.UserView, CarWashShopAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+ ---> AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+CustomUser -> UserView
+CarWashShopAPI.Entities.CustomUser -> CarWashShopAPI.DTO.UserDTOs.UserView
+
+Type Map configuration:
+CustomUser -> UserView
+CarWashShopAPI.Entities.CustomUser -> CarWashShopAPI.DTO.UserDTOs.UserView
+
+Destination Member:
+Role
+
+ ---> System.ArgumentException: Requested value 'Admin' was not found.
+   at System.Enum.TryParseByName(RuntimeType enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, UInt64& result)
+   at System.Enum.TryParseInt32Enum(RuntimeType enumType, ReadOnlySpan`1 value, Int32 minInclusive, Int32 maxInclusive, Boolean ignoreCase, Boolean throwOnFailure, TypeCode type, Int32& result)
+   at System.Enum.TryParse(Type enumType, ReadOnlySpan`1 value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at System.Enum.TryParse(Type enumType, String value, Boolean ignoreCase, Boolean throwOnFailure, Object& result)
+   at lambda_method676(Closure , Object , List`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method676(Closure , Object , List`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method676(Closure , Object , List`1 , ResolutionContext )
+   at CarWashShopAPI.Controllers.AccountManagementController.Get(UserFilter filter) in C:\Users\nicjp\Desktop\ValueShore\CarWashApp\CarWashApi NikolaPanic\Repo10\CarWashShopAPI\Controllers\AccountManagementController.cs:line 117
+   at lambda_method664(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.Policy.AuthorizationMiddlewareResultHandler.HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+11/20/2022 17:21:15  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/20/2022 17:21:27  / GET / MethodName: 'Login' / user '' found / USER FOUND 
+11/21/2022 02:05:27  / POST / MethodName: 'Login' / user 'string' failed to login / FAILED TO LOGIN 
+11/21/2022 02:19:01  / POST / MethodName: 'Login' / user 'string' failed to login / FAILED TO LOGIN 
+11/21/2022 02:19:39  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:20:16  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:20:40  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:21:58  / POST / MethodName: 'Login' / user 'linda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:21:59  / POST / MethodName: 'Login' / user 'linda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:22:06  / POST / MethodName: 'Login' / user 'linda' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:22:55  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:23:20  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:25:41  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:00  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:15  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:26:49  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:50  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:50  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:50  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:26:50  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:08  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:08  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:09  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:10  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:25  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:26  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:26  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:26  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:26  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:27  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:27  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:29  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:30  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:30  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:30  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:44  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:44  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:44  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:45  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:45  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:45  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:45  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:27:45  / POST / MethodName: 'Login' / user 'fghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:16  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:17  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:17  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:24  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:24  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:24  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:25  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:25  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:25  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:25  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:32  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:32  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:32  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:38  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:38  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:39  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:39  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:39  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:39  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:40  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:40  / POST / MethodName: 'Login' / user 'asda' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:42  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:42  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:42  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:42  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:43  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:43  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:28:43  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:11  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:11  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:12  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:12  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:12  / POST / MethodName: 'Login' / user 'asdaasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:19  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:27  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:38  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:29:39  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:27  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:27  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:29  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:30  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:30  / POST / MethodName: 'Login' / user 'sadasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:33  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:33  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:34  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:34  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:34  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:34  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:43  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:44  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:44  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:44  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:44  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:44  / POST / MethodName: 'Login' / user 'dsfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:48  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:48  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:48  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:30:59  / POST / MethodName: 'Login' / user 'dfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:31:15  / POST / MethodName: 'Login' / user 'dfgfd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:31:33  / POST / MethodName: 'Login' / user 'jsmith' failed to login / FAILED TO LOGIN 
+11/21/2022 02:32:00  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:32:20  / POST / MethodName: 'Login' / user 'dsfsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:32:38  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:32:39  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:32:39  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:33:11  / POST / MethodName: 'Login' / user 'dsfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:33:19  / POST / MethodName: 'Login' / user 'fdgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:33:27  / POST / MethodName: 'Login' / user 'dfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:19  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:20  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:20  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:20  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:20  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:34  / POST / MethodName: 'Login' / user 'sdfsdfasdsa' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:35  / POST / MethodName: 'Login' / user 'sdfsdfasdsa' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:35  / POST / MethodName: 'Login' / user 'sdfsdfasdsa' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:44  / POST / MethodName: 'Login' / user 'dsfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:45  / POST / MethodName: 'Login' / user 'dsfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:53  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:53  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:53  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:53  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:54  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:54  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:34:54  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:14  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:14  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:14  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:15  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:15  / POST / MethodName: 'Login' / user 'dsfsdfds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:18  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:18  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:19  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:19  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:19  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:20  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:20  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:28  / POST / MethodName: 'Login' / user 'fsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:29  / POST / MethodName: 'Login' / user 'fsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:29  / POST / MethodName: 'Login' / user 'fsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:29  / POST / MethodName: 'Login' / user 'fsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:30  / POST / MethodName: 'Login' / user 'fsdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:40  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:41  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:41  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:41  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:42  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:35:42  / POST / MethodName: 'Login' / user 'dfgdfgdfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:06  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:06  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:07  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:08  / POST / MethodName: 'Login' / user 'fghfghfg' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:22  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:22  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:22  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:23  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:24  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:24  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:24  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:24  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:25  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:25  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:36  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:36  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:36  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:37  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:37  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:37  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:38  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:39  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:39  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:36:39  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:24  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:25  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:25  / POST / MethodName: 'Login' / user 'sdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:27  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:59  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:37:59  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:00  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:00  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:00  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:03  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:03  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:03  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:04  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:32  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:32  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:35  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:36  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:36  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:36  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:36  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:37  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:38  / POST / MethodName: 'Login' / user 'sdfsdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:50  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:50  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:50  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:55  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:38:55  / POST / MethodName: 'Login' / user 'dfgdfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:39:34  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:39:35  / POST / MethodName: 'Login' / user 'asdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:01  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 02:40:18  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:19  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:19  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:19  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:19  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:19  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:20  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:20  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:20  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:21  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:21  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:22  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:23  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:23  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:30  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:31  / POST / MethodName: 'Login' / user 'sadasds' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:34  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:35  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:35  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:36  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:36  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:36  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:37  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:37  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:37  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:37  / POST / MethodName: 'Login' / user 'asdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:51  / POST / MethodName: 'Login' / user 'dsfdsf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:52  / POST / MethodName: 'Login' / user 'dsfdsf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:52  / POST / MethodName: 'Login' / user 'dsfdsf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:52  / POST / MethodName: 'Login' / user 'dsfdsf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:40:52  / POST / MethodName: 'Login' / user 'dsfdsf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:28  / POST / MethodName: 'Login' / user 'dfgfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:28  / POST / MethodName: 'Login' / user 'dfgfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:28  / POST / MethodName: 'Login' / user 'dfgfgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:43  / POST / MethodName: 'Login' / user 'fdgfdgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:43  / POST / MethodName: 'Login' / user 'fdgfdgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:41:43  / POST / MethodName: 'Login' / user 'fdgfdgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:22  / POST / MethodName: 'Login' / user 'fdgfdgdf' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:28  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:29  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:58  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:58  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:42:58  / POST / MethodName: 'Login' / user 'sdfsdfsd' failed to login / FAILED TO LOGIN 
+11/21/2022 02:43:14  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:43:14  / POST / MethodName: 'Login' / user 'asdasdas' failed to login / FAILED TO LOGIN 
+11/21/2022 02:43:26  / POST / MethodName: 'Login' / user 'asdasdasd' failed to login / FAILED TO LOGIN 
+11/21/2022 03:01:35  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:03:46  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:04:52  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:06:20  / POST / MethodName: 'Login' / user 'jsmith' failed to login / FAILED TO LOGIN 
+11/21/2022 03:06:21  / POST / MethodName: 'Login' / user 'jsmith' failed to login / FAILED TO LOGIN 
+11/21/2022 03:06:25  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:07:03  / POST / MethodName: 'Login' / user 'jsmith' failed to login / FAILED TO LOGIN 
+11/21/2022 03:07:07  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:13:17  / POST / MethodName: 'Login' / user 'jsmith' failed to login / FAILED TO LOGIN 
+11/21/2022 03:13:30  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 
+11/21/2022 03:14:13  / POST / MethodName: 'Login' / user 'jsmith' logged in / LOGIN SUCCESS - TOKEN GRANTED 

@@ -121,7 +121,7 @@ namespace CarWashShopAPI.Tests
 
             var repo = BuildAccountRepo(context, userManager, configuration);
 
-            return new AccountManagementController(userManager, signInManager, configuration, context, mapper, repo, loggerMoq);
+            return new AccountManagementController(userManager, signInManager, mapper, repo, loggerMoq);
         }
 
         protected static UserManager<TUser> BuildUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
@@ -689,7 +689,7 @@ namespace CarWashShopAPI.Tests
                     ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                     CarWashShopId = 2,
                     ServiceId  = 1,
-                    ScheduledDateTime = new DateTime(2022, 10, 10, 15, 0, 0),
+                    ScheduledDateTime = new DateTime(2024, 10, 10, 15, 0, 0),
                     IsPaid = false,
                     BookingStatus = BookingStatus.Confirmed
                 },
@@ -700,7 +700,7 @@ namespace CarWashShopAPI.Tests
                     ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                     CarWashShopId = 2,
                     ServiceId  = 2,
-                    ScheduledDateTime = new DateTime(2022, 10, 05, 11, 0, 0),
+                    ScheduledDateTime = new DateTime(2024, 10, 05, 11, 0, 0),
                     IsPaid = false,
                     BookingStatus = BookingStatus.Pending
                 },

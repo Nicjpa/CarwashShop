@@ -5,7 +5,6 @@ using CarWashShopAPI.DTO.OwnerDTO;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.DTO.UserDTOs;
 using CarWashShopAPI.Entities;
-using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.Helpers
 {
@@ -50,7 +49,7 @@ namespace CarWashShopAPI.Helpers
                 .ForMember(x => x.ShopRemovalRequests, opt => opt.Ignore())
                 .ReverseMap();
 
-            CreateMap<CarWashShop, ListOfOwnersPerShopView>()
+            CreateMap<CarWashShop, OwnersPerShopView>()
                 .ForMember(x => x.Owners, opt => opt.MapFrom(CarWashShopOwners2OwnerView));
 
             CreateMap<DisbandRequest, DisbandRequestView>()
@@ -103,7 +102,7 @@ namespace CarWashShopAPI.Helpers
             return result;
         }
 
-        private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, ListOfOwnersPerShopView view)
+        private List<string> CarWashShopOwners2OwnerView(CarWashShop entity, OwnersPerShopView view)
         {
             var result = new List<string>();
             entity.Owners.ForEach(x => result.Add(x.Owner.UserName));

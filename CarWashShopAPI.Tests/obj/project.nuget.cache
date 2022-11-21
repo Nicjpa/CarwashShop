@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SLkrQn/yp3+fj25Ue1pFAxAxGZZVALEuCSP1P2s8ktp6OYpLaDAmaj6BWPa9sJxhVvTfCy9HkBzT8CpuFnFUSA==",
+  "dgSpecHash": "lBmQO4UgTFWeS83ypwUvpDlL5x889UjXpgKHXQleuXyRfmfJE+1UUtMBxuk07LyN70JYkY5ngHBzBNq4jxnBkA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\400193\\Desktop\\CarWashApi NikolaPanic\\Repo10\\CarWashShopAPI.Tests\\CarWashShopAPI.Tests.csproj",
+  "projectFilePath": "C:\\Users\\400193\\Desktop\\Repo10\\CarWashShopAPI.Tests\\CarWashShopAPI.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\400193\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\400193\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",

@@ -1,0 +1,270 @@
+D O C U M E N T A T I O N
+--------------------------
+
+
+C O N T E N T:
+
+1) 5 Controllers
+2) 31 HttpMethods
+3) 86 UnitTests
+
+
+
+F E A T U R E S:
+
+1) OwnerSideFeatures:
+- Create/Login user
+- CRUD Shops
+- CRUD Services
+- Filtered listing of the shop bookings
+- Confirm&Reject shop bookings
+- Total revenue of the shops
+- Daily/weekly/monthly/yearly income reports
+- Filtered listing of the shop coowners
+- Filtered listing of DisbandRequests
+- Filtered listing of ShopRemovalRequests
+- Add new coowners to the shop
+- Request coowner disband/removal from the shop
+- Approve own disband/removal from the shop
+- Approve shop removal/delete
+- Cancel shop removal/delete
+
+2) ConsumerSideFeatures:
+- Create/Login user
+- Filtered listing of all shops
+- Filtered listing of all car wash services
+- Filtered listiing of all bookings
+- Schedule/cancel booking
+
+3) AdminSideFeatures:
+- SearchUsers
+- DeleteUsers
+
+
+
+I M P L E M E N T E D   C O N C E P T S:
+
+1) EntityFramework:
+- One to many relationship
+- Many to many relationship
+- Seeded data (1 admin, 
+		    10 owners, 
+		    10 consumers,
+		    10 shops,
+	         30 services,
+		    30 shops_services,
+		    16 shops_owners,
+		    100 bookings)
+- migration with seeded data and 1 SQL stored procedure
+
+2) ASP.NET Identity:
+- extended user entity
+- role user claims
+
+3) CustomDIRepositories:
+- each controller has his own customRepository
+
+4) DTOs:
+- Entity DTO
+- Creation DTO
+- View DTO
+- Update DTO
+- Filter DTO
+
+5) IHosterService:
+- confirms booking requests 15 minutes after it's creation if not confirmed or rejected by owner
+- delete rejected bookings 
+- charge executed bookings
+*(activates every 5 minutes)*
+- cancel disband requests after 7 pending days of creation without approval, and delete failed requests
+- disband owner from the shop if request is approved, and delete approved reqeusts
+*(activates once per day)*
+- cancel shop removal requests after 7 pending days of creation without all coowner approvals, and delete failed requests
+- delete shop if all shop removal request are approved, and delete approved reqeusts
+*(activates once per day)* 
+
+6) Serilog
+- log to console and txt file, every action result that user hits, covered for all of 31 controllers
+- log to console and txt file, every IHostedService action which is performed behind the scene 
+
+7) AutoMapper
+8) Filters
+9) Pagination
+
+
+
+C O N T R O L L E R S:
+
+1) AccountManagement:
+- /api/User/CreateUser *** user registration (owners,consumers) ***
+- /api/User/Login *** login for registered users (admins/owners/consumers) ***
+- /api/User/GetUsers *** user search (admins) ***
+- /api/User/DeleteUserByEmail *** delete user (admin) ***
+
+2) ConsumerManagement:
+- /api/ConsumerManagement/GetAllShops-ConsumerSide *** Filtered shop search by registered users (admins,owners,consumers) ***
+- /api/ConsumerManagement/GetAllServices-ConsumerSide **** Filtered service search by registered users (admins,owners,consumers) ***
+- /api/ConsumerManagement/GetAllBookings *** Filtered listing of all bookings from the current user (Consumer) ***
+- /api/ConsumerManagement/ScheduleAService *** Current user can book a car wash service for him (Consumer) ***
+- /api/ConsumerManagement/CancelBookingById *** Booking cancelation by id for the current user (Consumer) ***
+
+3) OwnerCarWashShopCRUD:
+- /api/OwnerCarWashShopCRUD/GetAllShops-OwnerSide *** Filtered search of the shops in possesion of the current user (Owner) ***
+- /api/OwnerCarWashShopCRUD/CreateNewShop *** User can create brand new car wash shop including new services and additional coowners (Owner) ***
+- /api/OwnerCarWashShopCRUD/UpdateShopInfo *** User can edit and update shop's general info all together (Owner) ***
+- /api/OwnerCarWashShopCRUD/PatchShopInfo *** User can edit and update single shop's property (Owner) ***
+- /api/OwnerCarWashShopCRUD/RemoveShop *** User can delete his shop if he is the only owner, 
+						       otherwise shop removal requests will be made for the additional coowners to approve. (Owner) ***							 
+4) OwnerManagement:
+- /api/OwnerManagement/GetShopOwners *** Filtered listing of the shop owners per each shop in possession (Owner) ***
+- /api/OwnerManagement/GetShopBookings *** Filtered listing of all bookings per each shop in possession (Owner) ***
+- /api/OwnerManagement/GetDisbandRequests *** Filtered listing of all disband requests of the current user to be disbanded from the shop as coowner (Owner) ***
+- /api/OwnerManagement/GetShopRemovalRequests *** Filtered listing of all shop removal requests of the current user to approve in order to delete shop (Owner) ***
+- /api/OwnerManagement/GetRevenue *** Listing of revenues for all shops in user's possesion or by shop name/id (Owner) ***
+- /api/OwnerManagement/GetIncomeReport *** Filtered listing of the shop incomes for each shop in user's possesion on daily,weekly,monthly,yearly basis (Owner) ***
+- /api/OwnerManagement/AddOwnerToShop *** User can add new additional coowners to his shops (Owner) ***
+- /api/OwnerManagement/RequestOwnerRemoval *** User can request a disband from the shop of his fellow coowner (Owner) ***
+- /api/OwnerManagement/ConfirmRejectBooking *** User can confirm or reject consumers scheduled bookings (Owner) ***
+- /api/OwnerManagement/ApproveDisband *** User can approve to be disbanded from the shop as the coowner (Owner) ***
+- /api/OwnerManagement/ApproveShopRemoval *** User can approve shop removal (Owner) ***
+- /api/OwnerManagement/CancelShopRemoval *** User can cancel shop removal and completely stop shop removal process (Owner) ***
+
+5) OwnerServiceCRUD:
+- /api/OwnerServiceCRUD/GetAllServices-OwnerSide *** Filtered search of the services of all shops in possession (Owner) ***
+- /api/OwnerServiceCRUD/AddNewServiceToShop *** User can create and assign new service to the shop in possession (Owner) ***
+- /api/OwnerServiceCRUD/UpdateShopService *** User can edit and update service general info all together (Owner) ***
+- /api/OwnerServiceCRUD/PatchShopService *** User can edit and update single service property (Owner) ***
+- /api/OwnerServiceCRUD/RemoveService *** User can delete any service that is assigned to any of his shops in possesion (Owner) ***
+
+
+
+
+U N I T   T E S T S:
+
+1) AccountControllerTests:
+- UserIsCreated *** user is created successfully ***
+- UserCanLogin *** user logged in successfully ***
+- UserCannotLogin *** user logging failed because of the wrong password ***
+
+2) ConsumerControllerTests:
+- GetAllShopsNoFilter *** searched shops without filters, results found ***
+- GetAllShopsFilteredByIdSuccess *** searched shop by id successfully ***
+- GetAllShopsFilteredByNameSuccess *** searched shops by name, found results ***
+- GetAllShopsFilteredByNameFail *** searched shops by name, no results ***
+- GetAllServicesNoFilter *** searched services without filters, results found ***
+- GetAllServicesFilteredByMinMaxPrice *** searched shops by min and max price, results found ***
+- GetAllServicesFilteredByIdFail *** searched shop by id failed ***
+- GetAllBookingsNoFilter *** searched bookings without filters, results found ***
+- GetAllBookingsFilteredByConfirmedBooking *** searched bookings by confirmation, results found ***
+- GetAllBookingsFilteredByUserWithNoBookings *** searched bookings by confirmation, no results ***
+- ScheduleBookingSuccessfully *** user scheduled a service successfully ***
+- ScheduleBookingWithWrongShopID *** user's bad attempt to schedule a service with a wrong shop id ***
+- ScheduleBookingWithWrongServiceID *** user's bad attempt to schedule a service with a wrong service id ***
+- ScheduleBookingToLatePriorToServiceStart *** user's late attempt to schedule a service, which is less than 1 hour gap between booking creation and service execution ***
+- ScheduleBookingOutOfWorkingHours *** user's bad attempt to schedule a service out of working hours of the shop ***
+- ScheduleBookingForTheHourWhenEverythingIsBooked *** user's bad attempt to schedule a service for the hour which is fully booked ***
+- CancelBookingSuccessfully *** user has canceled his booking successfully ***
+- FailtToCancelBooking15MinBeforeTheStart *** user's late attempt to cancel his booking, which is less than 15 minutes prior to service execution ***
+- CancelBookingWhichDoesntExistByID *** user's bad attempt to cancel the booking with unexisting booking id ***
+
+3) CarWashShopCRUDControllerTests:
+- GetAllShopsInPossessionNoFilter *** searched shops without filters, results found ***
+- GetShopInPossessionById *** searched shop by id successfully ***
+- CreateNewShopWithServicesSuccessfully *** new shop created with 3 new services and 2 additional coowners ***
+- CreateNewShopFailedBecauseOfNoServicesAdded *** shop creation failed, because there was no services created (shop cannot be without a single service) ***
+- CreateNewShopFailedDuplicatedShopName *** shop creation failed because of the duplicated shop name which already exist (shop name must be unique) ***
+- UpdateShopInfoSuccessfully *** shop's general info has been updated successfully ***
+- UpdateShopInfoFailedDuplicatedName *** shop's general info update failed because of the duplicated shop name which already exist (shop name must be unique) ***
+- UpdateShopInfoFailedBadShopId *** shop's general info update failed because of the bad id ***
+- PatchShopByIdSuccessfully *** shop has been patched successfully ***
+- PatchShopFailedNullJsonDoc *** shop's patching failed because of the empty/null patch DTO ***
+- PatchShopFailedBadId *** shop's patching failed because of the bad  id ***
+- DeleteShopByIdSuccessfully *** shop has been deleted successfully by id ***
+- MakeRemovalRequestCoownership *** shop delete is pending and shop removal requests has been made, because the owner requester is not the single owner of the shop ***
+- DeleteShopFailedByBadId *** shop delete failed, because of the bad id ***
+- RemovalRequestsAreAlreadyMade *** action din't take action because shop removal reqeusts has been already made for that shop ***
+
+4) OwnerManagementControllerTests:
+- GetListOfOwnersPerShopNoFilters *** list of owners of the shops in possession, results found *** 
+- GetListOfOwnersOfShopById *** list of owners for the specific shop searched by id successfully ***
+- GetListOfOwnersNotFound *** list of owners filtered by unexisting shop name, no results ***
+- GetListOfBookingsPerShopNoFilters *** list of bookings for each shop in possesion, results found ***
+- GetListOfBookingsByShopId *** list of bookings for the specific shop searched by id succesfully ***
+- GetBookingsNotFound *** list of bookings for the specific shop by bad name, no results ***
+- GetAllDisbandRequestsNoFilters *** list of disband requests without filters, results found ***
+- GetAllDisbandRequestsFiltered *** filtered list of disband requests by approved status, results found ***
+- GetAllDisbandRequestsFilteredNotFound *** filtered list of disband requests by not approved status, no results ***
+- GetAllShopRemovalRequestsNoFilters *** list of all shop removal requests without filters, results found ***
+- GetAllShopRemovalRequestsFiltered *** filtered list of shop removal requests by not approved status, results found ***
+- GetAllShopRemovalRequestsNotFound *** list of all shop removal requests without filters, no results ***
+- GetShopTotalRevenue *** shops revenue report, results found ***
+- AddNewCoOwnersToShopSuccessfully *** new coowners successfully assigned to the shop by shop id ***
+- IgnoringDuplicateAndFakeOwnersToShop *** attempt to assign new coowners, consumers, not registered usernames and already assigned coowners, while only new legit coowners has been added ***
+- FailToAddNewOwnerBadShopId *** failed to assign new coowners to the shop because of the bad shop id ***
+- FailToAddNewOwnerAccessDeniedToShop *** bad attempt to assign new coowners to the shop that doesn't belong to the current user ***
+- RequestOwnerDisbandSuccessfully *** disband request has been made successfully toward the fellow coowner ***
+- OwnerDisbandRequestAlreadyExist *** bad attempt to make duplicated disband request which alreadey exist ***
+- FailedToDisbandForeignOwnerFromForeignShop *** bad attempt to make disband request over coowners from the foreign shop that doesn't belong to the current user ***
+- FailedToMatchOwnerWithShop *** bad attempt to make disband request, because of either bad shop id or bad coowner username  ***
+- FailedToDisbandYourself *** bad attempt to disband yourself as the coowner of the shop in possesion, it's not possible to disband yourself ***
+- SuccessfullyConfirmedShopBooking *** confirmed booking for the service of the shop in possesion successfully ***
+- TryingToConfirmAlreadyConfirmedBooking *** bad attempt to override booking with same booking status ***
+- TryingToRejectBookingLessThanHourBefore *** late attempt to reject booking less than 1 hour prior to service execution ***
+- FailedToConfirmBookingByBadId *** bad attempt to confirm booking beacuse of bad booking id ***
+- SuccessfullyApprovedToGetDisbandFromShop *** user successfully approved to get disbanded from the shop as the coowner ***
+- TryingToApproveDisbandRequestByBadShopId *** bad attempt to approve disband request because of the bad shop id ***
+- SuccessfullyApprovedShopRemoval *** user successfully approved shop removal ***
+- FailedToApproveRemovalByBadId *** bad attempt to approve shop removal request beacuse of the bad shop id ***
+- FailedToApproveAlreadyApprovedRemoval *** bad attempt to approve already approved shop removal request ***
+- CancelShopRemoval *** successfully canceled shop removal ***
+- FailedToCancelShopRemovalByWrongId *** bad attempt to cancel shop removal because of the bad shop id ***
+
+5) OwnerServiceCRUDControllerTests
+- GetAllServicesForEachShopNoFilters *** searched services by shops in possesion without filters, results found  ***
+- GetAllServicesNoShopCreatedNoServices *** searched service without filters, no results  ***
+- GetAllServicesFilteredByShopName *** searched services filtered by shop name, results found ***
+- GetServiceFilteredByIDThatDoesntBelongToOwnersShop *** bad attempt to search service from the shop that doesn't belong to the current user ***
+- CreateAndBoundServiceToShopSuccessfully *** successfully created and assigned new service to existing shop ***
+- FailToCreateServiceOnForeignShop *** bad attempt to create and assign service on foreign shop which doesn't belong to the current user ***
+- FailToCreateServiceOnUnexistingShop *** bad attempt to create and assign service to shop that doesn't exist ***
+- UpdateServiceByIDSuccessfully *** service updated by id successfully ***
+- UpdateServiceByIDFailed *** bad attempt to update service beacuse of the wrong id ***
+- PatchServiceNameByIdSuccessfully *** successfully patched service by id ***
+- PatchServiceNameFailedWrongId *** bad attempt to patched service by wrong id ***
+- PatchServiceFailedNull *** bad attempt to patched service because of the empty/null patch DTO ***
+- RemoveServiceSuccessfullyById *** successfully deleted service from the existing shop in possession ***
+- RemoveServiceFailedBecuaseItsOnlyService *** bad attempt to delete one and only existing service in the shop, shop cannot be without a single car wash service ***
+- RemoveServiceFailedByWrongId *** bad attempt to delete service because of the bad id ***
+
+6) AutoMapperTest
+- AssertConfigurationIsValid *** ulitmate test for all maps created in automapper profile ***
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

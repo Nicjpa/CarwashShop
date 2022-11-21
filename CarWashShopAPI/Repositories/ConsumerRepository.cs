@@ -181,5 +181,20 @@ namespace CarWashShopAPI.Repositories
 
             return entity;
         }
+
+        public async Task AddBooking(Booking booking)
+        {
+            _dbContext.Bookings.Add(booking);
+        }
+
+        public async Task DeleteBooking(Booking booking)
+        {
+            _dbContext.Bookings.Remove(booking);
+        }
+
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

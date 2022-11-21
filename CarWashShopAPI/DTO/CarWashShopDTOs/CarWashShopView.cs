@@ -1,5 +1,4 @@
 ﻿using CarWashShopAPI.DTO.ServiceDTO;
-using CarWashShopAPI.Entities;
 
 namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {

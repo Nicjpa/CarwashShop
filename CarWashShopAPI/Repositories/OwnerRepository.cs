@@ -146,7 +146,7 @@ namespace CarWashShopAPI.Repositories
             return approvedOwnerIDs;
         }
 
-        public async Task<List<IncomeEntity>> GetIncome(IncomeFilter filter, string userName)
+        public async Task<List<ShopIncome>> GetIncome(IncomeFilter filter, string userName)
         {
             var entities = await _dbContext.Income 
                 .FromSqlInterpolated                                                           // DON'T SIMPLIFY 'filter.CalendarFormat', BECAUSE IT'S GONNA THROW SQL PARSING ERROR!
@@ -156,7 +156,7 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        public async Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<IncomeEntity> incomeEntities, IncomeFilter filter)
+        public async Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<ShopIncome> incomeEntities, IncomeFilter filter)
         {
             var incomeView = new List<IncomeViewDays>();
 
@@ -172,7 +172,7 @@ namespace CarWashShopAPI.Repositories
             return incomeView;
         }
 
-        public async Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<IncomeEntity> incomeEntities, IncomeFilter filter)
+        public async Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<ShopIncome> incomeEntities, IncomeFilter filter)
         {
             var monthName = new DateTimeFormatInfo();
             var incomeView = new List<IncomeViewOther>();
@@ -348,7 +348,7 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        public async Task<IQueryable<CarWashShop>> GetOwners(string userName, ListOfOwnersPerShopFilters filters)
+        public async Task<IQueryable<CarWashShop>> GetOwners(string userName, OwnersPerShopFilters filters)
         {
             var entities = _dbContext.CarWashsShops
                 .Include(x => x.Owners).ThenInclude(x => x.Owner)
@@ -367,6 +367,29 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateEntity<T>(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task AddRangeOfOwners(List<CarWashShopsOwners> ownerList)
+        {
+            _dbContext.CarWashShopsOwners.AddRange(ownerList);
+        }
+
+        public async Task MakeDisbandRequest(DisbandRequest request)
+        {
+            _dbContext.OwnerRemovalRequests.Add(request);
+        }
+
+        public async Task CancelShopRemovalReq(List<ShopRemovalRequest> shopRemovalList)
+        {
+            _dbContext.ShopRemovalRequests.RemoveRange(shopRemovalList);
+        }
     }
 }
