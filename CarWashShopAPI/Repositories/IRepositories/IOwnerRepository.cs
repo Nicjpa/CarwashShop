@@ -18,15 +18,21 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<List<CarWashShopsOwners>> AssignNewOwnersToTheShop(CarWashShop carWashShop, List<string> approvedOwnersIDs, List<string> CurrentOwnerUserIds);
         public Task<CarWashShop> GetCarWashShopToAssignOwners(int id);
         public Task<List<string>> GetApprovedOwnerIDs(CarWashShopOwnerAdd listOfNewOwners, List<string> currentOwnerList);
-        public Task<List<IncomeEntity>> GetIncome(IncomeFilter filter, string userName);
-        public Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<IncomeEntity> incomeEntities, IncomeFilter filter);
-        public Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<IncomeEntity> incomeEntities, IncomeFilter filter);
+        public Task<List<ShopIncome>> GetIncome(IncomeFilter filter, string userName);
+        public Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<ShopIncome> incomeEntities, IncomeFilter filter);
+        public Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<ShopIncome> incomeEntities, IncomeFilter filter);
         public Task<IQueryable<CarWashShop>> GetShopsForRevenue(string userName, RevenueFilters revenueFilters);
-        public Task<List<RevenueReportView>> CalculateRevenue(IQueryable<CarWashShop> carWashShops);
-        public Task<IQueryable<ShopRemovalRequest>> GetShopRemovalRequests(string userName, OwnerRequestsFilters filters);
-        public Task<IQueryable<DisbandRequest>> GetDisbandRequests(string userName, OwnerRequestsFilters filters);
+        public Task<List<RevenueReportView>> CalculateRevenue(List<CarWashShop> carWashShops);
+        public Task<List<ShopRemovalRequest>> GetShopRemovalRequests(string userName);
+        public Task<List<DisbandRequest>> GetDisbandRequests(string userName);
         public Task<IQueryable<Booking>> GetBookings(string userName, BookingFilters filters);
-        public Task<IQueryable<CarWashShop>> GetOwners(string userName, ListOfOwnersPerShopFilters filters);
-        
+        public Task<IQueryable<CarWashShop>> GetOwners(string userName, OwnersPerShopFilters filters);
+        public Task Commit();
+        public Task UpdateEntity<T>(T entity);
+        public Task AddRangeOfOwners(List<CarWashShopsOwners> ownerList);
+        public Task MakeDisbandRequest(DisbandRequest request);
+        public Task CancelShopRemovalReq(List<ShopRemovalRequest> shopRemovalList, int shopID);
+        public Task RemoveMyselfFromShop(string userName, int shopID);
+        public Task RemoveDisbandRequest(DisbandRequest request);
     }
 }

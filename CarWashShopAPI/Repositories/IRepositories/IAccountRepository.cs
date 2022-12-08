@@ -1,7 +1,6 @@
 ﻿using CarWashShopAPI.DTO;
 using CarWashShopAPI.DTO.UserDTOs;
 using CarWashShopAPI.Entities;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CarWashShopAPI.Repositories.IRepositories
 {
@@ -11,5 +10,8 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<UserToken> BuildToken(UserLogin userInfo);
         public Task DeleteUserAssets(CustomUser user);
         public Task<IQueryable<CustomUser>> GetUsers(UserFilter filter);
+        public Task<CustomUser> GetUserByEmail(string email); 
+        public Task RemoveUser(CustomUser user);
+        public Task Commit();
     }
 }

@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace CarWashShopAPI.DTO
+﻿namespace CarWashShopAPI.DTO
 {
     public class Enums
     {

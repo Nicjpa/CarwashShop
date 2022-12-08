@@ -15,6 +15,10 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<string> GetUserID(string userName);
         public Task<CarWashShop> GetShopToBookService(BookingCreation bookingCreation);
         public Task<Booking> GetBookingByID(int id, string userName);
+        public Task AddBooking(Booking booking);
+        public Task DeleteBooking(Booking booking);
+        public Task<decimal> AssignPrice(CarWashShop shop, int serviceId);
+        public Task Commit();
 
     }
 }

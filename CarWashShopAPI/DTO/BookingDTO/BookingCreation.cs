@@ -15,7 +15,7 @@ namespace CarWashShopAPI.DTO.BookingDTO
         [DateTimeFormatRequired("yyyy-MM-dd")]
         public string ScheduledDate { get; set; }
 
-        [Required, Range(0, 23)]
+        [Required, Range(0, 24)]
         public int ScheduledHour { get; set; }
 
         [JsonIgnore]

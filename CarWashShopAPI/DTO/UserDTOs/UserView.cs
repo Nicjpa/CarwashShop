@@ -7,8 +7,7 @@ namespace CarWashShopAPI.DTO.UserDTOs
 {
     public class UserView
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public RoleClaim? Role { get; set; }
+        public string? Role { get; set; }
         public string? Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

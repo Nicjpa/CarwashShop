@@ -11,6 +11,9 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<CarWashShopsServices> GetCarWashShopService(int shopId);
         public Task<Service> GetServiceByID(int id, string userName);
         public Task<CarWashShop> GetShopToRemoveServiceByID(int id, string userName);
-
+        public Task Commit();
+        public Task AddService(CarWashShopsServices service);
+        public Task RemoveService(Service service);
+        public Task UpdateEntity<T>(T entity);
     }
 }

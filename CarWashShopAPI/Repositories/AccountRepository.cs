@@ -57,7 +57,8 @@ namespace CarWashShopAPI.Repositories
             return new UserToken
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = expiration
+                Expiration = expiration,
+                Role = identityUser.Role
             };
         }
 
@@ -113,6 +114,21 @@ namespace CarWashShopAPI.Repositories
                     entities = entities.Where(x => x.Address.ToLower().Contains(filter.Address.ToLower()));
             }
             return entities;
+        }
+
+        public async Task<CustomUser> GetUserByEmail(string email)
+        {
+            return await _dbContext.CustomUsers.FirstOrDefaultAsync(x => x.Email == email); 
+        }
+
+        public async Task RemoveUser(CustomUser user)
+        {
+            _dbContext.CustomUsers.Remove(user);
+        }
+
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
     

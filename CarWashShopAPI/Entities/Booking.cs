@@ -15,5 +15,6 @@ namespace CarWashShopAPI.Entities
         public bool IsPaid { get; set; } = false;
         public BookingStatus BookingStatus { get; set; } = BookingStatus.Pending;
         public DateTime DateCreated { get; set; } = DateTime.Now;
+        public decimal Price { get; set; }
     }
 }

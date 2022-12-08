@@ -32,6 +32,9 @@ namespace CarWashShopAPI.Repositories
                 if (!string.IsNullOrWhiteSpace(filterDTO.CarWashName))
                     carWashShop = carWashShop.Where(x => x.Name.ToLower().Contains(filterDTO.CarWashName.ToLower()));
 
+                if (!string.IsNullOrWhiteSpace(filterDTO.Address))
+                    carWashShop = carWashShop.Where(x => x.Address.ToLower().Contains(filterDTO.Address.ToLower()));
+
                 if (!string.IsNullOrWhiteSpace(filterDTO.AdvertisingDescription))
                     carWashShop = carWashShop.Where(x => x.AdvertisingDescription.ToLower().Contains(filterDTO.AdvertisingDescription.ToLower()));
 
@@ -44,10 +47,10 @@ namespace CarWashShopAPI.Repositories
                     carWashShop = carWashShop.Where(x => x.AmountOfWashingUnits >= filterDTO.MinimumAmountOfWashingUnits);
 
                 if (filterDTO.RequiredAndEarlierOpeningTime != null)
-                    carWashShop = carWashShop.Where(x => x.OpeningTime <= filterDTO.RequiredAndEarlierOpeningTime);
+                    carWashShop = carWashShop.Where(x => x.OpeningTime >= filterDTO.RequiredAndEarlierOpeningTime);
 
                 if (filterDTO.RequiredAndLaterClosingTime != null)
-                    carWashShop = carWashShop.Where(x => x.ClosingTime >= filterDTO.RequiredAndLaterClosingTime);
+                    carWashShop = carWashShop.Where(x => x.ClosingTime <= filterDTO.RequiredAndLaterClosingTime);
 
                 
             }
@@ -62,6 +65,7 @@ namespace CarWashShopAPI.Repositories
                 .ThenInclude(b => b.Service)
                 .Include(x => x.Owner)
                 .Where(x => x.Owner.UserName == userName)
+                .OrderByDescending(x => x.CarWashShop.Revenue)
                 .AsQueryable();
 
             return entities.Select(x => x.CarWashShop);
@@ -151,5 +155,64 @@ namespace CarWashShopAPI.Repositories
 
             return doesExist;
         }
+
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateEntity<T>(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task<bool> CheckEditShopName(string shopName, int shopId)
+        {
+            bool isLegit = true;
+            var shop = await _dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Name == shopName);   
+
+            if(shop != null)
+            {
+                isLegit = shop.Id == shopId;
+            }
+
+            return isLegit;
+        }
+
+        public async Task<bool> CheckCreateShopName(string shopName)
+        {
+            return await _dbContext.CarWashsShops.AnyAsync(x => x.Name == shopName);
+        }
+
+        public async Task AddRangeOfServices(List<Service> services)
+        {
+            _dbContext.Services.AddRange(services);
+        }
+
+        public async Task RemoveRangeOfServices(List<Service> services)
+        {
+            _dbContext.Services.RemoveRange(services);
+        }
+
+        public async Task AddCarWashShop(CarWashShop shop)
+        {
+            _dbContext.CarWashsShops.Add(shop);
+        }
+
+        public async Task RemoveCarWashShop(CarWashShop shop)
+        {
+            _dbContext.CarWashsShops.Remove(shop);
+        }
+
+        public async Task AddRangeOfShopRemovals(List<ShopRemovalRequest> shopRemovals, CarWashShop shop)
+        {
+            var shopForRemoval = shop;
+            shopForRemoval.isInRemovalProcess = true;
+
+            _dbContext.ShopRemovalRequests.AddRange(shopRemovals);
+            _dbContext.Entry(shopForRemoval).State = EntityState.Modified;
+        }
+
+       
     }
 }

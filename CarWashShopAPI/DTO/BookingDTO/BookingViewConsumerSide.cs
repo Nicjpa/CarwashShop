@@ -9,6 +9,7 @@ namespace CarWashShopAPI.DTO.BookingDTO
         public int Id { get; set; }
         public int CarWashShopId { get; set; }
         public string CarWashShopName { get; set; }
+        public string Address { get; set; }
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
         public string ScheduledDate { get; set; }

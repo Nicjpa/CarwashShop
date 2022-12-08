@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
+using CarWashShopAPI.DTO;
 using CarWashShopAPI.DTO.BookingDTO;
 using CarWashShopAPI.DTO.CarWashShopDTOs;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
-using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace CarWashShopAPI.Controllers
 {
@@ -16,19 +16,16 @@ namespace CarWashShopAPI.Controllers
     [ApiController]
     public class ConsumerManagementController : ControllerBase
     {
-        private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IConsumerRepository _consumerRepository;
         private readonly ILogger<ConsumerManagementController> _logger;
         public ConsumerManagementController
             (
-            CarWashDbContext dbContext, 
             IMapper mapper, 
             IConsumerRepository consumerRepository, 
             ILogger<ConsumerManagementController> logger
             )
         {
-            _dbContext = dbContext;
             _mapper = mapper;
             _consumerRepository = consumerRepository;
             _logger = logger;
@@ -49,10 +46,10 @@ namespace CarWashShopAPI.Controllers
             if (carShopsEntities == null || !carShopsEntities.Any())
             {
                 _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetShops-ConsumerSide' / '0' SHOPS FOUND ");
-                return NotFound("There is no CarWashShop found..");
+                return Ok(new JsonResult("There is no CarWashShop found.."));
             }
 
-            var shopsPaginated = await _consumerRepository.Pagination(HttpContext, carShopsEntities, filter.RecordsPerPage, filter.Pagination);
+            var shopsPaginated = await _consumerRepository.Pagination(HttpContext, carShopsEntities, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var shopsView = _mapper.Map<List<CarWashShopView>>(shopsPaginated);
 
@@ -78,7 +75,7 @@ namespace CarWashShopAPI.Controllers
                 return NotFound("There is no Service found..");
             }
 
-            var servicesPaginated = await _consumerRepository.Pagination(HttpContext, serviceEntities, filter.RecordsPerPage, filter.Pagination);
+            var servicesPaginated = await _consumerRepository.Pagination(HttpContext, serviceEntities, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
 
@@ -101,10 +98,10 @@ namespace CarWashShopAPI.Controllers
             if (bookingsEntity == null || !bookingsEntity.Any())
             {
                 _logger.LogInformation($" / GET / UserName: '{userName.ToUpper()}' / MethodName: 'GetBookings-ConsumerSide' / '0' BOOKINGS FOUND ");
-                return NotFound("No bookings found with specified filters");
+                return Ok(new JsonResult("No bookings found with specified filters"));
             }
 
-            var bookingsPaginated = await _consumerRepository.Pagination(HttpContext, bookingsEntity, filter.RecordsPerPage, filter.Pagination);
+            var bookingsPaginated = await _consumerRepository.Pagination(HttpContext, bookingsEntity, filter.RecordsPerPage, new PaginationDTO { Page = filter.Page, RecordsPerPage = filter.RecordsPerPage });
 
             var bookingsView = _mapper.Map<List<BookingViewConsumerSide>>(bookingsPaginated);
 
@@ -131,10 +128,10 @@ namespace CarWashShopAPI.Controllers
                 _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'ScheduleService-ConsumerSide' " +
                     $"/ shop and service didn't match / BOOKING FAILED ");
 
-                return NotFound($"Car wash shop or service that you've selected doesn't exist" +
+                return NotFound(new JsonResult($"Car wash shop or service that you've selected doesn't exist" +
                                 $"\nCheck your inputs:" +
                                 $"\nCarwashID: '{bookingCreation.CarWashShopId}'" +
-                                $"\nServiceID: '{bookingCreation.ServiceId}'");
+                                $"\nServiceID: '{bookingCreation.ServiceId}'"));
             }
 
             if (bookingCreation.ScheduledDateTime < DateTime.Now.AddHours(2))
@@ -142,9 +139,9 @@ namespace CarWashShopAPI.Controllers
                 _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'ScheduleService-ConsumerSide' " +
                     $"/ attempt to schedule booking less than 2h before / BOOKING FAILED ");
 
-                return BadRequest($"Booking needs to be scheduled at least 2 hours prior to the service start.." +
+                return BadRequest(new JsonResult($"Booking needs to be scheduled at least 2 hours prior to the service start.." +
                                   $"\nCURRENT DATE: {DateTime.Now.Date.ToString("ddd, dd MMM yyyy")}" +
-                                  $"\nCURRENT TIME: {DateTime.Now.ToString("HH:mm")}");
+                                  $"\nCURRENT TIME: {DateTime.Now.ToString("HH:mm")}"));
             }
 
             carWashShop.Bookings.ForEach(x => { if(x.ScheduledDateTime == bookingCreation.ScheduledDateTime) { amountOfUsedWashingUnits++; } });
@@ -154,7 +151,7 @@ namespace CarWashShopAPI.Controllers
                 _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'ScheduleService-ConsumerSide' " +
                     $"/ everything is booked already for the selected time / BOOKING FAILED ");
 
-                return BadRequest($"Unfortunately all '{carWashShop.AmountOfWashingUnits}' washing units are already booked for the selected date and time..");
+                return BadRequest(new JsonResult($"Unfortunately all '{carWashShop.AmountOfWashingUnits}' washing units are already booked for the selected date and time.."));
             }
 
             if (!(bookingCreation.ScheduledDateTime.Hour >= carWashShop.OpeningTime && bookingCreation.ScheduledDateTime.Hour < carWashShop.ClosingTime))
@@ -162,16 +159,17 @@ namespace CarWashShopAPI.Controllers
                 _logger.LogInformation($" / POST / UserName: '{userName.ToUpper()}' / MethodName: 'ScheduleService-ConsumerSide' " +
                     $"/ selected time is out of working hours / BOOKING FAILED ");
 
-                return BadRequest($"Your scheduled hour '{bookingCreation.ScheduledDateTime.ToString("HH:mm")}' is out of the '{carWashShop.Name}' working hours.." +
+                return BadRequest(new JsonResult($"Your scheduled hour '{bookingCreation.ScheduledDateTime.ToString("HH:mm")}' is out of the '{carWashShop.Name}' working hours.." +
                                   $"\nOPENING TIME: {carWashShop.OpeningTime}" +
-                                  $"\nCLOSING TIME: {carWashShop.ClosingTime}");
+                                  $"\nCLOSING TIME: {carWashShop.ClosingTime}"));
             }
 
             var bookingEntity = _mapper.Map<Booking>(bookingCreation);
+            bookingEntity.Price = await _consumerRepository.AssignPrice(carWashShop, bookingCreation.ServiceId);
             bookingEntity.ConsumerId = userId;
 
-            _dbContext.Bookings.Add(bookingEntity);
-            await _dbContext.SaveChangesAsync();
+            await _consumerRepository.AddBooking(bookingEntity);
+            await _consumerRepository.Commit();
 
             var bookingView = _mapper.Map<BookingViewConsumerSide>(bookingEntity);
 
@@ -198,22 +196,22 @@ namespace CarWashShopAPI.Controllers
                     _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'CancelBooking-ConsumerSide' " +
                         $"/ attempted to cancel booking less than 15 minutes before / CANCELATION FAILED ");
 
-                    return BadRequest("You cannot cancel your booking less than 15 minutes before the scheduled time..");
+                    return BadRequest(new JsonResult("You cannot cancel your booking less than 15 minutes before the scheduled time.."));
                 }
 
-                _dbContext.Bookings.Remove(bookingEntity);
-                await _dbContext.SaveChangesAsync();
+                await _consumerRepository.DeleteBooking(bookingEntity);
+                await _consumerRepository.Commit();
 
                 _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'CancelBooking-ConsumerSide' " +
                         $"/ SUCCESSFULLY CANCELED ");
 
-                return Ok($"You have successfully canceled your booking scheduled for '{bookingEntity.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'.");
+                return Ok(new JsonResult($"You have successfully canceled your booking scheduled for '{bookingEntity.ScheduledDateTime.ToString("dddd, dd MMMM yyyy HH:mm")}'."));
             }
 
             _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'CancelBooking-ConsumerSide' " +
                         $"/ booking doesn't exist, wrong booking ID / CANCELATION FAILED ");
 
-            return NotFound($"You don't have booking with ID: '{bookingID}'..");
+            return NotFound(new JsonResult($"You don't have booking with ID: '{bookingID}'.."));
         }
     }
 }

@@ -39,6 +39,9 @@ namespace CarWashShopAPI.Repositories
                 if (!string.IsNullOrWhiteSpace(filter.CarWashName))
                     entities = entities.Where(x => x.Name.ToLower().Contains(filter.CarWashName.ToLower()));
 
+                if (!string.IsNullOrWhiteSpace(filter.Address))
+                    entities = entities.Where(x => x.Address.ToLower().Contains(filter.Address.ToLower()));
+
                 if (!string.IsNullOrWhiteSpace(filter.AdvertisingDescription))
                     entities = entities.Where(x => x.AdvertisingDescription.ToLower().Contains(filter.AdvertisingDescription.ToLower()));
 
@@ -51,10 +54,10 @@ namespace CarWashShopAPI.Repositories
                     entities = entities.Where(x => x.AmountOfWashingUnits >= filter.MinimumAmountOfWashingUnits);
 
                 if (filter.RequiredAndEarlierOpeningTime != null)
-                    entities = entities.Where(x => x.OpeningTime <= filter.RequiredAndEarlierOpeningTime);
+                    entities = entities.Where(x => x.OpeningTime >= filter.RequiredAndEarlierOpeningTime);
 
                 if (filter.RequiredAndLaterClosingTime != null)
-                    entities = entities.Where(x => x.ClosingTime >= filter.RequiredAndLaterClosingTime);
+                    entities = entities.Where(x => x.ClosingTime <= filter.RequiredAndLaterClosingTime);
             }
             return entities;
         }
@@ -74,13 +77,13 @@ namespace CarWashShopAPI.Repositories
             else
             {
                 if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
-                    entities = entities.Where(x => x.CarWashShops.Any(x => x.CarWashShop.Name.Contains(filters.CarWashShopName)));
+                    entities = entities.Where(x => x.CarWashShops.Any(x => x.CarWashShop.Name.ToLower().Contains(filters.CarWashShopName.ToLower())));
 
                 if (!string.IsNullOrWhiteSpace(filters.ServiceName))
-                    entities = entities.Where(x => x.Name.Contains(filters.ServiceName));
+                    entities = entities.Where(x => x.Name.ToLower().Contains(filters.ServiceName.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filters.ServiceDescription))
-                    entities = entities.Where(x => x.Description.Contains(filters.ServiceDescription));
+                    entities = entities.Where(x => x.Description.ToLower().Contains(filters.ServiceDescription.ToLower()));
 
                 if (filters.MinPrice != null)
                     entities = entities.Where(x => x.Price >= filters.MinPrice);
@@ -98,7 +101,7 @@ namespace CarWashShopAPI.Repositories
                 .Include(x => x.Service)
                 .Include(x => x.Consumer)
                 .Where(x => x.Consumer.UserName == userName)
-                .OrderBy(x => x.ScheduledDateTime)
+                .OrderByDescending(x => x.ScheduledDateTime)
                 .AsQueryable();
 
             if (filter.BookingID != null)
@@ -114,28 +117,31 @@ namespace CarWashShopAPI.Repositories
                     bookingsEntity = bookingsEntity.Where(x => x.ServiceId == filter.ServiceID);
 
                 if (!string.IsNullOrWhiteSpace(filter.CarWashShopName))
-                    bookingsEntity = bookingsEntity.Where(x => x.CarWashShop.Name == filter.CarWashShopName);
+                    bookingsEntity = bookingsEntity.Where(x => x.CarWashShop.Name.ToLower().Contains(filter.CarWashShopName.ToLower()));
+
+                if (!string.IsNullOrWhiteSpace(filter.ShopAddress))
+                    bookingsEntity = bookingsEntity.Where(x => x.CarWashShop.Address.ToLower().Contains(filter.ShopAddress.ToLower()));
 
                 if (!string.IsNullOrWhiteSpace(filter.ServiceName))
-                    bookingsEntity = bookingsEntity.Where(x => x.Service.Name == filter.ServiceName);
+                    bookingsEntity = bookingsEntity.Where(x => x.Service.Name.ToLower().Contains(filter.ServiceName.ToLower()));
 
                 if (filter.OnScheduledDate != null)
                     bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date == filter.OnScheduledDate);
 
                 if (filter.ScheduledDatesBefore != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date < filter.ScheduledDatesBefore);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date <= filter.ScheduledDatesBefore);
 
                 if (filter.ScheduledDatesAfter != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date > filter.ScheduledDatesAfter);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Date >= filter.ScheduledDatesAfter);
 
                 if (filter.AtScheduledHour != null)
                     bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour == filter.AtScheduledHour);
 
                 if (filter.ScheduledHoursBefore != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour < filter.ScheduledHoursBefore);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour <= filter.ScheduledHoursBefore);
 
                 if (filter.ScheduledHoursAfter != null)
-                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour > filter.ScheduledHoursAfter);
+                    bookingsEntity = bookingsEntity.Where(x => x.ScheduledDateTime.Hour >= filter.ScheduledHoursAfter);
 
                 if (filter.IsActiveBooking)
                     bookingsEntity = bookingsEntity.Where(x => !x.IsPaid);
@@ -180,6 +186,26 @@ namespace CarWashShopAPI.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id && x.Consumer.UserName == userName);
 
             return entity;
+        }
+
+        public async Task AddBooking(Booking booking)
+        {
+            _dbContext.Bookings.Add(booking);
+        }
+
+        public async Task DeleteBooking(Booking booking)
+        {
+            _dbContext.Bookings.Remove(booking);
+        }
+
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        public async Task<decimal> AssignPrice(CarWashShop shop, int serviceId)
+        {
+            return shop.CarWashShopsServices.Where(x => x.ServiceId == serviceId).Select(x => x.Service.Price).FirstOrDefault();
         }
     }
 }

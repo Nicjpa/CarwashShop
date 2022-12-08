@@ -121,7 +121,7 @@ namespace CarWashShopAPI.Tests
 
             var repo = BuildAccountRepo(context, userManager, configuration);
 
-            return new AccountManagementController(userManager, signInManager, configuration, context, mapper, repo, loggerMoq);
+            return new AccountManagementController(userManager, signInManager, mapper, repo, loggerMoq);
         }
 
         protected static UserManager<TUser> BuildUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
@@ -201,7 +201,8 @@ namespace CarWashShopAPI.Tests
                 AmountOfWashingUnits = 10,
                 Address = "WallStreet2",
                 OpeningTime = 8,
-                ClosingTime = 20
+                ClosingTime = 20,
+                Revenue = 40M
             });
 
             dbContext.CarWashsShops.Add(new CarWashShop()
@@ -212,7 +213,8 @@ namespace CarWashShopAPI.Tests
                 AmountOfWashingUnits = 5,
                 Address = "Pinapple Block 82",
                 OpeningTime = 8,
-                ClosingTime = 23
+                ClosingTime = 23,
+                Revenue = 16.25M
             });
 
             dbContext.CarWashsShops.Add(new CarWashShop()
@@ -634,7 +636,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 3,
                     ScheduledDateTime = new DateTime(2077, 5, 10, 15, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Confirmed
+                    BookingStatus = BookingStatus.Confirmed,
+                    Price = 50M
                 },
 
                 new Booking()
@@ -645,7 +648,9 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 1,
                     ScheduledDateTime = DateTime.Now,
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Rejected
+                    BookingStatus = BookingStatus.Rejected,
+                    Price = 10M
+                    
                 },
 
                 new Booking()
@@ -656,7 +661,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 2,
                     ScheduledDateTime = new DateTime(2022, 10, 05, 11, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 15M
                 },
 
                 new Booking()
@@ -667,7 +673,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 2,
                     ScheduledDateTime = DateTime.Now.AddHours(-1),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 15M
                 },
 
 
@@ -680,7 +687,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 3,
                     ScheduledDateTime = new DateTime(2077, 5, 10, 15, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Confirmed
+                    BookingStatus = BookingStatus.Confirmed,
+                    Price = 50M
                 },
 
                 new Booking()
@@ -689,9 +697,10 @@ namespace CarWashShopAPI.Tests
                     ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                     CarWashShopId = 2,
                     ServiceId  = 1,
-                    ScheduledDateTime = new DateTime(2022, 10, 10, 15, 0, 0),
+                    ScheduledDateTime = new DateTime(2024, 10, 10, 15, 0, 0),
                     IsPaid = false,
-                    BookingStatus = BookingStatus.Confirmed
+                    BookingStatus = BookingStatus.Confirmed,
+                    Price = 10M
                 },
 
                 new Booking()
@@ -700,9 +709,10 @@ namespace CarWashShopAPI.Tests
                     ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                     CarWashShopId = 2,
                     ServiceId  = 2,
-                    ScheduledDateTime = new DateTime(2022, 10, 05, 11, 0, 0),
+                    ScheduledDateTime = new DateTime(2024, 10, 05, 11, 0, 0),
                     IsPaid = false,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 15M
                 },
 
                 new Booking()
@@ -713,7 +723,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 2,
                     ScheduledDateTime = new DateTime(2022, 9, 7, 19, 0, 0),
                     IsPaid = false,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 15M
                 },
 
 
@@ -726,7 +737,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 9,
                     ScheduledDateTime = new DateTime(2077, 5, 15, 15, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Confirmed
+                    BookingStatus = BookingStatus.Confirmed,
+                    Price = 16.25M
                 },
 
                 new Booking()
@@ -737,7 +749,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 3,
                     ScheduledDateTime = new DateTime(2022, 10, 12, 15, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Confirmed
+                    BookingStatus = BookingStatus.Confirmed,
+                    Price = 50M
                 },
 
                 new Booking()
@@ -748,7 +761,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 3,
                     ScheduledDateTime = new DateTime(2022, 11, 05, 11, 0, 0),
                     IsPaid = true,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 50M
                 },
 
                 new Booking()
@@ -759,7 +773,8 @@ namespace CarWashShopAPI.Tests
                     ServiceId  = 7,
                     ScheduledDateTime = new DateTime(2022, 12, 7, 19, 0, 0),
                     IsPaid = false,
-                    BookingStatus = BookingStatus.Pending
+                    BookingStatus = BookingStatus.Pending,
+                    Price = 7.99M
                 },
 
             });

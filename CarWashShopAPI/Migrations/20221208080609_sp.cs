@@ -1,0 +1,87 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace CarWashShopAPI.Migrations
+{
+    public partial class sp : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+			// STORED PROCEDURE TO GET SHOP OVERVIEW OF DAILY,WEEKLY,MONTHLY,YEARLY INCOME
+
+			string shopCreateProcedure = @" CREATE PROCEDURE spGetShopIncome
+
+			@UserName nvarchar(100),
+			@ShopId int,
+			@DateType varchar(10),
+			@Year varchar(10),
+			@RecordsPerSearch int,
+			@StartingDate datetime = NULL,
+			@EndingDate datetime = NULL
+
+			AS
+			BEGIN
+			SET NOCOUNT ON;
+
+			SELECT TOP(@RecordsPerSearch)
+			t.CarWashShopId,
+			c.Name CarWashShopName,
+			CASE 
+				WHEN @DateType = 'DAY' THEN DATEPART(DAYOFYEAR,PaymentDay)
+				WHEN @DateType = 'WEEK' THEN DATEPART(WEEK, PaymentDay)
+				WHEN @DateType = 'MONTH' THEN DATEPART(MONTH, PaymentDay)
+				WHEN @DateType = 'YEAR' THEN DATEPART(YEAR, PaymentDay)
+			END Calendar,
+
+			CASE 
+				WHEN @DateType = 'DAY' THEN PaymentDay
+				ELSE '10000101'
+			END Date,
+			SUM(t.Amount) Income
+
+
+			FROM dbo.CarWashsShops c
+			JOIN dbo.CarWashShopsOwners o ON o.CarWashShopId = c.Id
+			JOIN dbo.Transactions t ON t.CarWashShopId = c.Id
+			WHERE o.OwnerId = 
+				(
+				SELECT u.Id
+				FROM AspNetUsers u
+				WHERE u.UserName = @UserName
+				)
+				AND t.CarWashShopId = @ShopId 
+				AND YEAR(t.PaymentDay) = @Year
+				AND (CAST(t.PaymentDay AS DATE) >= @StartingDate OR @StartingDate IS NULL)
+				AND (CAST(t.PaymentDay AS DATE) <= @EndingDate OR @EndingDate IS NULL)
+			GROUP BY 
+			CASE
+				WHEN @DateType = 'DAY' THEN DATEPART(DAYOFYEAR, PaymentDay)
+				WHEN @DateType = 'WEEK' THEN DATEPART(WEEK, PaymentDay)
+				WHEN @DateType = 'MONTH' THEN DATEPART(MONTH, PaymentDay)
+				WHEN @DateType = 'YEAR' THEN DATEPART(YEAR, PaymentDay)
+			END,
+			CASE 
+				WHEN @DateType = 'DAY' THEN PaymentDay
+				ELSE '10000101'
+			END,
+			t.CarWashShopId,
+			c.Name
+
+			ORDER BY Calendar DESC
+			END";
+
+
+
+			string shopDropProcedure = @"IF OBJECT_ID('spGetShopIncome') IS NOT NULL DROP PROCEDURE spGetShopIncome";
+
+			migrationBuilder.Sql(shopDropProcedure);
+			migrationBuilder.Sql(shopCreateProcedure);
+		}
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+           
+        }
+    }
+}

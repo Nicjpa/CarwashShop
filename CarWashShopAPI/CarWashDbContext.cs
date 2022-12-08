@@ -14,12 +14,13 @@ namespace CarWashShopAPI
         public DbSet<CarWashShop> CarWashsShops { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<CarWashShopsOwners> CarWashShopsOwners { get; set; }
         public DbSet<CarWashShopsServices> CarWashShopsServices { get; set; }
         public DbSet<DisbandRequest> OwnerRemovalRequests { get; set; }
         public DbSet<ShopRemovalRequest> ShopRemovalRequests { get; set; }
         public DbSet<CustomUser> CustomUsers { get; set; }
-        public DbSet<IncomeEntity> Income { get; set; }
+        public DbSet<ShopIncome> Income { get; set; }
       
 
 
@@ -828,9 +829,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 1,
                 ServiceId = 30,
                 ScheduledDateTime = new DateTime(2022, 1, 10, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.99M
             };
 
             var booking2 = new Booking()
@@ -840,9 +842,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 1,
                 ServiceId = 29,
                 ScheduledDateTime = new DateTime(2022, 1, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.20M
             };
 
             var booking3= new Booking()
@@ -852,9 +855,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 1,
                 ServiceId = 30,
                 ScheduledDateTime = new DateTime(2022, 1, 14, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.99M
             };
 
             var booking4 = new Booking()
@@ -864,9 +868,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 1,
                 ServiceId = 30,
                 ScheduledDateTime = new DateTime(2022, 1, 18, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.99M
             };
 
             var booking5 = new Booking()
@@ -876,9 +881,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 1,
                 ServiceId = 29,
                 ScheduledDateTime = new DateTime(2022, 1, 22, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.20M
             };
 
             var booking6 = new Booking()
@@ -888,9 +894,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 28,
                 ScheduledDateTime = new DateTime(2022, 1, 26, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.75M
             };
 
             var booking7 = new Booking()
@@ -900,9 +907,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 26,
                 ScheduledDateTime = new DateTime(2022, 1, 27, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.70M
             };
 
             var booking8 = new Booking()
@@ -912,9 +920,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 27,
                 ScheduledDateTime = new DateTime(2022, 2, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.25M
             };
 
             var booking9 = new Booking()
@@ -924,9 +933,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 25,
                 ScheduledDateTime = new DateTime(2022, 2, 8, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.99M
             };
 
             var booking10 = new Booking()
@@ -936,9 +946,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 24,
                 ScheduledDateTime = new DateTime(2022, 2, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.50M
             };
 
 
@@ -950,9 +961,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 28,
                 ScheduledDateTime = new DateTime(2022, 1, 25, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.75M
             };
 
             var booking12 = new Booking()
@@ -962,9 +974,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 26,
                 ScheduledDateTime = new DateTime(2022, 2, 1, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.70M
             };
 
             var booking13 = new Booking()
@@ -974,9 +987,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 28,
                 ScheduledDateTime = new DateTime(2022, 2, 6, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.75M
             };
 
             var booking14 = new Booking()
@@ -986,9 +1000,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 2,
                 ServiceId = 27,
                 ScheduledDateTime = new DateTime(2022, 2, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.25M
             };
 
             var booking15 = new Booking()
@@ -998,9 +1013,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 25,
                 ScheduledDateTime = new DateTime(2022, 2, 16, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.99M
             };
 
             var booking16 = new Booking()
@@ -1010,9 +1026,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 24,
                 ScheduledDateTime = new DateTime(2022, 2, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.50M
             };
 
             var booking17 = new Booking()
@@ -1022,9 +1039,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 23,
                 ScheduledDateTime = new DateTime(2022, 2, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 11.50M
             };
 
             var booking18 = new Booking()
@@ -1034,9 +1052,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 25,
                 ScheduledDateTime = new DateTime(2022, 2, 27, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.99M
             };
 
             var booking19 = new Booking()
@@ -1046,9 +1065,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 24,
                 ScheduledDateTime = new DateTime(2022, 2, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.50M
             };
 
             var booking20 = new Booking()
@@ -1058,9 +1078,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 23,
                 ScheduledDateTime = new DateTime(2022, 3, 5, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 11.50M
             };
 
 
@@ -1072,9 +1093,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 25,
                 ScheduledDateTime = new DateTime(2022, 2, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.99M
             };
 
             var booking22 = new Booking()
@@ -1084,9 +1106,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 24,
                 ScheduledDateTime = new DateTime(2022, 2, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.50M
             };
 
             var booking23 = new Booking()
@@ -1096,9 +1119,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 3,
                 ServiceId = 23,
                 ScheduledDateTime = new DateTime(2022, 2, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 11.50M
             };
 
             var booking24 = new Booking()
@@ -1108,9 +1132,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 22,
                 ScheduledDateTime = new DateTime(2022, 3, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.60M
             };
 
             var booking25 = new Booking()
@@ -1120,9 +1145,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 21,
                 ScheduledDateTime = new DateTime(2022, 3, 9, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.75M
             };
 
             var booking26 = new Booking()
@@ -1132,9 +1158,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 20,
                 ScheduledDateTime = new DateTime(2022, 3, 14, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking27 = new Booking()
@@ -1144,9 +1171,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 22,
                 ScheduledDateTime = new DateTime(2022, 3, 18, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.60M
             };
 
             var booking28 = new Booking()
@@ -1156,9 +1184,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 21,
                 ScheduledDateTime = new DateTime(2022, 3, 22, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.75M
             };
 
             var booking29 = new Booking()
@@ -1168,9 +1197,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 19,
                 ScheduledDateTime = new DateTime(2022, 3, 26, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 22.90M
             };
 
             var booking30 = new Booking()
@@ -1180,9 +1210,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 18,
                 ScheduledDateTime = new DateTime(2022, 3, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.50M
             };
 
 
@@ -1193,9 +1224,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 22,
                 ScheduledDateTime = new DateTime(2022, 3, 15, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.60M
             };
 
             var booking32 = new Booking()
@@ -1205,9 +1237,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 21,
                 ScheduledDateTime = new DateTime(2022, 3, 19, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.75M
             };
 
             var booking33 = new Booking()
@@ -1217,9 +1250,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 22,
                 ScheduledDateTime = new DateTime(2022, 3, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.60M
             };
 
             var booking34 = new Booking()
@@ -1229,9 +1263,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 4,
                 ServiceId = 20,
                 ScheduledDateTime = new DateTime(2022, 3, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking35 = new Booking()
@@ -1241,9 +1276,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 19,
                 ScheduledDateTime = new DateTime(2022, 4, 1, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 22.90M
             };
 
             var booking36 = new Booking()
@@ -1253,9 +1289,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 18,
                 ScheduledDateTime = new DateTime(2022, 4, 6, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.50M
             };
 
             var booking37 = new Booking()
@@ -1265,9 +1302,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 17,
                 ScheduledDateTime = new DateTime(2022, 4, 10, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.75M
             };
 
             var booking38 = new Booking()
@@ -1277,9 +1315,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 18,
                 ScheduledDateTime = new DateTime(2022, 4, 16, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.50M
             };
 
             var booking39 = new Booking()
@@ -1289,9 +1328,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 4, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
             var booking40 = new Booking()
@@ -1301,9 +1341,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 4, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
 
@@ -1315,9 +1356,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 19,
                 ScheduledDateTime = new DateTime(2022, 3, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 22.90M
             };
 
             var booking42 = new Booking()
@@ -1327,9 +1369,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 18,
                 ScheduledDateTime = new DateTime(2022, 4, 8, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.50M
             };
 
             var booking43 = new Booking()
@@ -1339,9 +1382,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 17,
                 ScheduledDateTime = new DateTime(2022, 4, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.75M
             };
 
             var booking44 = new Booking()
@@ -1351,9 +1395,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 17,
                 ScheduledDateTime = new DateTime(2022, 4, 18, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.75M
             };
 
             var booking45 = new Booking()
@@ -1363,9 +1408,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 4, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
             var booking46 = new Booking()
@@ -1375,9 +1421,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 4, 29, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking47 = new Booking()
@@ -1387,9 +1434,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 14,
                 ScheduledDateTime = new DateTime(2022, 5, 5, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 7.99M
             };
 
             var booking48 = new Booking()
@@ -1399,9 +1447,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 14,
                 ScheduledDateTime = new DateTime(2022, 5, 16, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 7.99M
             };
 
             var booking49 = new Booking()
@@ -1411,9 +1460,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 5, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking50 = new Booking()
@@ -1423,9 +1473,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 5, 25, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
 
@@ -1437,9 +1488,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 19,
                 ScheduledDateTime = new DateTime(2022, 5, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 22.90M
             };
 
             var booking52 = new Booking()
@@ -1449,9 +1501,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 5,
                 ServiceId = 18,
                 ScheduledDateTime = new DateTime(2022, 5, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.50M
             };
 
             var booking53 = new Booking()
@@ -1461,9 +1514,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 6, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
             var booking54 = new Booking()
@@ -1473,9 +1527,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 6, 10, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking55 = new Booking()
@@ -1485,9 +1540,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 14,
                 ScheduledDateTime = new DateTime(2022, 6, 14, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 7.99M
             };
 
             var booking56 = new Booking()
@@ -1497,9 +1553,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking57 = new Booking()
@@ -1509,9 +1566,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 14,
                 ScheduledDateTime = new DateTime(2022, 6, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 7.99M
             };
 
             var booking58 = new Booking()
@@ -1521,9 +1579,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 13,
                 ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 20.00M
             };
 
             var booking59 = new Booking()
@@ -1533,9 +1592,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 12,
                 ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.75M
             };
 
             var booking60 = new Booking()
@@ -1545,9 +1605,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 11,
                 ScheduledDateTime = new DateTime(2022, 7, 10, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 5.00M
             };
 
 
@@ -1559,9 +1620,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 14,
                 ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 7.99M
             };
 
             var booking62 = new Booking()
@@ -1571,9 +1633,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 15,
                 ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.00M
             };
 
             var booking63 = new Booking()
@@ -1583,9 +1646,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
             var booking64 = new Booking()
@@ -1595,9 +1659,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 6,
                 ServiceId = 16,
                 ScheduledDateTime = new DateTime(2022, 7, 8, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.25M
             };
 
             var booking65 = new Booking()
@@ -1607,9 +1672,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 13,
                 ScheduledDateTime = new DateTime(2022, 7, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 20.00M
             };
 
             var booking66 = new Booking()
@@ -1619,9 +1685,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 12,
                 ScheduledDateTime = new DateTime(2022, 7, 16, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.75M
             };
 
             var booking67 = new Booking()
@@ -1631,9 +1698,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 11,
                 ScheduledDateTime = new DateTime(2022, 7, 22, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 5.00M
             };
 
             var booking68 = new Booking()
@@ -1643,9 +1711,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 11,
                 ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 5.00M
             };
 
             var booking69 = new Booking()
@@ -1655,9 +1724,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 12,
                 ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.75M
             };
 
             var booking70 = new Booking()
@@ -1667,9 +1737,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 13,
                 ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 20.00M
             };
 
 
@@ -1681,9 +1752,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 13,
                 ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 20.00M
             };
 
             var booking72 = new Booking()
@@ -1693,9 +1765,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 12,
                 ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 15.75M
             };
 
             var booking73 = new Booking()
@@ -1705,9 +1778,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 11,
                 ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 5.00M
             };
 
             var booking74 = new Booking()
@@ -1717,9 +1791,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 7,
                 ServiceId = 11,
                 ScheduledDateTime = new DateTime(2022, 7, 8, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 5.00M
             };
 
             var booking75 = new Booking()
@@ -1729,9 +1804,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 10,
                 ScheduledDateTime = new DateTime(2022, 7, 12, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.25M
             };
 
             var booking76 = new Booking()
@@ -1741,9 +1817,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 9,
                 ScheduledDateTime = new DateTime(2022, 7, 16, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.20M
             };
 
             var booking77 = new Booking()
@@ -1753,9 +1830,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 8,
                 ScheduledDateTime = new DateTime(2022, 7, 22, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.00M
             };
 
             var booking78 = new Booking()
@@ -1765,9 +1843,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 8,
                 ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.00M
             };
 
             var booking79 = new Booking()
@@ -1777,9 +1856,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 9,
                 ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.20M
             };
 
             var booking80 = new Booking()
@@ -1789,9 +1869,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 10,
                 ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.25M
             };
 
 
@@ -1803,9 +1884,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 9,
                 ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.20M
             };
 
             var booking82 = new Booking()
@@ -1815,9 +1897,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 10,
                 ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 19.25M
             };
 
             var booking83 = new Booking()
@@ -1827,9 +1910,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 8,
                 ScheduledDateTime = new DateTime(2022, 7, 6, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.00M
             };
 
             var booking84 = new Booking()
@@ -1839,9 +1923,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 8,
                 ServiceId = 9,
                 ScheduledDateTime = new DateTime(2022, 7, 10, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.20M
             };
 
             var booking85 = new Booking()
@@ -1851,9 +1936,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 7,
                 ScheduledDateTime = new DateTime(2022, 7, 15, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 24.99M
             };
 
             var booking86 = new Booking()
@@ -1863,9 +1949,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 6,
                 ScheduledDateTime = new DateTime(2022, 7, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.75M
             };
 
             var booking87 = new Booking()
@@ -1875,9 +1962,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 5,
                 ScheduledDateTime = new DateTime(2022, 7, 24, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.50M
             };
 
             var booking88 = new Booking()
@@ -1887,9 +1975,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 5,
                 ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 12.50M
             };
 
             var booking89 = new Booking()
@@ -1899,9 +1988,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 6,
                 ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.75M
             };
 
             var booking90 = new Booking()
@@ -1911,9 +2001,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 7,
                 ScheduledDateTime = new DateTime(2022, 8, 9, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 24.99M
             };
 
 
@@ -1925,9 +2016,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 7,
                 ScheduledDateTime = new DateTime(2022, 7, 20, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 24.99M
             };
 
             var booking92 = new Booking()
@@ -1937,9 +2029,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 9,
                 ServiceId = 6,
                 ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 16.75M
             };
 
             var booking93 = new Booking()
@@ -1949,9 +2042,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 1,
                 ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.75M
             };
 
             var booking94 = new Booking()
@@ -1961,9 +2055,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 2,
                 ScheduledDateTime = new DateTime(2022, 8, 5, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.99M
             };
 
             var booking95 = new Booking()
@@ -1973,9 +2068,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 3,
                 ScheduledDateTime = new DateTime(2022, 8, 9, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.25M
             };
 
             var booking96 = new Booking()
@@ -1985,9 +2081,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 4,
                 ScheduledDateTime = new DateTime(2022, 8, 14, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 23.50M
             };
 
             var booking97 = new Booking()
@@ -1997,9 +2094,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 4,
                 ScheduledDateTime = new DateTime(2022, 8, 18, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 23.50M
             };
 
             var booking98 = new Booking()
@@ -2009,9 +2107,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 3,
                 ScheduledDateTime = new DateTime(2022, 8, 21, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 18.25M
             };
 
             var booking99 = new Booking()
@@ -2021,9 +2120,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 2,
                 ScheduledDateTime = new DateTime(2022, 8, 25, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 14.99M
             };
 
             var booking100 = new Booking()
@@ -2033,9 +2133,10 @@ namespace CarWashShopAPI
                 CarWashShopId = 10,
                 ServiceId = 1,
                 ScheduledDateTime = new DateTime(2022, 8, 30, 10, 0, 0),
-                IsPaid = true,
+                IsPaid = false,
                 BookingStatus = BookingStatus.Confirmed,
                 DateCreated = new DateTime(2022, 1, 5, 10, 0, 0),
+                Price = 10.75M
             };
 
 

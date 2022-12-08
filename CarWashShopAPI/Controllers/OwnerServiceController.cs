@@ -1,35 +1,33 @@
 ﻿using AutoMapper;
-using CarWashShopAPI.DTO.CarWashShopDTOs;
+using CarWashShopAPI.DTO;
 using CarWashShopAPI.DTO.ServiceDTO;
 using CarWashShopAPI.Entities;
-using CarWashShopAPI.Helpers;
 using CarWashShopAPI.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+
 
 namespace CarWashShopAPI.Controllers
 {
-    [Route("api/OwnerServiceCRUD")]
+    [Route("api/OwnerServices")]
     [ApiController]
-    public class OwnerServiceCRUDController : ControllerBase
+    public class OwnerServiceController : ControllerBase
     {
-        private readonly CarWashDbContext _dbContext;
+        //private readonly CarWashDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IServiceRepository _serviceRepository;
-        private readonly ILogger<OwnerServiceCRUDController> _logger;
+        private readonly ILogger<OwnerServiceController> _logger;
 
-        public OwnerServiceCRUDController(
-            CarWashDbContext dbContext, 
+        public OwnerServiceController(
+            //CarWashDbContext dbContext, 
             IMapper mapper, 
             IServiceRepository serviceRepository, 
-            ILogger<OwnerServiceCRUDController> logger)
+            ILogger<OwnerServiceController> logger)
         {
-            _dbContext = dbContext;
+            //_dbContext = dbContext;
             _mapper = mapper;
             _serviceRepository = serviceRepository;
             _logger = logger;
@@ -54,7 +52,7 @@ namespace CarWashShopAPI.Controllers
 
                 return NotFound("There is no Service with specified filter parameters..");
             }
-            var servicesPaginated = await _serviceRepository.Pagination(HttpContext, serviceEntities, filters.RecordsPerPage, filters.Pagination);
+            var servicesPaginated = await _serviceRepository.Pagination(HttpContext, serviceEntities, filters.RecordsPerPage, new PaginationDTO { Page = filters.Page, RecordsPerPage = filters.RecordsPerPage });
 
             var allServicesView = _mapper.Map<List<ServiceViewWithShopAssigned>>(servicesPaginated);
 
@@ -97,8 +95,8 @@ namespace CarWashShopAPI.Controllers
             var newServiceEntity = _mapper.Map<Service>(newServiceCreation);
             shopServiceEntity.Service = newServiceEntity;
 
-            _dbContext.CarWashShopsServices.Add(shopServiceEntity);
-            await _dbContext.SaveChangesAsync();
+            await _serviceRepository.AddService(shopServiceEntity);
+            await _serviceRepository.Commit();
 
             var newServiceCreated = _mapper.Map<ServiceView>(newServiceEntity);
 
@@ -129,8 +127,9 @@ namespace CarWashShopAPI.Controllers
             }
 
             serviceEntity = _mapper.Map(serviceUpdate, serviceEntity);
-            _dbContext.Entry(serviceEntity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+
+            await _serviceRepository.UpdateEntity(serviceEntity);
+            await _serviceRepository.Commit();
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
 
@@ -180,7 +179,7 @@ namespace CarWashShopAPI.Controllers
             }
 
             _mapper.Map(serviceEntityPatch, serviceEntity);
-            await _dbContext.SaveChangesAsync();
+            await _serviceRepository.Commit();
 
             var serviceView = _mapper.Map<ServiceView>(serviceEntity);
 
@@ -224,16 +223,16 @@ namespace CarWashShopAPI.Controllers
                 _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveServiceFromShop-OwnerSide' " +
                   $"/ attempt to remove only shop service, ID '{serviceID}' / REMOVE SERVICE FAILED ");
 
-                return BadRequest($"You cannot delete the last and only existing service that you have in '{shopName}' CarWashShop..");
+                return BadRequest(new JsonResult($"You cannot delete the last and only existing service that you have in '{shopName}' CarWashShop.."));
             }
 
-            _dbContext.Services.Remove(service);
-            await _dbContext.SaveChangesAsync();
+            await _serviceRepository.RemoveService(service);
+            await _serviceRepository.Commit();
 
             _logger.LogInformation($" / DELETE / UserName: '{userName.ToUpper()}' / MethodName: 'RemoveServiceFromShop-OwnerSide' " +
                   $"/ service '{service.Name}' has been removed from the shop '{shopName}' / SERVICE HAS BEEN SUCCESSFULLY REMOVED ");
 
-            return Ok($"You have successfully removed '{service.Name}' service from the {shopName} CarWashShop..");
+            return Ok(new JsonResult($"You have successfully removed '{service.Name}' service from the {shopName} CarWashShop.."));
         }
 
     }

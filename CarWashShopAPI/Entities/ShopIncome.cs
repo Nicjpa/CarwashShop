@@ -3,7 +3,7 @@
 namespace CarWashShopAPI.DTO.OwnerDTO
 {
     [Keyless]
-    public class IncomeEntity
+    public class ShopIncome
     {
         public int CarWashShopId { get; set; }
         public string CarWashShopName { get; set; }

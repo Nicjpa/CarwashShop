@@ -22,7 +22,7 @@ namespace CarWashShopAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("CarWashShopAPI.DTO.OwnerDTO.IncomeEntity", b =>
+            modelBuilder.Entity("CarWashShopAPI.DTO.OwnerDTO.ShopIncome", b =>
                 {
                     b.Property<int>("Calendar")
                         .HasColumnType("int");
@@ -67,6 +67,9 @@ namespace CarWashShopAPI.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("ScheduledDateTime")
                         .HasColumnType("datetime2");
 
@@ -91,7 +94,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 1,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.99m,
                             ScheduledDateTime = new DateTime(2022, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 30
                         },
@@ -102,7 +106,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 1,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.20m,
                             ScheduledDateTime = new DateTime(2022, 1, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 29
                         },
@@ -113,7 +118,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 1,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.99m,
                             ScheduledDateTime = new DateTime(2022, 1, 14, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 30
                         },
@@ -124,7 +130,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 1,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.99m,
                             ScheduledDateTime = new DateTime(2022, 1, 18, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 30
                         },
@@ -135,7 +142,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 1,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.20m,
                             ScheduledDateTime = new DateTime(2022, 1, 22, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 29
                         },
@@ -146,7 +154,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.75m,
                             ScheduledDateTime = new DateTime(2022, 1, 26, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 28
                         },
@@ -157,7 +166,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.70m,
                             ScheduledDateTime = new DateTime(2022, 1, 27, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 26
                         },
@@ -168,7 +178,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.25m,
                             ScheduledDateTime = new DateTime(2022, 2, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 27
                         },
@@ -179,7 +190,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.99m,
                             ScheduledDateTime = new DateTime(2022, 2, 8, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 25
                         },
@@ -190,7 +202,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 24
                         },
@@ -201,7 +214,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.75m,
                             ScheduledDateTime = new DateTime(2022, 1, 25, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 28
                         },
@@ -212,7 +226,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.70m,
                             ScheduledDateTime = new DateTime(2022, 2, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 26
                         },
@@ -223,7 +238,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.75m,
                             ScheduledDateTime = new DateTime(2022, 2, 6, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 28
                         },
@@ -234,7 +250,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 2,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.25m,
                             ScheduledDateTime = new DateTime(2022, 2, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 27
                         },
@@ -245,7 +262,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.99m,
                             ScheduledDateTime = new DateTime(2022, 2, 16, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 25
                         },
@@ -256,7 +274,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 24
                         },
@@ -267,7 +286,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 11.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 23
                         },
@@ -278,7 +298,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.99m,
                             ScheduledDateTime = new DateTime(2022, 2, 27, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 25
                         },
@@ -289,7 +310,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 24
                         },
@@ -300,7 +322,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 11.50m,
                             ScheduledDateTime = new DateTime(2022, 3, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 23
                         },
@@ -311,7 +334,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.99m,
                             ScheduledDateTime = new DateTime(2022, 2, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 25
                         },
@@ -322,7 +346,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 24
                         },
@@ -333,7 +358,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 3,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 11.50m,
                             ScheduledDateTime = new DateTime(2022, 2, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 23
                         },
@@ -344,7 +370,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.60m,
                             ScheduledDateTime = new DateTime(2022, 3, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 22
                         },
@@ -355,7 +382,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.75m,
                             ScheduledDateTime = new DateTime(2022, 3, 9, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 21
                         },
@@ -366,7 +394,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 3, 14, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 20
                         },
@@ -377,7 +406,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.60m,
                             ScheduledDateTime = new DateTime(2022, 3, 18, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 22
                         },
@@ -388,7 +418,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.75m,
                             ScheduledDateTime = new DateTime(2022, 3, 22, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 21
                         },
@@ -399,7 +430,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 22.90m,
                             ScheduledDateTime = new DateTime(2022, 3, 26, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 19
                         },
@@ -410,7 +442,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.50m,
                             ScheduledDateTime = new DateTime(2022, 3, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 18
                         },
@@ -421,7 +454,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.60m,
                             ScheduledDateTime = new DateTime(2022, 3, 15, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 22
                         },
@@ -432,7 +466,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.75m,
                             ScheduledDateTime = new DateTime(2022, 3, 19, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 21
                         },
@@ -443,7 +478,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.60m,
                             ScheduledDateTime = new DateTime(2022, 3, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 22
                         },
@@ -454,7 +490,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 4,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 3, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 20
                         },
@@ -465,7 +502,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 22.90m,
                             ScheduledDateTime = new DateTime(2022, 4, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 19
                         },
@@ -476,7 +514,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.50m,
                             ScheduledDateTime = new DateTime(2022, 4, 6, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 18
                         },
@@ -487,7 +526,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.75m,
                             ScheduledDateTime = new DateTime(2022, 4, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 17
                         },
@@ -498,7 +538,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.50m,
                             ScheduledDateTime = new DateTime(2022, 4, 16, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 18
                         },
@@ -509,7 +550,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 4, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -520,7 +562,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 4, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -531,7 +574,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 22.90m,
                             ScheduledDateTime = new DateTime(2022, 3, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 19
                         },
@@ -542,7 +586,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.50m,
                             ScheduledDateTime = new DateTime(2022, 4, 8, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 18
                         },
@@ -553,7 +598,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.75m,
                             ScheduledDateTime = new DateTime(2022, 4, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 17
                         },
@@ -564,7 +610,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.75m,
                             ScheduledDateTime = new DateTime(2022, 4, 18, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 17
                         },
@@ -575,7 +622,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 4, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -586,7 +634,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 4, 29, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -597,7 +646,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 7.99m,
                             ScheduledDateTime = new DateTime(2022, 5, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 14
                         },
@@ -608,7 +658,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 7.99m,
                             ScheduledDateTime = new DateTime(2022, 5, 16, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 14
                         },
@@ -619,7 +670,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 5, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -630,7 +682,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 5, 25, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -641,7 +694,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 22.90m,
                             ScheduledDateTime = new DateTime(2022, 5, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 19
                         },
@@ -652,7 +706,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 5,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.50m,
                             ScheduledDateTime = new DateTime(2022, 5, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 18
                         },
@@ -663,7 +718,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 6, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -674,7 +730,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 6, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -685,7 +742,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 7.99m,
                             ScheduledDateTime = new DateTime(2022, 6, 14, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 14
                         },
@@ -696,7 +754,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -707,7 +766,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 7.99m,
                             ScheduledDateTime = new DateTime(2022, 6, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 14
                         },
@@ -718,7 +778,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 20.00m,
                             ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 13
                         },
@@ -729,7 +790,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 12
                         },
@@ -740,7 +802,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 5.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 11
                         },
@@ -751,7 +814,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 7.99m,
                             ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 14
                         },
@@ -762,7 +826,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.00m,
                             ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 15
                         },
@@ -773,7 +838,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -784,7 +850,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 6,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.25m,
                             ScheduledDateTime = new DateTime(2022, 7, 8, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 16
                         },
@@ -795,7 +862,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 20.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 13
                         },
@@ -806,7 +874,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 16, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 12
                         },
@@ -817,7 +886,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 5.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 22, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 11
                         },
@@ -828,7 +898,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 5.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 11
                         },
@@ -839,7 +910,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 12
                         },
@@ -850,7 +922,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 20.00m,
                             ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 13
                         },
@@ -861,7 +934,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 20.00m,
                             ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 13
                         },
@@ -872,7 +946,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 15.75m,
                             ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 12
                         },
@@ -883,7 +958,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 5.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 11
                         },
@@ -894,7 +970,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 7,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 5.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 8, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 11
                         },
@@ -905,7 +982,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.25m,
                             ScheduledDateTime = new DateTime(2022, 7, 12, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 10
                         },
@@ -916,7 +994,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.20m,
                             ScheduledDateTime = new DateTime(2022, 7, 16, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 9
                         },
@@ -927,7 +1006,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 22, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 8
                         },
@@ -938,7 +1018,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 8
                         },
@@ -949,7 +1030,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.20m,
                             ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 9
                         },
@@ -960,7 +1042,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "36838a09-6809-4423-964e-154dea2e45c0",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.25m,
                             ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 10
                         },
@@ -971,7 +1054,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.20m,
                             ScheduledDateTime = new DateTime(2022, 6, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 9
                         },
@@ -982,7 +1066,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 19.25m,
                             ScheduledDateTime = new DateTime(2022, 6, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 10
                         },
@@ -993,7 +1078,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.00m,
                             ScheduledDateTime = new DateTime(2022, 7, 6, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 8
                         },
@@ -1004,7 +1090,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 8,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.20m,
                             ScheduledDateTime = new DateTime(2022, 7, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 9
                         },
@@ -1015,7 +1102,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 24.99m,
                             ScheduledDateTime = new DateTime(2022, 7, 15, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 7
                         },
@@ -1026,7 +1114,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 6
                         },
@@ -1037,7 +1126,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.50m,
                             ScheduledDateTime = new DateTime(2022, 7, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 5
                         },
@@ -1048,7 +1138,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 12.50m,
                             ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 5
                         },
@@ -1059,7 +1150,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.75m,
                             ScheduledDateTime = new DateTime(2022, 8, 4, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 6
                         },
@@ -1070,7 +1162,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 24.99m,
                             ScheduledDateTime = new DateTime(2022, 8, 9, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 7
                         },
@@ -1081,7 +1174,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 24.99m,
                             ScheduledDateTime = new DateTime(2022, 7, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 7
                         },
@@ -1092,7 +1186,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 9,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 16.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 26, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 6
                         },
@@ -1103,7 +1198,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.75m,
                             ScheduledDateTime = new DateTime(2022, 7, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 1
                         },
@@ -1114,7 +1210,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.99m,
                             ScheduledDateTime = new DateTime(2022, 8, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 2
                         },
@@ -1125,7 +1222,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.25m,
                             ScheduledDateTime = new DateTime(2022, 8, 9, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 3
                         },
@@ -1136,7 +1234,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 23.50m,
                             ScheduledDateTime = new DateTime(2022, 8, 14, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 4
                         },
@@ -1147,7 +1246,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 23.50m,
                             ScheduledDateTime = new DateTime(2022, 8, 18, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 4
                         },
@@ -1158,7 +1258,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 18.25m,
                             ScheduledDateTime = new DateTime(2022, 8, 21, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 3
                         },
@@ -1169,7 +1270,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 14.99m,
                             ScheduledDateTime = new DateTime(2022, 8, 25, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 2
                         },
@@ -1180,7 +1282,8 @@ namespace CarWashShopAPI.Migrations
                             CarWashShopId = 10,
                             ConsumerId = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             DateCreated = new DateTime(2022, 1, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPaid = true,
+                            IsPaid = false,
+                            Price = 10.75m,
                             ScheduledDateTime = new DateTime(2022, 8, 30, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             ServiceId = 1
                         });
@@ -1214,6 +1317,12 @@ namespace CarWashShopAPI.Migrations
                     b.Property<int>("OpeningTime")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Revenue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("isInRemovalProcess")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -1230,7 +1339,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 10,
                             ClosingTime = 23,
                             Name = "Waterloo",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1240,7 +1351,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 8,
                             ClosingTime = 23,
                             Name = "Geyser Blaze",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1250,7 +1363,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 25,
                             ClosingTime = 23,
                             Name = "Vehicle Washing Center",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1260,7 +1375,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 6,
                             ClosingTime = 23,
                             Name = "Real Wash",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1270,7 +1387,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 12,
                             ClosingTime = 23,
                             Name = "Phantom Wash",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1280,7 +1399,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 5,
                             ClosingTime = 23,
                             Name = "BubbleTime",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1290,7 +1411,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 6,
                             ClosingTime = 23,
                             Name = "Purifying Station",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1300,7 +1423,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 8,
                             ClosingTime = 23,
                             Name = "EazyPizzy",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1310,7 +1435,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 10,
                             ClosingTime = 23,
                             Name = "Emerald Wash",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         },
                         new
                         {
@@ -1320,7 +1447,9 @@ namespace CarWashShopAPI.Migrations
                             AmountOfWashingUnits = 25,
                             ClosingTime = 23,
                             Name = "Tsunami Wash",
-                            OpeningTime = 8
+                            OpeningTime = 8,
+                            Revenue = 0m,
+                            isInRemovalProcess = false
                         });
                 });
 
@@ -1894,6 +2023,30 @@ namespace CarWashShopAPI.Migrations
                     b.ToTable("ShopRemovalRequests");
                 });
 
+            modelBuilder.Entity("CarWashShopAPI.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CarWashShopId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDay")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarWashShopId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -2274,16 +2427,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "24ab6a6c-14f1-4b49-8964-ecfcbce372a3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "294396cc-60f8-40c1-bbf3-4791aab51363",
+                            ConcurrencyStamp = "8615c101-07d7-4e6e-bc6e-1dc5ec8d7ede",
                             Email = "john.smith@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOHN.SMITH@GMAIL.COM",
                             NormalizedUserName = "JSMITH",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDgaUKeqUA4uWAwtozhfBPBhMbYew1pyrq/65wzbS4/EfHPQd2CpcMLtGV0HF70ANA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC5713WmM5mYUXt++wBp6rbe82ocDE7NDhOi9wNQUuq2bwDy3seSWk1nUXQaUua/Cg==",
                             PhoneNumber = "+1 582-282-2749",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "39458e42-490b-4243-9e22-a0abd78241bf",
+                            SecurityStamp = "a2f768b4-37e9-46e6-90f9-c67cbf37429b",
                             TwoFactorEnabled = false,
                             UserName = "jsmith",
                             Address = "9th Street",
@@ -2295,16 +2448,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "6f57119a-6b89-43ed-8df4-4b70d5259548",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "532a3551-fa86-46c7-98cf-47d7d71d914d",
+                            ConcurrencyStamp = "59bb3b0c-b9ef-4d05-b4ba-9f3221fc3d0a",
                             Email = "mark.tanarte@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARK.TANARTE@GMAIL.COM",
                             NormalizedUserName = "MARKTAN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDTJo2rKFUqspNnPDadaWOmOIgAHbI5AEXGxmfJxEtIsU2FE4YlI/StLKJS+YfNbcQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEERw3AY+h5TIbslXq/FJcdKx4GSiIyGeulVq3ieZo6myWph6CohXjYgS9C0aS0DBmQ==",
                             PhoneNumber = "+1 409-861-1005",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "af4adcc8-f063-45a5-8069-410b5f3036fe",
+                            SecurityStamp = "c5efc861-80a8-4aef-ab5d-928f1625c1e5",
                             TwoFactorEnabled = false,
                             UserName = "marktan",
                             Address = "66th Street",
@@ -2316,16 +2469,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "1741abab-ff61-4598-a947-9c798c4ff866",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f99573c8-ae50-4b1b-bf16-9e86853ac306",
+                            ConcurrencyStamp = "e93eaedc-1e55-4439-a561-4fb8e844b4f9",
                             Email = "vese.calin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "VESE.CALIN@GMAIL.COM",
                             NormalizedUserName = "VESEC",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMtmzWR0tI+Z/Dgw8G+6nvV+sSOGdQ8okYh0fY0WvtzdEyXqzxyHs8bg520wYaqtUg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEYfMp+xx7bMCl/Z/7dn4T1k0AtgULR3dKkzTrzaQhbQpTo8ZhDNvgYoUaRlhm5VLA==",
                             PhoneNumber = "+1 312-251-6119",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "393a7d49-c38e-4a7f-8ee3-0325ca8b7c07",
+                            SecurityStamp = "3bacc662-42a1-4354-ba1a-ce6172dff26a",
                             TwoFactorEnabled = false,
                             UserName = "vesec",
                             Address = "Pinewood Heights 70",
@@ -2337,16 +2490,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "f4352621-5ced-4afa-854f-49a10819d206",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "571e9d48-e1a8-4193-aa58-3f3c4ce27cb9",
+                            ConcurrencyStamp = "872bfa40-7a31-48e2-b7ae-1b3413252de0",
                             Email = "michael.santos@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MICHAEL.SANTOS@GMAIL.COM",
                             NormalizedUserName = "MSANTOS",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBH1NXyFBiwH42ZERac0S71C97/p2CKslooKR/rzjdEbRTvgw8F0xLy1Of1jZCcAPA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJZw3yHdIXQh/49qst4AbYsP65QI3IxUVBzAis8sLIBzaPnvfCo9772zbWs85eXpZQ==",
                             PhoneNumber = "+1 262-589-1904",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "28027095-6c7f-4614-8fa1-3c9a90b429ac",
+                            SecurityStamp = "5ff8ba23-6bd5-44a1-8b69-a8b5f7af8898",
                             TwoFactorEnabled = false,
                             UserName = "msantos",
                             Address = "Iron Boulevard 45",
@@ -2358,16 +2511,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "74ea7ef1-0444-447a-9780-0b3a0126a20b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "617321b4-072e-4a6e-86bb-51fbb1e2eba1",
+                            ConcurrencyStamp = "a2c6a84d-f405-4864-be1f-33f8f2744072",
                             Email = "ramon.altamiranda@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "RAMON.ALTAMIRANDA@GMAIL.COM",
                             NormalizedUserName = "ALTARAMON",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKtPWcHJ0I/SyECD0WqPVT/RMley4mnsbpVU2JZ+bARknO19o0/WrHZPUO8OH2hclA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECOJKxQY166wW/SnkW4/gMGd0MW1XQNYDMMFGkLWkzdbN/lENeXdpByU+iiyQF91JQ==",
                             PhoneNumber = "+1 505-753-6592",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ba73d1be-e482-44e9-9c7f-4fb866f49b08",
+                            SecurityStamp = "f0b8abc7-1323-4b7a-9038-0e9bfd83a478",
                             TwoFactorEnabled = false,
                             UserName = "altaramon",
                             Address = "Sintagma Square 106",
@@ -2379,16 +2532,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "94084a54-4f4e-4e86-805c-0ba0abdb1ec6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d881fce3-5d8b-4674-b0e1-85b9ede52ab9",
+                            ConcurrencyStamp = "424f1079-ebcd-4301-b9c4-78a575a1fcb2",
                             Email = "ehab.eshaak@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB.ESHAAK@GMAIL.COM",
                             NormalizedUserName = "EHABES",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFcSe650QTscvFrOcKHft/gGmHdhAGf/MbLvryxNGfCXgCM4i0KReQM7C43hx3ooDQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOnFaZjUIKY2dRsboRn+Ax9K90hGZ17Uy7SC3eM2ZLVRO0FE1XbV4mSoqVBYgio8fw==",
                             PhoneNumber = "+1 315-919-1406",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "818811b5-0c65-4c99-b50b-35d5970cc1a6",
+                            SecurityStamp = "325ea8bc-6dee-479c-86ad-03b95fcfec27",
                             TwoFactorEnabled = false,
                             UserName = "ehabes",
                             Address = "Green Street 99",
@@ -2400,16 +2553,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "edebb245-2066-4126-b9e4-dc020ffdafe7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "04bfd49f-50ba-46bc-9d5c-58b4ab3b388f",
+                            ConcurrencyStamp = "a8614e14-453a-4559-9414-a0ad892b5f2f",
                             Email = "andry.goncharenko@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ANDRY.GONCHARENKO@GMAIL.COM",
                             NormalizedUserName = "ANDRY",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBicKVLlWUGzIDRbHsmuKewhIyRRRO8w5N198/00qQ6nuXC87T+vH03XAezFaTjh2w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDjsAvYIKNS4IpmFy/QyOFKU8PI6p9yL9iECHWSCwTvgchgy2RVv/+G8mj+5Fvw7MA==",
                             PhoneNumber = "+1 410-470-4327",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e5fa8a87-5274-4641-b7f8-12930b338df3",
+                            SecurityStamp = "a365c7f8-6865-4866-b9ad-a12e04955153",
                             TwoFactorEnabled = false,
                             UserName = "andry",
                             Address = "Yellow Roof Street 66",
@@ -2421,16 +2574,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "e8952694-1ca9-44b1-a8fa-73988bb4eee5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4255c378-277a-4e04-976a-0422b9ff6051",
+                            ConcurrencyStamp = "ba2b378d-4acd-4357-89ee-c24748a73955",
                             Email = "mohinder.pathania@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHINDER.PATHANIA@GMAIL.COM",
                             NormalizedUserName = "MOHINDER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPzMJjZDXY2+3YaHch10R/mwJ8E3HdtAojTJ2/aQHanxyhztKVi4qBLOeFpWY/ftSQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPy9sQ/7nu+PIMeBoDBGe6SiXFkEGTeRtK0ekXNGT86IKD49a8yeH3Ig2MZc7CWeWQ==",
                             PhoneNumber = "+1 509-243-9105",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5351df48-0c1a-404b-a82c-54313652aadb",
+                            SecurityStamp = "887e2560-a251-4560-a59a-6778df498703",
                             TwoFactorEnabled = false,
                             UserName = "mohinder",
                             Address = "Barksdale Boulevard 506",
@@ -2442,16 +2595,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "caba2ea1-ab92-4db7-a2fa-0d01d6d6195f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7725e53-6d0e-409e-8a06-704ac52cd2c5",
+                            ConcurrencyStamp = "16091cf5-326b-4f1f-b6ac-e621b03b6606",
                             Email = "monica.bordei@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MONICA.BORDEI@GMAIL.COM",
                             NormalizedUserName = "MONICA",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOjac3W9M6OO4zL8ybWYwgtauGXLP2yV2zJ+5m6T1+p42bSCB6EQdhgfPwCZC9VfsA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF7fJ2QsAtdVna0ceB24lDWVs1sYl5EBBe/tvrOOFkbx6BzMz86iNQmmEao68/vIiw==",
                             PhoneNumber = "+1 582-322-0444",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b5992c0d-cf98-4ad0-a82c-30d422dbce7c",
+                            SecurityStamp = "59cb1a34-f1e5-4d32-ae01-8d33eb41a18f",
                             TwoFactorEnabled = false,
                             UserName = "monica",
                             Address = "Silverlake Lane 96",
@@ -2463,16 +2616,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "f02b000c-622d-4c3f-b215-7e08cea2469c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f8234736-597f-4589-a409-43886355492b",
+                            ConcurrencyStamp = "b6489222-d16d-42cc-b1c8-411ad44ebce9",
                             Email = "alex.petcu@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ALEX.PETCU@GMAIL.COM",
                             NormalizedUserName = "ALEXP",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPKJyChPvZDclRFcphy6JA9XGK9MmeNB2gyRo4c+C8aIKjVW+YDv7tEu4XYZvVq0wA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL7LZH6uCQzXEkrwSTmIinMdHa1erx/CSC4nW/sZBcObHHQ0Zy/Y+IVVrNHkPDcyLw==",
                             PhoneNumber = "+1 423-923-5656",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "173f715b-98bb-4abf-8c34-84f4307b417b",
+                            SecurityStamp = "c93c800f-1a70-4f4c-8eb9-23edcca7ca2f",
                             TwoFactorEnabled = false,
                             UserName = "alexp",
                             Address = "Timberwood Fall 64",
@@ -2484,16 +2637,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "71a07f92-c8b6-47a8-8f1f-0eb340062e57",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cd5d4339-c69e-4d93-8c76-e90ba21d09ae",
+                            ConcurrencyStamp = "fbbf1bb9-3a80-4031-a54b-05c10c5ec9cc",
                             Email = "linda.jones@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "LINDA.JONES@GMAIL.COM",
                             NormalizedUserName = "LINDA",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMCSkEmSMa/dS+1QTIUZJsYx9qtC/P/E8mpkF/TOM+GmM7n8sGFAkG4/hcjt7WMNmA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMN6eDxAf0ArNDhGv0r82CDBO6r5QZhS17VTmIGt1Ku2n+JaikotkQB5TwctL7TRTg==",
                             PhoneNumber = "+1 223-814-3940",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8e14afc0-9cb5-4520-b47e-b89a84c17da2",
+                            SecurityStamp = "3300b715-108c-44e1-a35f-a0f454a5a8b4",
                             TwoFactorEnabled = false,
                             UserName = "linda",
                             Address = "Summerville Lane 19",
@@ -2505,16 +2658,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "b48c3cdd-dc9a-4d9d-af2c-420a68556126",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c39b4f45-e247-4e4e-9104-ba1460fb6cb0",
+                            ConcurrencyStamp = "60059d89-4a92-4c72-8023-6ade35c04880",
                             Email = "carlos.benavidez@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CARLOS.BENAVIDEZ@GMAIL.COM",
                             NormalizedUserName = "CARLOS",
-                            PasswordHash = "AQAAAAEAACcQAAAAENB8m1mfj9V7Ov73veeT6gNJRC8DQvjtVES/l4VhUR+uayT6AKj4m8sEFZ4dd7qlSw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIJjT2QrPuh11KevS0NVDOMjxsqYPuO5c7RvsDHTV8dE8np855zq3k3yVlLwqO1psw==",
                             PhoneNumber = "+1 215-293-3691",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aade50ee-7473-4d5b-9228-4452d4abb436",
+                            SecurityStamp = "3c86633f-c1e8-4c7f-be7a-91e6cb3a328b",
                             TwoFactorEnabled = false,
                             UserName = "carlos",
                             Address = "Blackpot Square 12",
@@ -2526,16 +2679,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "06638581-8f0c-4119-a637-e4f3b5bbe858",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "535574b8-2dba-44cc-a2e8-81899a705bbe",
+                            ConcurrencyStamp = "fae5ff4c-1e55-4b76-94a1-0f7d67ac3fac",
                             Email = "wadzanai.bote@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "WADZANAI.BOTE@GMAIL.COM",
                             NormalizedUserName = "WADZA",
-                            PasswordHash = "AQAAAAEAACcQAAAAECbcnXat08R9XXErnSuDLOymoPNVTTAtp/zDN0FYR8AhShmfsyUxjf6HJPqI0M/NKA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIcJj+5go2SFvCuQ30kfmuWCVDcKEU0DeCotNH+f1GeKXSAdxk8fuJTIrS+bGmfF8g==",
                             PhoneNumber = "+1 582-444-7776",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "44d47a58-f6d0-48a4-8f72-1bf818e40ba5",
+                            SecurityStamp = "7e0cf1f4-c1b9-4670-b434-be748e65bca9",
                             TwoFactorEnabled = false,
                             UserName = "wadza",
                             Address = "Redcliff View 78",
@@ -2547,16 +2700,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "a73fc0f6-3559-4848-9224-099903fcdca2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "711b492b-292c-4739-a1ae-1759123c86f6",
+                            ConcurrencyStamp = "59e10ead-4597-4dd9-b706-58c51a7a6b24",
                             Email = "cindy.shaw@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CINDY.SHAW@GMAIL.COM",
                             NormalizedUserName = "CINDY",
-                            PasswordHash = "AQAAAAEAACcQAAAAENw+HhrIoxDoUWmBq7HX/kdtqOMTL0uwZFcoXwcXN7mi+Wn4Vl9l8fmsnHtump5K5w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHiaObA9NQbZGp3h3PpSPp30QwvquF/qIPobe6ommK5CwkzCRIIPtkUedkhSaeDbbw==",
                             PhoneNumber = "+1 582-333-4023",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f2290b9-ef73-46c0-ad84-5553ffb1aba6",
+                            SecurityStamp = "9c551f6c-be37-4233-8362-786563b78237",
                             TwoFactorEnabled = false,
                             UserName = "cindy",
                             Address = "Rapsberry Grow 154",
@@ -2568,16 +2721,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "dbf1bf5c-8485-4ebb-9d83-3806149d8048",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "64b70079-d72d-4fba-a9ae-59dcfeff02ea",
+                            ConcurrencyStamp = "17792418-7757-45a8-9186-573c9ddafaeb",
                             Email = "vishnu.gawas@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "VISHNU.GAWAS@GMAIL.COM",
                             NormalizedUserName = "VISHNU",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB/eCYC3u8mJ01gBDisCMUkwf+IGmz6Ddh/v49LCBqeA2J4sCFhjbilGS/jpMtv+Wg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHaOCTrGDg8CnUvKquwqjnjClbND9rIyGzgXNlZiUtJjEioOpp5WC+kzd684eiNAxA==",
                             PhoneNumber = "+1 213-354-2486",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fcb6b7dc-40a8-4653-bb97-786e113d62c9",
+                            SecurityStamp = "1bad4832-efed-48c7-847b-3a28c2550510",
                             TwoFactorEnabled = false,
                             UserName = "vishnu",
                             Address = "22nd Jump Street",
@@ -2589,16 +2742,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "989b1e73-da14-4218-ac8c-d60aaf816520",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20997b8f-455b-4542-9d8a-e2847180e801",
+                            ConcurrencyStamp = "6cd9a909-80e7-4544-8d0f-2c616ed28251",
                             Email = "alister.fernandez@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ALISTER.FERNANDEZ@GMAIL.COM",
                             NormalizedUserName = "ALISTER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG65d30MzrIRpiJdnU26u8wqZsSD1MHBYYkaoTvGeN92aT5Y563XS2xJ7eCzI8vOiw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEjbHwZrCWHvQDAr6bt2bt+8vTFY8q8OWXQbCGlE92UMQv4Hgec9N11RQ+kLm4F0KQ==",
                             PhoneNumber = "+1 508-796-7186",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "dbb4335a-2381-40af-8963-8ce4457a2997",
+                            SecurityStamp = "2a184755-5b05-42ea-b445-6c9acc44456b",
                             TwoFactorEnabled = false,
                             UserName = "alister",
                             Address = "Palmville Heights 24",
@@ -2610,16 +2763,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "c4b2e35a-d562-483a-9c89-f4a3d3d59e77",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9e5dd795-ed55-4da3-9aec-b3860d6364d6",
+                            ConcurrencyStamp = "e1c5c375-fa45-483b-b1fd-709a70ad59fc",
                             Email = "martina.salerno@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MARTINA.SALERNO@GMAIL.COM",
                             NormalizedUserName = "MARTINA",
-                            PasswordHash = "AQAAAAEAACcQAAAAEE7PK2hKthJXYJYzOuRw3EshplOIu2qNfyU/fTTy1pQupr5A0TnTc63T2dIOVCAaNw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHAGKzAijz10cJE267UU0CXB+Xod9tDKU7OAckzw/qzNQsuXRWBvh445f+4GTkUuhQ==",
                             PhoneNumber = "+1 505-644-9019",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "adabb51f-a91c-40ca-a97a-246d777ad12b",
+                            SecurityStamp = "f7624b66-4634-41bd-af46-17db4e0e95e5",
                             TwoFactorEnabled = false,
                             UserName = "martina",
                             Address = "Hell's Kitchen 6A",
@@ -2631,16 +2784,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "56c4a3a6-cc46-4c6d-85cd-2d19a25835df",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1e848e16-a82c-4639-9f89-ea9ac4551ec8",
+                            ConcurrencyStamp = "b157ebb5-9938-4d2d-9989-d1036d65cd6b",
                             Email = "johnatan.garcia@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "JOHNATAN.GARCIA@GMAIL.COM",
                             NormalizedUserName = "JOHNATAN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKV5LNGYph1sltgrlscaE8QrJprDTmCNwRuB2dVr1ORCekN+8CPdi5+VVeMeQxh0sA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP+3hjMhv1tdilM8K8yX5Lj/aoEnr+y0nr3bQrgIl7djEBr4xq+Dr045t8O5bHypSg==",
                             PhoneNumber = "+1 218-955-6366",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42d480a1-ffca-431b-962d-8e8374677efc",
+                            SecurityStamp = "8565b775-f24d-41c9-b61b-9bf9c649fd2c",
                             TwoFactorEnabled = false,
                             UserName = "johnatan",
                             Address = "Los Olivos 112",
@@ -2652,16 +2805,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "36838a09-6809-4423-964e-154dea2e45c0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "63ea38af-9fb2-40d8-9f8b-5cfa5ac1a592",
+                            ConcurrencyStamp = "27d484cb-d6fe-4463-b7ca-b87e3e293a9d",
                             Email = "viktor.popov@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "VIKTOR.POPOV@GMAIL.COM",
                             NormalizedUserName = "VIKTOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEI7Xib/+a9fIy31KdlZ7S7uISlaO3rWrnxuJYcek3Ytiz+6T1Vprgjc9FlDeNTcAZg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPGtWS8HnkFvdyuzsbJKO1u2wSMlYX9b+3ERIZ/3wMfUewNvRALk0+rmEBg/5IONHA==",
                             PhoneNumber = "+1 218-955-6366",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1c99d4d-1879-48bf-9219-cd84d7b50934",
+                            SecurityStamp = "96cfa629-3de9-4691-b4a2-e35aa4ed5e0d",
                             TwoFactorEnabled = false,
                             UserName = "viktor",
                             Address = "Absolute Street 129",
@@ -2673,16 +2826,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "2e5be4cb-41c8-4265-8959-e6558a272b62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bfd713e8-016e-44f5-b1e5-f134ac3b9e16",
+                            ConcurrencyStamp = "77fc832e-f9b1-4ac2-9cac-01b66dcbcf39",
                             Email = "aurimas.trunchinskas@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "AURIMAS.TRUNCHINSKAS@GMAIL.COM",
                             NormalizedUserName = "AURIT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDer9d/yi8wBPsAqeqzd0n0sDz/1TBZiuyIA59ThZP+pehRly6j67GzFP1i73gHChw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ20UqlF/5xoaOeppzgeAPaqjSoUuY8uKzOPPzNx4pG7yYkFkBOQOC3ge34W/GvMiA==",
                             PhoneNumber = "+1 304-894-4852",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "367309ca-4498-4a45-bd99-c6a5ce645d32",
+                            SecurityStamp = "8712be3f-dbca-4389-ba64-46c230758dd7",
                             TwoFactorEnabled = false,
                             UserName = "aurit",
                             Address = "66th Street",
@@ -2694,16 +2847,16 @@ namespace CarWashShopAPI.Migrations
                         {
                             Id = "1e2723ba-bed4-4f4e-a56f-9fd8abd53e7b",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8cf3392e-f0ed-49ef-9de4-5308844d300a",
+                            ConcurrencyStamp = "843be05e-0027-418f-a6ab-e417594b3162",
                             Email = "robert.bradford@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ROBERT.BRADFORD@GMAIL.COM",
                             NormalizedUserName = "ROBBER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA49KhV9S0u3B5uNCtQdCikFc39hX0bT8Gf9x874w6Nhww9vNgU8ilbraYGipjCG+A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIOA4k3ayRwsw9cxoAUCBZzo+fgMxwk/lbUO84SASaFTHFfHBcoHLW3JNR8mvJA+0Q==",
                             PhoneNumber = "+1 304-894-4852",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9d5cabe2-edb9-4906-acbf-4a76ec87585b",
+                            SecurityStamp = "467f63a0-9ffc-4501-9e68-234930b243db",
                             TwoFactorEnabled = false,
                             UserName = "robber",
                             Address = "Whiteroof Valley",
@@ -2820,6 +2973,15 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("CarWashShopAPI.Entities.Transaction", b =>
+                {
+                    b.HasOne("CarWashShopAPI.Entities.CarWashShop", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("CarWashShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -2882,6 +3044,8 @@ namespace CarWashShopAPI.Migrations
                     b.Navigation("Owners");
 
                     b.Navigation("ShopRemovalRequests");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("CarWashShopAPI.Entities.Service", b =>

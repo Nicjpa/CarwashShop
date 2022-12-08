@@ -1,19 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static CarWashShopAPI.DTO.Enums;
 
 namespace CarWashShopAPI.DTO.UserDTOs
 {
     public class UserInfo
     {
         [Required]
-        [MinLength(1), MaxLength(50)]
+        [MaxLength(50)]
         public string FirstName { get; set; }
 
         [Required]
-        [MinLength(1), MaxLength(50)]
+        [MaxLength(50)]
         public string LastName { get; set; }
 
         [Required]
-        [MinLength(1), MaxLength(100)]
+        [MaxLength(100)]
         public string Address { get; set; }
 
         [Required]
@@ -33,6 +34,9 @@ namespace CarWashShopAPI.DTO.UserDTOs
         [Required]
         [MinLength(5), MaxLength(20)]
         public string Password { get; set; }
+
+        [Required]
+        public RoleClaim Role { get; set; }
 
     }
 }

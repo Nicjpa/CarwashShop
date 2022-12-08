@@ -2,15 +2,13 @@
 
 namespace CarWashShopAPI.DTO.BookingDTO
 {
-    public class BookingFilters
+    public class BookingFilters : PaginationDTO
     {
-        public int Page { get; set; } = 1;
-        public int RecordsPerPage { get; set; } = 20;
-        public PaginationDTO Pagination { get { return new PaginationDTO() { Page = Page, RecordsPerPage = RecordsPerPage }; } }
         public int? BookingID { get; set; }
         public int? CarWashShopID { get; set; }
         public int? ServiceID { get; set; }
         public string? CarWashShopName { get; set; }
+        public string? ShopAddress { get; set; }
         public string? ServiceName { get; set; }
         public DateTime? OnScheduledDate { get; set; }
         public DateTime? ScheduledDatesBefore { get; set; }

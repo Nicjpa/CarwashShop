@@ -1,6 +1,5 @@
 ﻿using CarWashShopAPI.Repositories.IRepositories;
 
-
 namespace CarWashShopAPI.Services
 {
     public class RadarService : IHostedService, IDisposable

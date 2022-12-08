@@ -1,5 +1,4 @@
 ﻿using CarWashShopAPI.DTO.ServiceDTO;
-using CarWashShopAPI.Entities;
 
 namespace CarWashShopAPI.DTO.CarWashShopDTOs
 {
@@ -10,8 +9,10 @@ namespace CarWashShopAPI.DTO.CarWashShopDTOs
         public string? AdvertisingDescription { get; set; }
         public int AmountOfWashingUnits { get; set; }
         public string Address { get; set; }
+        public decimal Revenue { get; set; }
         public int OpeningTime { get; set; }
         public int ClosingTime { get; set; }
+        public bool isInRemovalProcess { get; set; }
         public List<ServiceView> Services { get; set; }
     }
 }

@@ -16,5 +16,14 @@ namespace CarWashShopAPI.Repositories.IRepositories
         public Task<string> ConcatenateCoOwnerNames(CarWashShop carWashShop, string userName);
         public Task<List<ShopRemovalRequest>> CreateShopRemovalRequests(CarWashShop carWashShop, string userName, CarWashShopRemovalRequestCreation statement);
         public Task<bool> CheckIfRequestExist(int id);
+        public Task Commit();
+        public Task UpdateEntity<T>(T entity);
+        public Task<bool> CheckCreateShopName(string shopName);
+        public Task<bool> CheckEditShopName(string shopName, int shopId);
+        public Task AddRangeOfServices(List<Service> services);
+        public Task RemoveRangeOfServices(List<Service> services);
+        public Task AddCarWashShop(CarWashShop shop);
+        public Task RemoveCarWashShop(CarWashShop shop);
+        public Task AddRangeOfShopRemovals(List<ShopRemovalRequest> shopRemovals, CarWashShop shop);
     }
 }

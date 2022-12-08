@@ -1,18 +1,13 @@
 using CarWashShopAPI.Entities;
 using CarWashShopAPI.Helpers;
-using CarWashShopAPI.Repositories;
-using CarWashShopAPI.Repositories.IRepositories;
 using CarWashShopAPI.Services;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Serilog.Events;
-using Serilog.Formatting.Elasticsearch;
-using Serilog.Sinks.SystemConsole.Themes;
+
 using System.Text;
 
 namespace CarWashShopAPI
@@ -44,6 +39,12 @@ namespace CarWashShopAPI
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection"));
                 options.EnableSensitiveDataLogging();
             });
+
+            builder.Services.AddCors();
+
+            builder.Services.AddDataProtection();
+
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddLogging();
 
@@ -123,6 +124,10 @@ namespace CarWashShopAPI
 
             //app.UseStaticFiles();
 
+            app.UseRouting();
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("NumberOfPages", "TotalAmountOfItems"));
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -133,12 +138,7 @@ namespace CarWashShopAPI
 
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-               .UseStartup<Program>()
-               .UseConfiguration(Configuration)
-               .UseSerilog()
-               .Build();
+    
 
 
 

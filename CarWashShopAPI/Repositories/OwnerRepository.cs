@@ -51,10 +51,23 @@ namespace CarWashShopAPI.Repositories
         {
             var entity = await _dbContext.OwnerRemovalRequests
                 .Include(x => x.CarWashShop)
+                .ThenInclude(x => x.Owners)
                 .Include(x => x.OwnerToBeRemoved)
                 .FirstOrDefaultAsync(x => x.OwnerToBeRemoved.UserName == userName && x.CarWashShop.Id == id && !x.IsApproved);
 
+            if(entity != null && entity.CarWashShop.Owners.Count > 1)
+            {
+                entity.IsApproved = true;
+            }
+
             return entity;
+        }
+
+        public async Task RemoveDisbandRequest(DisbandRequest request)
+        {
+            var requestToDelete = request;
+            _dbContext.OwnerRemovalRequests.Remove(requestToDelete);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<Booking> GetBookingByID(BookingStatusSelection status, string userName)
@@ -146,7 +159,7 @@ namespace CarWashShopAPI.Repositories
             return approvedOwnerIDs;
         }
 
-        public async Task<List<IncomeEntity>> GetIncome(IncomeFilter filter, string userName)
+        public async Task<List<ShopIncome>> GetIncome(IncomeFilter filter, string userName)
         {
             var entities = await _dbContext.Income 
                 .FromSqlInterpolated                                                           // DON'T SIMPLIFY 'filter.CalendarFormat', BECAUSE IT'S GONNA THROW SQL PARSING ERROR!
@@ -156,7 +169,7 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        public async Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<IncomeEntity> incomeEntities, IncomeFilter filter)
+        public async Task<List<IncomeViewDays>> IncomeEntityMap2IncomeViewDays(List<ShopIncome> incomeEntities, IncomeFilter filter)
         {
             var incomeView = new List<IncomeViewDays>();
 
@@ -172,7 +185,7 @@ namespace CarWashShopAPI.Repositories
             return incomeView;
         }
 
-        public async Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<IncomeEntity> incomeEntities, IncomeFilter filter)
+        public async Task<List<IncomeViewOther>> IncomeEntityMap2IncomeViewOther(List<ShopIncome> incomeEntities, IncomeFilter filter)
         {
             var monthName = new DateTimeFormatInfo();
             var incomeView = new List<IncomeViewOther>();
@@ -196,6 +209,7 @@ namespace CarWashShopAPI.Repositories
                 .Include(x => x.Owners)
                 .Include(x => x.Bookings)
                 .Where(x => x.Owners.Select(x => x.Owner.UserName).Contains(userName))
+                .OrderByDescending(x => x.Revenue)
                 .AsQueryable();
 
             if (revenueFilters.ShopID != null)
@@ -207,7 +221,7 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        public async Task<List<RevenueReportView>> CalculateRevenue(IQueryable<CarWashShop> carWashShops)
+        public async Task<List<RevenueReportView>> CalculateRevenue(List<CarWashShop> carWashShops)
         {
             var allRevenueReports = new List<RevenueReportView>();
 
@@ -223,11 +237,11 @@ namespace CarWashShopAPI.Repositories
                     {
                         if (booking.ServiceId == service.ServiceId && booking.IsPaid)
                         {
-                            serviceRevenue.Revenue += booking.Service.Price;
+                            serviceRevenue.Revenue += booking.Price;
                             serviceRevenue.AmountOfBookings += 1;
                         }
                     }
-                    revenueReport.Revenue += serviceRevenue.Revenue;
+                    revenueReport.Revenue = shop.Revenue;
                     revenueReport.TotalBookings += serviceRevenue.AmountOfBookings;
                     revenueReport.ByServicesRevenue.Add(serviceRevenue);
                 }
@@ -236,50 +250,26 @@ namespace CarWashShopAPI.Repositories
             return allRevenueReports;
         }
 
-        public async Task<IQueryable<ShopRemovalRequest>> GetShopRemovalRequests(string userName, OwnerRequestsFilters filters)
+        public async Task<List<ShopRemovalRequest>> GetShopRemovalRequests(string userName)
         {
-            var entities = _dbContext.ShopRemovalRequests
+            var entities = await _dbContext.ShopRemovalRequests
                 .Include(x => x.Owner)
                 .Include(x => x.CarWashShop)
                 .Where(x => x.Owner.UserName == userName)
-                .AsQueryable();
+                .ToListAsync();
 
-            if (filters.CarWashShopId != null)
-            {
-                entities = entities.Where(x => x.CarWashShopId == filters.CarWashShopId);
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
-                    entities = entities.Where(x => x.CarWashShop.Name == filters.CarWashShopName);
-
-                if (filters.NotApproved)
-                    entities = entities.Where(x => !x.IsApproved);
-            }
             return entities;
         }
 
-        public async Task<IQueryable<DisbandRequest>> GetDisbandRequests(string userName, OwnerRequestsFilters filters)
+        public async Task<List<DisbandRequest>> GetDisbandRequests(string userName)
         {
-            var entities = _dbContext.OwnerRemovalRequests
+            var entities = await _dbContext.OwnerRemovalRequests
                 .Include(x => x.Requester)
                 .Include(x => x.CarWashShop)
                 .Include(x => x.OwnerToBeRemoved)
                 .Where(x => x.OwnerToBeRemoved.UserName == userName)
-                .AsQueryable();
+                .ToListAsync();
 
-            if (filters.CarWashShopId != null)
-            {
-                entities = entities.Where(x => x.CarWashShopId == filters.CarWashShopId);
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
-                    entities = entities.Where(x => x.CarWashShop.Name == filters.CarWashShopName);
-
-                if (filters.NotApproved)
-                    entities = entities.Where(x => !x.IsApproved);
-            }
             return entities;
         }
 
@@ -290,7 +280,7 @@ namespace CarWashShopAPI.Repositories
                 .ThenInclude(x => x.Owners)
                 .Include(x => x.Service)
                 .Include(x => x.Consumer)
-                .OrderBy(x => x.ScheduledDateTime)
+                .OrderByDescending(x => x.ScheduledDateTime)
                 .Where(x => x.CarWashShop.Owners.Select(x => x.Owner.UserName).Contains(userName))
                 .AsQueryable();
 
@@ -309,6 +299,9 @@ namespace CarWashShopAPI.Repositories
                 if (!string.IsNullOrWhiteSpace(filters.CarWashShopName))
                     entities = entities.Where(x => x.CarWashShop.Name.ToLower() == filters.CarWashShopName.ToLower());
 
+                if (!string.IsNullOrWhiteSpace(filters.ShopAddress))
+                    entities = entities.Where(x => x.CarWashShop.Address.ToLower().Contains(filters.ShopAddress.ToLower()));
+
                 if (!string.IsNullOrWhiteSpace(filters.ServiceName))
                     entities = entities.Where(x => x.Service.Name.ToLower() == filters.ServiceName.ToLower());
 
@@ -325,10 +318,10 @@ namespace CarWashShopAPI.Repositories
                     entities = entities.Where(x => x.ScheduledDateTime.Hour == filters.AtScheduledHour);
 
                 if (filters.ScheduledHoursBefore != null)
-                    entities = entities.Where(x => x.ScheduledDateTime.Hour < filters.ScheduledHoursBefore);
+                    entities = entities.Where(x => x.ScheduledDateTime.Hour <= filters.ScheduledHoursBefore);
 
                 if (filters.ScheduledHoursAfter != null)
-                    entities = entities.Where(x => x.ScheduledDateTime.Hour > filters.ScheduledHoursAfter);
+                    entities = entities.Where(x => x.ScheduledDateTime.Hour >= filters.ScheduledHoursAfter);
 
                 if (filters.IsActiveBooking)
                     entities = entities.Where(x => !x.IsPaid);
@@ -348,7 +341,7 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        public async Task<IQueryable<CarWashShop>> GetOwners(string userName, ListOfOwnersPerShopFilters filters)
+        public async Task<IQueryable<CarWashShop>> GetOwners(string userName, OwnersPerShopFilters filters)
         {
             var entities = _dbContext.CarWashsShops
                 .Include(x => x.Owners).ThenInclude(x => x.Owner)
@@ -367,6 +360,54 @@ namespace CarWashShopAPI.Repositories
             return entities;
         }
 
-        
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateEntity<T>(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task AddRangeOfOwners(List<CarWashShopsOwners> ownerList)
+        {
+            _dbContext.CarWashShopsOwners.AddRange(ownerList);
+        }
+
+        public async Task MakeDisbandRequest(DisbandRequest request)
+        {
+            _dbContext.OwnerRemovalRequests.Add(request);
+        }
+
+        public async Task CancelShopRemovalReq(List<ShopRemovalRequest> shopRemovalList, int shopID)
+        {
+            var shop = await _dbContext.CarWashsShops.FirstOrDefaultAsync(x => x.Id == shopID);
+            shop.isInRemovalProcess = false;
+
+            _dbContext.ShopRemovalRequests.RemoveRange(shopRemovalList);
+            _dbContext.Entry(shop).State = EntityState.Modified;
+        }
+
+        public async Task RemoveMyselfFromShop(string userName, int shopID)
+        {
+            var owner = await _dbContext.CustomUsers.FirstOrDefaultAsync(x => x.UserName == userName);
+            var shopOwner = await _dbContext.CarWashShopsOwners.FirstOrDefaultAsync(x => x.OwnerId == owner.Id && x.CarWashShopId == shopID);
+            var removalRequest = await _dbContext.ShopRemovalRequests.FirstOrDefaultAsync(x => x.CarWashShopId == shopID && x.OwnerId == owner.Id);
+            var ownerRemovalReqs = await _dbContext.OwnerRemovalRequests.Where(x => (x.CarWashShopId == shopID && x.RequesterId == owner.Id) || (x.CarWashShopId == shopID && x.OwnerToBeRemovedId == owner.Id)).ToListAsync();
+
+            if(removalRequest != null)
+            {
+                _dbContext.ShopRemovalRequests.Remove(removalRequest);
+            }
+
+            if(ownerRemovalReqs != null && ownerRemovalReqs.Count > 0)
+            {
+                _dbContext.OwnerRemovalRequests.RemoveRange(ownerRemovalReqs);
+            }
+            _dbContext.CarWashShopsOwners.Remove(shopOwner);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -41,8 +41,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Get(filter);
@@ -72,8 +72,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string notFoundMessage = "There is no Service with specified filter parameters..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Get(filter);
@@ -103,8 +103,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Get(filter);
@@ -135,8 +135,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Get(filter);
@@ -181,8 +181,8 @@ namespace CarWashShopAPI.Tests.UnitTests
                 .CountAsync();
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Post(shopId, creation);
@@ -232,8 +232,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             var badReqMessage = $"You don't have access to the {shop.Name} with ID: '{shopId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Post(shopId, creation);
@@ -274,8 +274,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             var notFoundMessage = $"There is no CarWashShop with ID: '{shopId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Post(shopId, creation);
@@ -304,6 +304,7 @@ namespace CarWashShopAPI.Tests.UnitTests
             int serviceId = 10;
             var creation = new ServiceCreationAndUpdate()
             {
+                
                 Name = "Updated New Name",
                 Description = "Updated New Description..",
                 Price = 0.99M
@@ -321,8 +322,8 @@ namespace CarWashShopAPI.Tests.UnitTests
 
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Put(serviceId, creation);
@@ -365,8 +366,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string notFoundMessage = $"You don't have any service with ID '{serviceId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
             var response = await controller.Put(serviceId, creation);
@@ -408,8 +409,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             }));
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             controller.ObjectValidator = objectValidator.Object;
@@ -452,8 +453,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string notFoundMessage = $"You don't have any service with ID '{serviceId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
             controller.ObjectValidator = objectValidator.Object;
@@ -491,8 +492,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = "You didn't specify which info do you want to patch..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
@@ -532,8 +533,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string okMessage = $"You have successfully removed '{service.Name}' service from the {shopName} CarWashShop..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
@@ -541,9 +542,9 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Verification
             var result = response.Result as OkObjectResult;
-
+            var json = result.Value as JsonResult;
             Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(okMessage, result.Value);
+            Assert.AreEqual(okMessage, json.Value);
         }
 
 
@@ -568,8 +569,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"You cannot delete the last and only existing service that you have in '{carWashShop.Name}' CarWashShop..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
@@ -577,9 +578,9 @@ namespace CarWashShopAPI.Tests.UnitTests
 
             // Verification
             var result = response.Result as BadRequestObjectResult;
-
+            var json = result.Value as JsonResult;
             Assert.AreEqual(400, result.StatusCode);
-            Assert.AreEqual(badReqMessage, result.Value);
+            Assert.AreEqual(badReqMessage, json.Value);
             Assert.AreEqual(1, carWashShop.CarWashShopsServices.Count);
         }
 
@@ -603,8 +604,8 @@ namespace CarWashShopAPI.Tests.UnitTests
             string badReqMessage = $"You don't have any service with ID '{serviceId}'..";
 
             // Testing
-            var loggerMoq = Mock.Of<ILogger<OwnerServiceCRUDController>>();
-            var controller = new OwnerServiceCRUDController(dbContext, mapper, repository, loggerMoq);
+            var loggerMoq = Mock.Of<ILogger<OwnerServiceController>>();
+            var controller = new OwnerServiceController(mapper, repository, loggerMoq);
             controller.ModelState.Clear();
             controller.ControllerContext.HttpContext = new DefaultHttpContext() { User = userClaims };
 
